@@ -4,6 +4,10 @@
 
 - 시작 : 211229
 
+### 프로젝트 소정의 목표
+
+- no css files
+
 ### 배운 내용
 
 - fireabse private key, .env 에서 오류 발생 할 때

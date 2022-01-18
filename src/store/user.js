@@ -3,11 +3,15 @@ import { createSlice } from "@reduxjs/toolkit";
 export const user = createSlice({
   name: "user",
   initialState: {
-    kakaoUid: null,
+    uid: null,
+    name: null,
   },
   reducers: {
-    setKakaoUid: (state, { payload }) => {
-      state.list = payload;
+    setUid: (state, { payload }) => {
+      state.uid = payload.uid;
+      state.name = payload.displayName;
     },
   },
 });
+
+export const { setUid } = user.actions;
