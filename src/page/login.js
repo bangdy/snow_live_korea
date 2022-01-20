@@ -29,7 +29,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function SignIn() {
+export default function SignIn(props) {
   const redirectUri = "http://localhost:3000";
 
   const onClickToAuthorize = () => {

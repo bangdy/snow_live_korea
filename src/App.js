@@ -1,17 +1,21 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import initFirebase from "./help/firebaseConfig";
 import styled from "styled-components";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { useSelector, useDispatch } from "react-redux";
-import { Route, NavLink, Routes } from "react-router-dom";
-import Login from "./page/login";
+import { Route, NavLink, Routes, Navigate } from "react-router-dom";
 import kakaoAuth from "help/kakaoAuth";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import { setUid, getUserDocThunk } from "store/user";
 
-//process.env.REACT_APP_REST_API_KEY ??
+import Login from "./page/login";
+import Main from "./page/main";
+import Profile from "./page/profile";
 
 initFirebase();
 
@@ -28,11 +32,58 @@ const Header = styled.div`
 function App() {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const getUser = async () => await kakaoAuth(kakaoAuthCode);
+
     const kakaoAuthCode = window.location.search.split("=")[1];
-    kakaoAuthCode && kakaoAuth(kakaoAuthCode, dispatch);
+    if (kakaoAuthCode) {
+      dispatch(setUid(getUser()));
+    }
   }, []);
+
+  useEffect(() => {
+    const authStateListener = () => {
+      setLoading(true);
+      return firebase.auth().onAuthStateChanged(
+        (user) => {
+          if (user) {
+            // signed in
+            dispatch(setUid(user));
+            dispatch(getUserDocThunk());
+            setLoading(false);
+          } else {
+            // signed out
+            console.log("fail");
+            setLoading(false);
+          }
+        },
+        (error) => {
+          // error
+          console.log(error);
+          setLoading(false);
+        }
+      );
+    };
+    const unsubscribe = authStateListener();
+
+    return () => unsubscribe();
+  }, [dispatch]);
+
+  let rightButton;
+
+  if (loading) {
+    rightButton = "";
+  } else if (user.uid) {
+    rightButton = <Avatar sx={{ bgcolor: deepOrange[100] }}>🐻</Avatar>;
+  } else {
+    rightButton = (
+      <NavLink className="nav-link btn btn-light" activeClassName="active" to="/login">
+        LOGIN
+      </NavLink>
+    );
+  }
 
   return (
     <Container maxWidth="md" sx={{ height: "100vh" }}>
@@ -41,18 +92,16 @@ function App() {
         <NavLink className="nav-link btn btn-light" activeClassName="active" to="/">
           Snow Live
         </NavLink>
-        {user.uid ? (
-          <Avatar sx={{ bgcolor: deepOrange[500] }}>{user.name}</Avatar>
-        ) : (
-          <NavLink className="nav-link btn btn-light" activeClassName="active" to="/login">
-            LOGIN
-          </NavLink>
-        )}
+        {rightButton}
       </nav>
       <div>
         <Routes>
-          <Route path="/" element={<Box />} />
+          <Route
+            path="/"
+            element={user.uid && user.profile ? <Main /> : <Navigate to="/profile" />}
+          />
           <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>
     </Container>

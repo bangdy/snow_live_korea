@@ -2,8 +2,9 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { setUid } from "store/user";
+import { createUserDoc } from "help/firestore";
 
-export default function kakaoAuth(kakaoAuthCode, dispatch) {
+export default function kakaoAuth(kakaoAuthCode) {
   const functions = getFunctions();
   if (kakaoAuthCode) {
     //카카오 로그인 토큰을 파이어베이스 함수에 전달합니다.
@@ -40,13 +41,15 @@ export default function kakaoAuth(kakaoAuthCode, dispatch) {
         window.Kakao.Auth.setAccessToken(kakaoToken);
         const user = result.user;
         console.log("User : ", user);
+        console.log(result.additionalUserInfo);
         if (result.additionalUserInfo.isNewUser) {
           console.log("신규 사용자...");
           // _this.$router.push("/welcome"); // welcome
         } else {
           // _this.$router.push("/profile");
-          dispatch(setUid(user));
+          console.log("기존 user?");
         }
+        return user;
       })
       .catch(function (error) {
         // Handle Errors here.
