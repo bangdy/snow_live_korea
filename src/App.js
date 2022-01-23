@@ -2,20 +2,19 @@ import { useEffect, useState } from "react";
 import initFirebase from "./help/firebaseConfig";
 import styled from "styled-components";
 import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
 import { useSelector, useDispatch } from "react-redux";
-import { Route, NavLink, Routes, Navigate } from "react-router-dom";
+import { Route, NavLink, Routes, Navigate, Link } from "react-router-dom";
 import kakaoAuth from "help/kakaoAuth";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import { setUid, getUserDocThunk } from "store/user";
+import { setUid, getProfileThunk } from "store/user";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import Login from "./page/login";
 import Main from "./page/main";
-import Profile from "./page/profile";
+import MyPage from "./page/myPage";
 
 initFirebase();
 
@@ -34,6 +33,9 @@ function App() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
 
+  //Logical Indicator
+  const fullfilledUser = user.uid && user.profile;
+
   useEffect(() => {
     const getUser = async () => await kakaoAuth(kakaoAuthCode);
 
@@ -51,8 +53,7 @@ function App() {
           if (user) {
             // signed in
             dispatch(setUid(user));
-            dispatch(getUserDocThunk());
-            setLoading(false);
+            dispatch(getProfileThunk(user.uid)).then(() => setLoading(false));
           } else {
             // signed out
             console.log("fail");
@@ -76,7 +77,11 @@ function App() {
   if (loading) {
     rightButton = "";
   } else if (user.uid) {
-    rightButton = <Avatar sx={{ bgcolor: deepOrange[100] }}>🐻</Avatar>;
+    rightButton = (
+      <Link to="/profile" style={{ textDecoration: "none" }}>
+        <Avatar sx={{ bgcolor: deepOrange[100] }}>🐻</Avatar>
+      </Link>
+    );
   } else {
     rightButton = (
       <NavLink className="nav-link btn btn-light" activeClassName="active" to="/login">
@@ -94,15 +99,16 @@ function App() {
         </NavLink>
         {rightButton}
       </nav>
-      <div>
-        <Routes>
-          <Route
-            path="/"
-            element={user.uid && user.profile ? <Main /> : <Navigate to="/profile" />}
-          />
-          <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
-        </Routes>
+      <div className="d-flex justify-content-center w-100 mt-1">
+        {loading ? (
+          <CircularProgress mt={3} />
+        ) : (
+          <Routes>
+            <Route path="/" element={fullfilledUser ? <Main /> : <Navigate to="/profile" />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/profile" element={<MyPage />} />
+          </Routes>
+        )}
       </div>
     </Container>
   );

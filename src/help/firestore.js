@@ -1,19 +1,17 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 
-export const createUserDoc = async (uid) => {
-  const docRef = firebase.firestore().collection("users").doc(uid);
-
-  console.log(docRef.data());
+export const createDoc = async (col, uid, data) => {
+  const docRef = firebase.firestore().collection(col).doc(uid);
 
   docRef
-    .set({})
+    .set(data)
     .then(() => true)
     .catch((error) => error);
 };
 
-export const getUserDoc = async (uid) => {
-  const doc = await firebase.firestore().collection("users").doc(uid);
+export const getDoc = async (col, uid) => {
+  const doc = await firebase.firestore().collection(col).doc(uid);
 
   try {
     const snapshot = await doc.get();

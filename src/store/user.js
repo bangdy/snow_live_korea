@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getUserDoc } from "help/firestore";
+import { getDoc } from "help/firestore";
 
-export const getUserDocThunk = createAsyncThunk("GET_USER_DOC", async () => {
-  const response = await getUserDoc();
-  return response;
+export const getProfileThunk = createAsyncThunk("GET_USER_DOC", async (uid) => {
+  const response = await getDoc("users", uid);
+  return response.profile;
 });
 
 export const user = createSlice({
@@ -20,7 +20,7 @@ export const user = createSlice({
     },
   },
   extraReducers: {
-    [getUserDocThunk.fulfilled]: (state, { payload }) => {
+    [getProfileThunk.fulfilled]: (state, { payload }) => {
       state.profile = payload ?? null;
     },
   },
