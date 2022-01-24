@@ -11,10 +11,12 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { setUid, getProfileThunk } from "store/user";
 import CircularProgress from "@mui/material/CircularProgress";
+import { resorts } from "assets/resortData";
 
 import Login from "./page/login";
 import Main from "./page/main";
 import MyPage from "./page/myPage";
+import Review from "./page/Review";
 
 initFirebase();
 
@@ -107,6 +109,9 @@ function App() {
             <Route path="/" element={fullfilledUser ? <Main /> : <Navigate to="/profile" />} />
             <Route path="/login" element={<Login />} />
             <Route path="/profile" element={<MyPage />} />
+            {resorts.map((t) => (
+              <Route path={`/${t.url}`} element={<Review name={t.name} />} />
+            ))}
           </Routes>
         )}
       </div>

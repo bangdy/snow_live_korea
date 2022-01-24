@@ -1,9 +1,13 @@
 import React from "react";
+import InfoCard from "components/InfoCard";
+import { resorts } from "assets/resortData";
 
 const Main = (props) => {
   return (
     <div>
-      <p>Main Page</p>
+      {resorts.map((t) => (
+        <InfoCard {...t} />
+      ))}
     </div>
   );
 };
