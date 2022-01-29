@@ -10,13 +10,14 @@ import { deepOrange } from "@mui/material/colors";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { setUid, getProfileThunk } from "store/user";
+import { getAllDocsThunk, resorts } from "store/resorts";
 import CircularProgress from "@mui/material/CircularProgress";
-import { resorts } from "assets/resortData";
 
-import Login from "./page/login";
-import Main from "./page/main";
-import MyPage from "./page/myPage";
+import Login from "./page/Login";
+import Main from "./page/Main";
+import MyPage from "./page/MyPage";
 import Review from "./page/Review";
+import ResortEditor from "./page/ResortEditor";
 
 initFirebase();
 
@@ -32,6 +33,8 @@ const Header = styled.div`
 
 function App() {
   const user = useSelector((state) => state.user);
+  const resorts = useSelector((state) => state.resorts);
+
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
 
@@ -55,6 +58,7 @@ function App() {
           if (user) {
             // signed in
             dispatch(setUid(user));
+            dispatch(getAllDocsThunk());
             dispatch(getProfileThunk(user.uid)).then(() => setLoading(false));
           } else {
             // signed out
@@ -80,7 +84,7 @@ function App() {
     rightButton = "";
   } else if (user.uid) {
     rightButton = (
-      <Link to="/profile" style={{ textDecoration: "none" }}>
+      <Link to="/my_page" style={{ textDecoration: "none" }}>
         <Avatar sx={{ bgcolor: deepOrange[100] }}>🐻</Avatar>
       </Link>
     );
@@ -106,12 +110,13 @@ function App() {
           <CircularProgress mt={3} />
         ) : (
           <Routes>
-            <Route path="/" element={fullfilledUser ? <Main /> : <Navigate to="/profile" />} />
+            <Route path="/" element={fullfilledUser ? <Main /> : <Navigate to="/my_page" />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/profile" element={<MyPage />} />
-            {resorts.map((t) => (
-              <Route path={`/${t.url}`} element={<Review name={t.name} />} />
+            <Route path="/my_page" element={<MyPage />} />
+            {resorts.collection.map((t) => (
+              <Route path={`/${t.url}`} element={<Review name={t.name} resortObj={t} />} />
             ))}
+            <Route path="/resort_editor" element={<ResortEditor />} />
           </Routes>
         )}
       </div>

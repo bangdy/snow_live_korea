@@ -1,6 +1,6 @@
 import React from "react";
-import FullWidthTabs from "components/tabs";
-import Profile from "page/profile";
+import FullWidthTabs from "components/Tabs";
+import Profile from "page/Profile";
 
 const MyPage = (props) => {
   const reviews = {
