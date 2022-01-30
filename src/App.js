@@ -10,7 +10,7 @@ import { deepOrange } from "@mui/material/colors";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { setUid, getProfileThunk } from "store/user";
-import { getAllDocsThunk, resorts } from "store/resorts";
+import { getAllDocsThunk } from "store/resorts";
 import CircularProgress from "@mui/material/CircularProgress";
 
 import Login from "./page/Login";
@@ -113,8 +113,8 @@ function App() {
             <Route path="/" element={fullfilledUser ? <Main /> : <Navigate to="/my_page" />} />
             <Route path="/login" element={<Login />} />
             <Route path="/my_page" element={<MyPage />} />
-            {resorts.collection.map((t) => (
-              <Route path={`/${t.url}`} element={<Review name={t.name} resortObj={t} />} />
+            {resorts.collection.map((resortObj) => (
+              <Route path={`/${resortObj.url}`} element={<Review {...resortObj} />} />
             ))}
             <Route path="/resort_editor" element={<ResortEditor />} />
           </Routes>

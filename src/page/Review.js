@@ -4,8 +4,6 @@ import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 
 const Review = (props) => {
-  const { resortObj } = props;
-
   const navigate = useNavigate();
 
   return (
@@ -17,7 +15,7 @@ const Review = (props) => {
         alignItems: "center",
       }}>
       <span>리뷰 : {props.name}</span>
-      <Button onClick={() => navigate("/resort_editor", { state: resortObj })}>수정하기</Button>
+      <Button onClick={() => navigate("/resort_editor", { state: props })}>수정하기</Button>
     </Box>
   );
 };

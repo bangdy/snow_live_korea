@@ -4,10 +4,15 @@ import "firebase/compat/firestore";
 export const createDoc = async (col, uid, data) => {
   const docRef = firebase.firestore().collection(col).doc(uid);
 
-  docRef
-    .set(data)
-    .then(() => true)
-    .catch((error) => error);
+  const snapshot = await docRef.get();
+  const isExist = snapshot.data();
+
+  if (isExist) {
+    throw "Is Exist";
+  }
+  docRef.set(data);
+
+  return "Success";
 };
 
 export const getDoc = async (col, docId) => {
@@ -28,8 +33,10 @@ export const updateDoc = async (col, docId, updatedObj) => {
     await firebase.firestore().runTransaction(async (transaction) => {
       transaction.update(doc, updatedObj);
     });
+    return "Success";
   } catch (err) {
     console.log(err);
+    return err;
   }
 };
 

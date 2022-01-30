@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import { Resort } from "assets/resortData";
+import { ResortFactory } from "assets/ResortFactory";
 import Button from "@mui/material/Button";
 import { updateDoc, createDoc } from "help/firestore";
 
@@ -12,20 +12,15 @@ const ResortEditor = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const resortObj = location.state;
+  const resort = new ResortFactory(resortObj);
 
   //Logical Indicator
-  const forEdit = resortObj !== undefined;
-
-  console.log(forEdit);
-
-  const resort = new Resort(resortObj);
+  const forEdit = resort.getObject.url !== undefined;
 
   const onTextChangeHandler = (e) => {
     resort.update(e.target.id, e.target.value);
     e.target.value = resort[e.target.id];
   };
-
-  console.log(resort.name);
 
   return (
     <Box
@@ -56,7 +51,6 @@ const ResortEditor = (props) => {
             id="address"
             label="주소"
             onChange={onTextChangeHandler}
-            autoFocus
             defaultValue={resort.address}
           />
         </Grid>
@@ -68,7 +62,6 @@ const ResortEditor = (props) => {
             id="url"
             label="url"
             onChange={onTextChangeHandler}
-            autoFocus
             value={resort.url}
             disabled={forEdit}
           />
@@ -77,10 +70,16 @@ const ResortEditor = (props) => {
       <Button
         onClick={() => {
           const dbFunction = forEdit ? updateDoc : createDoc;
-          dbFunction("resorts", resort.url, resort.getData).then(() => {
-            navigate("/");
-            alert("Success");
-          });
+          let message;
+          dbFunction("resorts", resort.url, resort.getObject)
+            .then((msg) => {
+              navigate("/");
+              message = msg;
+            })
+            .catch((msg) => {
+              message = msg;
+            })
+            .finally(() => alert(message));
         }}>
         {forEdit ? "수정하기" : "만들기"}
       </Button>
