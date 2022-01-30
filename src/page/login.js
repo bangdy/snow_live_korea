@@ -30,7 +30,8 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn(props) {
-  const redirectUri = "http://localhost:3000";
+  const protocol_domain = window.location.protocol + "//" + window.location.host;
+  const redirectUri = protocol_domain;
 
   const onClickToAuthorize = () => {
     Kakao.Auth.authorize({
