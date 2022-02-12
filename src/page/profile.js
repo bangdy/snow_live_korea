@@ -8,10 +8,10 @@ import ToggleButton from "@mui/material/ToggleButton";
 import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
 import { useSelector } from "react-redux";
-import { createDoc } from "help/firestore";
+import { createDoc, updateDoc } from "help/firestore";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import { logout } from "store/user";
+import { logout, updateProfile } from "store/user";
 import { useDispatch } from "react-redux";
 
 const Profile = (props) => {
@@ -21,7 +21,7 @@ const Profile = (props) => {
 
   //Logical Indicator
   const fullfilledUser = user.uid && user.profile;
-  const editable = fullfilledUser && edit;
+  const editable = !fullfilledUser || edit;
 
   const [nickName, setNickName] = useState(fullfilledUser ? user.profile.nickName : "");
   const [ski, setSki] = useState(fullfilledUser ? user.profile.ski : false);
@@ -48,7 +48,7 @@ const Profile = (props) => {
         <Input
           defaultValue="Hello world"
           inputProps={ariaLabel}
-          readOnly={!editable && fullfilledUser}
+          readOnly={!editable}
           value={nickName}
           onChange={handleChange}
           sx={{ width: "100%" }}
@@ -83,14 +83,20 @@ const Profile = (props) => {
             )}
             <Button
               variant="contained"
-              onClick={() =>
-                createDoc("users", user.uid, {
+              onClick={() => {
+                const func = fullfilledUser ? updateDoc : createDoc;
+                func("users", user.uid, {
                   profile: { nickName: nickName, ski: ski, board: board },
                 }).then(() => {
                   alert("수정이 완료되었습니다.");
                   setEdit(!edit);
-                })
-              }>
+                  if (!fullfilledUser) {
+                    window.location.href = "/";
+                  } else {
+                    dispatch(updateProfile({ nickName: nickName, ski: ski, board: board }));
+                  }
+                });
+              }}>
               저장
             </Button>
           </>
