@@ -65,7 +65,7 @@ export default function FullWidthTabs(props) {
           variant="fullWidth"
           aria-label="full width tabs example">
           {props.pages.map((obj, i) => (
-            <Tab label={obj.name} {...a11yProps(i)} />
+            <Tab key={i} label={obj.name} {...a11yProps(i)} />
           ))}
         </Tabs>
       </AppBar>
@@ -74,7 +74,7 @@ export default function FullWidthTabs(props) {
         index={value}
         onChangeIndex={handleChangeIndex}>
         {props.pages.map((obj, i) => (
-          <TabPanel value={value} index={i} dir={theme.direction}>
+          <TabPanel key={i} value={value} index={i} dir={theme.direction}>
             {obj.page}
           </TabPanel>
         ))}

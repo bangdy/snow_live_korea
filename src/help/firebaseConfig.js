@@ -13,8 +13,7 @@ const firebaseConfig = {
 
 const initFirebase = () => {
   const app = firebase.initializeApp(firebaseConfig);
-  console.log(app);
-  const functions = getFunctions(app);
+  getFunctions(app);
 };
 
 export default initFirebase;

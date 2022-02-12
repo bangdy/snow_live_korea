@@ -13,12 +13,12 @@ const Main = (props) => {
 
   useEffect(() => {
     dispatch(getAllDocsThunk());
-  }, []);
+  }, [dispatch]);
 
   return (
     <Stack spacing={2} direction="column" sx={{ alignItems: "center" }}>
-      {resorts.collection.map((data) => {
-        return <InfoCard {...data} />;
+      {resorts.collection.map((data, i) => {
+        return <InfoCard key={i} {...data} />;
       })}
       <Box>
         <Link to="/resort_editor" style={{ textDecoration: "none" }}>

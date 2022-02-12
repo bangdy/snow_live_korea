@@ -1,8 +1,6 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
-import { setUid } from "store/user";
-import { createUserDoc } from "help/firestore";
 
 export default function kakaoAuth(kakaoAuthCode) {
   const functions = getFunctions();
