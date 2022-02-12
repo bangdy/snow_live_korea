@@ -9,10 +9,15 @@ import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
 import { useSelector } from "react-redux";
 import { createDoc } from "help/firestore";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import { logout } from "store/user";
+import { useDispatch } from "react-redux";
 
 const Profile = (props) => {
   const user = useSelector((state) => state.user);
   const [edit, setEdit] = useState(false);
+  const dispatch = useDispatch();
 
   //Logical Indicator
   const fullfilledUser = user.uid && user.profile;
@@ -24,6 +29,16 @@ const Profile = (props) => {
   const ariaLabel = { "aria-label": "description" };
 
   const handleChange = (event) => editable && setNickName(event.target.value);
+
+  const logoutRequest = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        alert("logout");
+        dispatch(logout());
+      });
+  };
 
   return (
     <Stack sx={{ alignItems: "center" }}>
@@ -80,9 +95,12 @@ const Profile = (props) => {
             </Button>
           </>
         ) : (
-          <Button variant="contained" onClick={() => setEdit(!edit)}>
-            수정하기
-          </Button>
+          <>
+            <Button variant="contained" onClick={() => setEdit(!edit)}>
+              수정하기
+            </Button>
+            <Button onClick={logoutRequest}>로그아웃!</Button>
+          </>
         )}
       </Stack>
     </Stack>

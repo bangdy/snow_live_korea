@@ -18,6 +18,11 @@ export const user = createSlice({
       state.uid = payload.uid;
       state.name = payload.displayName;
     },
+    logout: (state) => {
+      state.uid = null;
+      state.name = null;
+      state.profile = null;
+    },
   },
   extraReducers: {
     [getProfileThunk.fulfilled]: (state, { payload }) => {
@@ -26,4 +31,4 @@ export const user = createSlice({
   },
 });
 
-export const { setUid } = user.actions;
+export const { setUid, logout } = user.actions;
