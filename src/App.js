@@ -3,7 +3,7 @@ import initFirebase from "./help/firebaseConfig";
 import styled from "styled-components";
 import Container from "@mui/material/Container";
 import { useSelector, useDispatch } from "react-redux";
-import { Route, NavLink, Routes, Navigate, Link } from "react-router-dom";
+import { Route, NavLink, Routes, Link } from "react-router-dom";
 import kakaoAuth from "help/kakaoAuth";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
@@ -18,6 +18,7 @@ import Main from "./page/Main";
 import MyPage from "./page/MyPage";
 import Review from "./page/Review";
 import ResortEditor from "./page/ResortEditor";
+import PageHOC from "components/PageHOC";
 
 initFirebase();
 
@@ -42,22 +43,28 @@ function App() {
   const fullfilledUser = user.uid && user.profile;
 
   useEffect(() => {
-    const getUser = async () => await kakaoAuth(kakaoAuthCode);
-
+    const getUser = async (kacode) => {
+      if (kacode) {
+        return await kakaoAuth(kacode);
+      }
+    };
     const kakaoAuthCode = window.location.search.split("=")[1];
     if (kakaoAuthCode) {
-      dispatch(setUid(getUser()));
+      setLoading(true);
+      getUser(kakaoAuthCode).then(() => setLoading(false));
+      window.history.replaceState(null, null, "http://localhost:3000/");
     }
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const authStateListener = () => {
       setLoading(true);
       return firebase.auth().onAuthStateChanged(
         (user) => {
+          console.log(user);
           if (user) {
             // signed in
-            dispatch(setUid(user));
+            dispatch(setUid({ uid: user.uid, name: user.name }));
             dispatch(getAllDocsThunk());
             dispatch(getProfileThunk(user.uid)).then(() => setLoading(false));
           } else {
@@ -100,7 +107,7 @@ function App() {
     <Container maxWidth="md" sx={{ height: "100vh" }}>
       <Header className="bg-success" />
       <nav className="navbar navbar-light bg-success">
-        <NavLink className="nav-link btn btn-light" activeClassName="active" to="/">
+        <NavLink className="nav-link btn btn-light" to="/">
           Snow Live
         </NavLink>
         {rightButton}
@@ -110,13 +117,20 @@ function App() {
           <CircularProgress mt={3} />
         ) : (
           <Routes>
-            <Route path="/" element={fullfilledUser ? <Main /> : <Navigate to="/my_page" />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/my_page" element={<MyPage />} />
-            {resorts.collection.map((resortObj) => (
-              <Route path={`/${resortObj.url}`} element={<Review {...resortObj} />} />
+            <Route path="/" element={<PageHOC name="Main" Component={<Main />} />} />
+            <Route path="/login" element={<PageHOC name="Login" Component={<Login />} />} />
+            <Route path="/my_page" element={<PageHOC name="MyPage" Component={<MyPage />} />} />
+            {resorts.collection.map((resortObj, i) => (
+              <Route
+                key={i}
+                path={`/${resortObj.url}`}
+                element={<PageHOC name="Review" Component={<Review {...resortObj} />} />}
+              />
             ))}
-            <Route path="/resort_editor" element={<ResortEditor />} />
+            <Route
+              path="/resort_editor"
+              element={<PageHOC name="ResortEditor" Component={<ResortEditor />} />}
+            />
           </Routes>
         )}
       </div>
