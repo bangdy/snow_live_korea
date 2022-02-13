@@ -9,7 +9,7 @@ const PageHOC = ({ Component, name }) => {
 
   //Logical Indicator
   const isLogin = user.uid;
-  const notProfileYet = !(user.uid && user.profile);
+  const notProfileYet = isLogin && !(user.uid && user.profile);
 
   useEffect(() => {
     switch (name) {

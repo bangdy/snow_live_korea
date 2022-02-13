@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 
 const InfoCard = (props) => {
   const [value, setValue] = useState(3);
-  const { name, address, url } = props;
+  const { name, address, url } = props.info;
 
   return (
     <Card sx={{ minWidth: 500, textAlign: "center" }}>

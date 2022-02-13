@@ -71,7 +71,7 @@ const ResortEditor = (props) => {
         onClick={() => {
           const dbFunction = forEdit ? updateDoc : createDoc;
           let message;
-          dbFunction("resorts", resort.url, resort.getObject)
+          dbFunction("resorts", resort.url, { info: resort.getObject })
             .then((msg) => {
               navigate("/");
               message = msg;
