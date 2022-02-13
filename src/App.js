@@ -3,7 +3,7 @@ import initFirebase from "./help/firebaseConfig";
 import styled from "styled-components";
 import Container from "@mui/material/Container";
 import { useSelector, useDispatch } from "react-redux";
-import { Route, NavLink, Routes, Link } from "react-router-dom";
+import { Route, Routes, useNavigate, Link } from "react-router-dom";
 import kakaoAuth from "help/kakaoAuth";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
@@ -12,6 +12,10 @@ import "firebase/compat/auth";
 import { setUid, getProfileThunk } from "store/user";
 import { getAllDocsThunk } from "store/resorts";
 import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 
 import Login from "./page/Login";
 import Main from "./page/Main";
@@ -29,18 +33,17 @@ const Header = styled.div`
   top: 0;
   padding: 0 10% 0 10%;
   z-index: -1;
-  height: 69.187px;
+  height: 70px;
+  background-color: #1976d2;
 `;
 
 function App() {
   const user = useSelector((state) => state.user);
   const resorts = useSelector((state) => state.resorts);
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-
-  //Logical Indicator
-  const fullfilledUser = user.uid && user.profile;
 
   useEffect(() => {
     const getUser = async (kacode) => {
@@ -97,43 +100,67 @@ function App() {
     );
   } else {
     rightButton = (
-      <NavLink className="nav-link btn btn-light" activeClassName="active" to="/login">
-        LOGIN
-      </NavLink>
+      <Link to="/login" style={{ textDecoration: "none" }}>
+        <Typography
+          variant="h6"
+          component="div"
+          sx={{
+            border: 1,
+            borderRadius: 1,
+            backgroundColor: "white",
+            padding: 0.5,
+          }}>
+          LOGIN
+        </Typography>
+      </Link>
     );
   }
 
   return (
-    <Container maxWidth="md" sx={{ height: "100vh" }}>
-      <Header className="bg-success" />
-      <nav className="navbar navbar-light bg-success">
-        <NavLink className="nav-link btn btn-light" to="/">
-          Snow Live
-        </NavLink>
-        {rightButton}
-      </nav>
-      <div className="d-flex justify-content-center w-100 mt-1">
-        {loading ? (
-          <CircularProgress mt={3} />
-        ) : (
-          <Routes>
-            <Route path="/" element={<PageHOC name="Main" Component={<Main />} />} />
-            <Route path="/login" element={<PageHOC name="Login" Component={<Login />} />} />
-            <Route path="/my_page" element={<PageHOC name="MyPage" Component={<MyPage />} />} />
-            {resorts.collection.map((resortObj, i) => (
+    <Container maxWidth="md" sx={{ height: "100vh", flexGrow: 1 }}>
+      <Header />
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static" sx={{ display: "block", height: 70 }}>
+          <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Link to="/" style={{ textDecoration: "none" }}>
+              <Typography variant="h6" component="div" sx={{ color: "white" }}>
+                Snow Live
+              </Typography>
+            </Link>
+            {rightButton}
+          </Toolbar>
+        </AppBar>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: 1,
+          flex: 1,
+        }}>
+        <Box sx={{ maxWidth: 500, width: 500 }}>
+          {loading ? (
+            <CircularProgress mt={3} />
+          ) : (
+            <Routes>
+              <Route path="/" element={<PageHOC name="Main" Component={<Main />} />} />
+              <Route path="/login" element={<PageHOC name="Login" Component={<Login />} />} />
+              <Route path="/my_page" element={<PageHOC name="MyPage" Component={<MyPage />} />} />
+              {resorts.collection.map((resortObj, i) => (
+                <Route
+                  key={i}
+                  path={`/${resortObj.info.url}`}
+                  element={<PageHOC name="Review" Component={<Review {...resortObj} />} />}
+                />
+              ))}
               <Route
-                key={i}
-                path={`/${resortObj.url}`}
-                element={<PageHOC name="Review" Component={<Review {...resortObj} />} />}
+                path="/resort_editor"
+                element={<PageHOC name="ResortEditor" Component={<ResortEditor />} />}
               />
-            ))}
-            <Route
-              path="/resort_editor"
-              element={<PageHOC name="ResortEditor" Component={<ResortEditor />} />}
-            />
-          </Routes>
-        )}
-      </div>
+            </Routes>
+          )}
+        </Box>
+      </Box>
     </Container>
   );
 }

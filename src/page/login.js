@@ -48,7 +48,7 @@ export default function SignIn(props) {
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5" className="mb-4">
+          <Typography component="h1" variant="h5" sx={{ marginBottom: 4 }}>
             간편로그인
           </Typography>
 
