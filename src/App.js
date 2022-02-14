@@ -3,7 +3,7 @@ import initFirebase from "./help/firebaseConfig";
 import styled from "styled-components";
 import Container from "@mui/material/Container";
 import { useSelector, useDispatch } from "react-redux";
-import { Route, Routes, useNavigate, Link } from "react-router-dom";
+import { Route, Routes, Link } from "react-router-dom";
 import kakaoAuth from "help/kakaoAuth";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
@@ -40,7 +40,6 @@ const Header = styled.div`
 function App() {
   const user = useSelector((state) => state.user);
   const resorts = useSelector((state) => state.resorts);
-  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
@@ -55,7 +54,8 @@ function App() {
     if (kakaoAuthCode) {
       setLoading(true);
       getUser(kakaoAuthCode).then(() => setLoading(false));
-      window.history.replaceState(null, null, "http://localhost:3000/");
+      const redirectUri = window.location.protocol + "//" + window.location.host;
+      window.history.replaceState(null, null, redirectUri);
     }
   }, [dispatch]);
 

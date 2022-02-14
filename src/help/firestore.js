@@ -40,6 +40,20 @@ export const updateDoc = async (col, docId, updatedObj) => {
   }
 };
 
+export const updateDocL2 = async (col, docId, l1, l2, updatedObj) => {
+  const doc = await firebase.firestore().collection(col).doc(docId);
+
+  try {
+    await firebase.firestore().runTransaction(async (transaction) => {
+      transaction.update(doc, `${l1}.${l2}`, updatedObj);
+    });
+    return "Success";
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
+
 export const getAllDocs = async (col) => {
   const snapshots = await firebase.firestore().collection(col).get();
 

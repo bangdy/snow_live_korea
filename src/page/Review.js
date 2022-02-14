@@ -17,7 +17,7 @@ const Review = (props) => {
         flex: 1,
       }}>
       <span>리뷰 : {props.info.name}</span>
-      <ReviewMaker />
+      <ReviewMaker url={props.info.url} />
       <Button onClick={() => navigate("/resort_editor", { state: props.info })}>수정하기</Button>
     </Box>
   );
