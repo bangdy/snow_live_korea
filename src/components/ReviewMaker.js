@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 import Rating from "@mui/material/Rating";
 import TextField from "@mui/material/TextField";
 import { useSelector } from "react-redux";
-import { updateDocL2 } from "help/firestore";
+import { updateDocL3 } from "help/firestore";
 import { getDate } from "help/util";
 
 const ReviewMaker = (props) => {
@@ -71,8 +71,10 @@ const ReviewMaker = (props) => {
           sx={{ alignSelf: "center" }}
           onClick={() => {
             let message;
-            updateDocL2("resorts", props.url, "review", date, {
-              [user.uid]: { score: score, createdAt: new Date(), comment: comment },
+            updateDocL3("resorts", props.url, "review", date, user.uid, {
+              score: score,
+              createdAt: new Date(),
+              comment: comment,
             })
               .then((msg) => {
                 message = msg;
