@@ -45,16 +45,16 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const redirectUri = window.location.protocol + "//" + window.location.host;
     const getUser = async (kacode) => {
       if (kacode) {
-        return await kakaoAuth(kacode);
+        return await kakaoAuth(kacode, redirectUri);
       }
     };
     const kakaoAuthCode = window.location.search.split("=")[1];
     if (kakaoAuthCode) {
       setLoading(true);
       getUser(kakaoAuthCode).then(() => setLoading(false));
-      const redirectUri = window.location.protocol + "//" + window.location.host;
       window.history.replaceState(null, null, redirectUri);
     }
   }, [dispatch]);

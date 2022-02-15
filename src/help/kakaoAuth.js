@@ -2,14 +2,14 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
 
-export default function kakaoAuth(kakaoAuthCode) {
+export default function kakaoAuth(kakaoAuthCode, redirectUri) {
   const functions = getFunctions();
   if (kakaoAuthCode) {
     //카카오 로그인 토큰을 파이어베이스 함수에 전달합니다.
     var kakaoAuth = httpsCallable(functions, "KakaoAuth");
     let kakaoToken;
 
-    kakaoAuth({ code: kakaoAuthCode })
+    kakaoAuth({ code: kakaoAuthCode, redirectUri: redirectUri })
       .then(function (result) {
         // Read result of the Cloud Function.
         console.log("below : cloud function result");

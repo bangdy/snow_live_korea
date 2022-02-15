@@ -47,14 +47,14 @@ function requestMe(kakaoAccessToken) {
 }
 
 const kakaoRequestTokenUrl = "https://kauth.kakao.com/oauth/token";
-function requestAccessToken(kakaoAuthCode) {
+function requestAccessToken(kakaoAuthCode, redirectUri) {
   console.log("Requesting user access token from Kakao API server.");
   // console.log('Kakao Client id : ', process.env.KAKAO_APP_KEY_REST)
 
   const body = {
     grant_type: "authorization_code",
     client_id: process.env.KAKAO_APP_KEY_REST,
-    redirect_uri: process.env.KAKAO_APP_REDIRECT_URI,
+    redirect_uri: redirectUri,
     code: kakaoAuthCode,
     // client_secret: ''
   };
@@ -183,6 +183,7 @@ exports.KakaoAuth = functions.https.onRequest((req, res) => {
 
       console.log(req);
       const authCode = req.body.data.code;
+      const redirectUri = req.body.data.redirectUri;
       console.log("Kakao Auth Code:", authCode);
       if (!authCode) {
         return cors(req, res, () => {
@@ -194,7 +195,7 @@ exports.KakaoAuth = functions.https.onRequest((req, res) => {
       }
 
       console.log(`Verifying Kakao Auth Code: ${authCode}`);
-      requestAccessToken(authCode)
+      requestAccessToken(authCode, redirectUri)
         .then((response) => {
           console.log(response);
 
