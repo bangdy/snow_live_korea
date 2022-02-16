@@ -16,6 +16,8 @@ import { useDispatch } from "react-redux";
 import Modal from "@mui/material/Modal";
 import AvatarImageCropper from "react-avatar-image-cropper";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import IconButton from "@mui/material/IconButton";
 
 const Profile = (props) => {
   const user = useSelector((state) => state.user);
@@ -26,7 +28,7 @@ const Profile = (props) => {
   const dispatch = useDispatch();
 
   const storage = getStorage();
-  const storageRef = ref(storage, `profile/${user.profile.uid}`);
+  const storageRef = ref(storage, `profile/${user.uid}`);
 
   //Logical Indicator
   const fullfilledUser = user.uid && user.profile;
@@ -53,12 +55,24 @@ const Profile = (props) => {
       });
   };
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleOk = () => {
+    setImgurl(window.URL.createObjectURL(img));
+    setOpen(false);
+  };
+
+  const handleClose = () => {
+    setImg(null);
+    setOpen(false);
+  };
 
   useEffect(() => {
     getDownloadURL(storageRef)
       .then((url) => {
+        console.log(storageRef);
         setImgurl(url);
       })
       .catch((error) => {
@@ -82,6 +96,19 @@ const Profile = (props) => {
       });
   }, []);
 
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    maxWidth: 600,
+    width: 500,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
+
   return (
     <>
       <Modal
@@ -89,30 +116,40 @@ const Profile = (props) => {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
-        <Stack sx={{ alignItems: "center", justifyContent: "center", backgroundColor: "white" }}>
-          <h3>닉네임2</h3>
+        <Stack
+          sx={{
+            ...style,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "white",
+          }}>
           <Box sx={{ width: "250px", height: "250px", margin: "auto", border: 1 }}>
             <AvatarImageCropper apply={onImageChange} />
           </Box>
+          <Stack direction="row" sx={{ justifyContent: "space-around", width: 350, marginTop: 2 }}>
+            <Button variant="outlined" onClick={handleClose}>
+              취소
+            </Button>
+            <Button variant="contained" onClick={handleOk}>
+              확인
+            </Button>
+          </Stack>
         </Stack>
       </Modal>
       <Stack sx={{ alignItems: "center" }}>
-        <Avatar sx={{ bgcolor: deepOrange[100], width: 200, height: 200, fontSize: 150 }}>
+        <Avatar
+          sx={{ bgcolor: deepOrange[100], width: 200, height: 200, fontSize: 150, border: 1 }}>
           {imgurl ? <img src={imgurl} /> : "🐻"}
         </Avatar>
-
-        <Button variant="contained" onClick={handleOpen}>
-          모달 열기
-        </Button>
-        <Button
-          variant="contained"
-          onClick={() =>
-            uploadBytes(storageRef, img).then((snapshot) => {
-              console.log("Uploaded a blob or file!");
-            })
-          }>
-          이미지 저장
-        </Button>
+        <IconButton
+          sx={{ position: "relative", top: -30, left: 80 }}
+          disabled={!editable}
+          color="primary"
+          aria-label="upload picture"
+          component="span"
+          onClick={handleOpen}>
+          <PhotoCamera sx={{ width: 40, height: 40 }} />
+        </IconButton>
         <Box sx={{ display: "block", textAlign: "left", width: "100%", padding: 2 }}>
           <h3>닉네임</h3>
           <Input
@@ -159,15 +196,19 @@ const Profile = (props) => {
                   const func = fullfilledUser ? updateDoc : createDoc;
                   func("users", user.uid, {
                     profile: { nickName: nickName, ski: ski, board: board },
-                  }).then(() => {
-                    alert("수정이 완료되었습니다.");
-                    setEdit(!edit);
-                    if (!fullfilledUser) {
-                      window.location.href = "/";
-                    } else {
-                      dispatch(updateProfile({ nickName: nickName, ski: ski, board: board }));
-                    }
-                  });
+                  })
+                    .then(() => {
+                      if (img) uploadBytes(storageRef, img);
+                    })
+                    .then(() => {
+                      alert("수정이 완료되었습니다.");
+                      setEdit(!edit);
+                      if (!fullfilledUser) {
+                        window.location.href = "/";
+                      } else {
+                        dispatch(updateProfile({ nickName: nickName, ski: ski, board: board }));
+                      }
+                    });
                 }}>
                 저장
               </Button>
@@ -177,7 +218,9 @@ const Profile = (props) => {
               <Button variant="contained" onClick={() => setEdit(!edit)}>
                 수정하기
               </Button>
-              <Button onClick={logoutRequest}>로그아웃!</Button>
+              <Button variant="outlined" onClick={logoutRequest}>
+                로그아웃!
+              </Button>
             </>
           )}
         </Stack>

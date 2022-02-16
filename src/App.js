@@ -9,7 +9,7 @@ import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import { setUid, getProfileThunk } from "store/user";
+import { setUid, getProfileThunk, getPictureThunk } from "store/user";
 import { getAllDocsThunk } from "store/resorts";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
@@ -69,6 +69,7 @@ function App() {
             // signed in
             dispatch(setUid({ uid: user.uid, name: user.name }));
             dispatch(getAllDocsThunk());
+            dispatch(getPictureThunk());
             dispatch(getProfileThunk(user.uid)).then(() => setLoading(false));
           } else {
             // signed out
