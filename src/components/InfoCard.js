@@ -13,7 +13,7 @@ const InfoCard = (props) => {
   const { name, address, url } = props.info;
 
   return (
-    <Card sx={{ minWidth: 500, textAlign: "center" }}>
+    <Card sx={{ width: "100%", textAlign: "center", flexGrow: 1, paddingX: 4 }}>
       <CardContent>
         <Typography variant="h5" component="div">
           {name}

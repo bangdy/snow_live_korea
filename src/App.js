@@ -119,7 +119,7 @@ function App() {
   return (
     <Container maxWidth="md" sx={{ height: "100vh", flexGrow: 1 }}>
       <Header />
-      <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ flexGrow: 1, marginX: "auto" }}>
         <AppBar position="static" sx={{ display: "block", height: 70 }}>
           <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
             <Link to="/" style={{ textDecoration: "none" }}>
@@ -135,10 +135,13 @@ function App() {
         sx={{
           display: "flex",
           justifyContent: "center",
+          alignContent: "center",
+          marginX: "auto",
           marginTop: 1,
-          flex: 1,
+          maxWidth: "500px",
+          width: "100%",
         }}>
-        <Box sx={{ maxWidth: 500, width: 500 }}>
+        <>
           {loading ? (
             <CircularProgress mt={3} />
           ) : (
@@ -159,7 +162,7 @@ function App() {
               />
             </Routes>
           )}
-        </Box>
+        </>
       </Box>
     </Container>
   );
