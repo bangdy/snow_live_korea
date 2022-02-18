@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from "react";
-import Avatar from "@mui/material/Avatar";
-import { deepOrange } from "@mui/material/colors";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { DownhillSkiingRounded, SnowboardingRounded } from "@mui/icons-material";
@@ -11,19 +9,20 @@ import { useSelector } from "react-redux";
 import { createDoc, updateDoc } from "help/firestore";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import { logout, updateProfile } from "store/user";
+import { logout, updateProfile, updatePictureUrl } from "store/user";
 import { useDispatch } from "react-redux";
 import Modal from "@mui/material/Modal";
 import AvatarImageCropper from "react-avatar-image-cropper";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import IconButton from "@mui/material/IconButton";
+import ProfileAvatar from "components/ProfileAvatar";
 
 const Profile = (props) => {
   const user = useSelector((state) => state.user);
   const [open, setOpen] = useState(false);
   const [img, setImg] = useState(null);
-  const [imgurl, setImgurl] = useState(null);
+  const [alterImgUrl, setAlterImgUrl] = useState(null);
   const [edit, setEdit] = useState(false);
   const dispatch = useDispatch();
 
@@ -33,6 +32,7 @@ const Profile = (props) => {
   //Logical Indicator
   const fullfilledUser = user.uid && user.profile;
   const editable = !fullfilledUser || edit;
+  const isChangigProfile = editable && alterImgUrl;
 
   const [nickName, setNickName] = useState(fullfilledUser ? user.profile.nickName : "");
   const [ski, setSki] = useState(fullfilledUser ? user.profile.ski : false);
@@ -60,7 +60,7 @@ const Profile = (props) => {
   };
 
   const handleOk = () => {
-    setImgurl(window.URL.createObjectURL(img));
+    setAlterImgUrl(window.URL.createObjectURL(img));
     setOpen(false);
   };
 
@@ -68,33 +68,6 @@ const Profile = (props) => {
     setImg(null);
     setOpen(false);
   };
-
-  useEffect(() => {
-    getDownloadURL(storageRef)
-      .then((url) => {
-        console.log(storageRef);
-        setImgurl(url);
-      })
-      .catch((error) => {
-        // A full list of error codes is available at
-        // https://firebase.google.com/docs/storage/web/handle-errors
-        switch (error.code) {
-          case "storage/object-not-found":
-            // File doesn't exist
-            break;
-          case "storage/unauthorized":
-            // User doesn't have permission to access the object
-            break;
-          case "storage/canceled":
-            // User canceled the upload
-            break;
-
-          case "storage/unknown":
-            // Unknown error occurred, inspect the server response
-            break;
-        }
-      });
-  }, []);
 
   const style = {
     position: "absolute",
@@ -137,10 +110,12 @@ const Profile = (props) => {
         </Stack>
       </Modal>
       <Stack sx={{ alignItems: "center" }}>
-        <Avatar
-          sx={{ bgcolor: deepOrange[100], width: 200, height: 200, fontSize: 150, border: 1 }}>
-          {imgurl ? <img src={imgurl} /> : "🐻"}
-        </Avatar>
+        <ProfileAvatar
+          user={user}
+          isChangigProfile={isChangigProfile}
+          size={200}
+          alterImgUrl={alterImgUrl}
+        />
         <IconButton
           sx={{ position: "relative", top: -30, left: 80 }}
           disabled={!editable}
@@ -199,6 +174,7 @@ const Profile = (props) => {
                   })
                     .then(() => {
                       if (img) uploadBytes(storageRef, img);
+                      dispatch(updatePictureUrl(alterImgUrl));
                     })
                     .then(() => {
                       alert("수정이 완료되었습니다.");

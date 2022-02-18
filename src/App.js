@@ -5,8 +5,6 @@ import Container from "@mui/material/Container";
 import { useSelector, useDispatch } from "react-redux";
 import { Route, Routes, Link } from "react-router-dom";
 import kakaoAuth from "help/kakaoAuth";
-import Avatar from "@mui/material/Avatar";
-import { deepOrange } from "@mui/material/colors";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { setUid, getProfileThunk, getPictureThunk } from "store/user";
@@ -23,6 +21,7 @@ import MyPage from "./page/MyPage";
 import Review from "./page/Review";
 import ResortEditor from "./page/ResortEditor";
 import PageHOC from "components/PageHOC";
+import ProfileAvatar from "components/ProfileAvatar";
 
 initFirebase();
 
@@ -69,7 +68,7 @@ function App() {
             // signed in
             dispatch(setUid({ uid: user.uid, name: user.name }));
             dispatch(getAllDocsThunk());
-            dispatch(getPictureThunk());
+            dispatch(getPictureThunk(user.uid));
             dispatch(getProfileThunk(user.uid)).then(() => setLoading(false));
           } else {
             // signed out
@@ -96,7 +95,7 @@ function App() {
   } else if (user.uid) {
     rightButton = (
       <Link to="/my_page" style={{ textDecoration: "none" }}>
-        <Avatar sx={{ bgcolor: deepOrange[100] }}>🐻</Avatar>
+        <ProfileAvatar user={user} size={40} />
       </Link>
     );
   } else {

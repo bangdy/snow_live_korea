@@ -11,6 +11,7 @@
 ### 배운 내용
 
 - fireabse private key, .env 에서 오류 발생 할 때
+
   - https://crispypotato.tistory.com/116
   - private_key끝에 replace(/\\n/g, '\n')를 넣어주면 정상적으로 작동
 
@@ -22,3 +23,5 @@
   - https://github.com/FirebaseExtended/custom-auth-samples
 - [Firebase Kakao Login, 카카오톡 로그인](https://parandol.tistory.com/48) (내가 사용 한 것)
   - firebase functions 를 이용하여, kakao auth를 통해, 카카오계정 번호를 얻어서 fireabse auth 를 진행하느 방법
+- Firebase storage 에 cors 설정 추가하는 방법
+  - https://stove99.github.io/etc/2021/06/09/firebase-storage-cors-setting/

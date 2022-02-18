@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import Avatar from "@mui/material/Avatar";
-import { deepOrange } from "@mui/material/colors";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Rating from "@mui/material/Rating";
@@ -10,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import { useSelector } from "react-redux";
 import { updateDocL3 } from "help/firestore";
 import { getDate } from "help/util";
+import ProfileAvatar from "components/ProfileAvatar";
 
 const ReviewMaker = (props) => {
   const user = useSelector((state) => state.user);
@@ -38,7 +37,7 @@ const ReviewMaker = (props) => {
         spacing={2}
         sx={{ alignItems: "flex-start", justifyContent: "center", padding: 2, flexGrow: 1 }}>
         <Stack direction="row">
-          <Avatar sx={{ bgcolor: deepOrange[100] }}>🐻</Avatar>
+          <ProfileAvatar user={user} size={40} />
           <Typography
             variant="subtitle1"
             component="div"
