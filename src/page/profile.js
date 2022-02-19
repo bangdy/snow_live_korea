@@ -13,10 +13,10 @@ import { logout, updateProfile, updatePictureUrl } from "store/user";
 import { useDispatch } from "react-redux";
 import Modal from "@mui/material/Modal";
 import AvatarImageCropper from "react-avatar-image-cropper";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import IconButton from "@mui/material/IconButton";
 import ProfileAvatar from "components/ProfileAvatar";
+import { uploadImage } from "help/util";
 
 const Profile = (props) => {
   const user = useSelector((state) => state.user);
@@ -25,9 +25,6 @@ const Profile = (props) => {
   const [alterImgUrl, setAlterImgUrl] = useState(null);
   const [edit, setEdit] = useState(false);
   const dispatch = useDispatch();
-
-  const storage = getStorage();
-  const storageRef = ref(storage, `profile/${user.uid}`);
 
   //Logical Indicator
   const fullfilledUser = user.uid && user.profile;
@@ -173,8 +170,10 @@ const Profile = (props) => {
                     profile: { nickName: nickName, ski: ski, board: board },
                   })
                     .then(() => {
-                      if (img) uploadBytes(storageRef, img);
-                      dispatch(updatePictureUrl(alterImgUrl));
+                      if (img) {
+                        uploadImage(user, img);
+                        dispatch(updatePictureUrl(alterImgUrl));
+                      }
                     })
                     .then(() => {
                       alert("수정이 완료되었습니다.");

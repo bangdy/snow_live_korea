@@ -5,8 +5,8 @@ import { deepOrange } from "@mui/material/colors";
 import styled from "styled-components";
 
 const FitImg = styled.img`
-  width: 100%;
   height: 100%;
+  width: auto;
   object-fit: contain;
 `;
 

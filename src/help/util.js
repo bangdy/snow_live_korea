@@ -1,3 +1,6 @@
+import { getStorage, ref, uploadBytes } from "firebase/storage";
+import imageCompression from "browser-image-compression";
+
 export const getDate = (d) => {
   var date = d;
   var year = date.getFullYear();
@@ -38,3 +41,18 @@ export function imgLoad(url) {
     request.send();
   });
 }
+
+export const uploadImage = async (user, imageFile) => {
+  const storage = getStorage();
+  const storageRef = ref(storage, `profile/${user.uid}`);
+
+  const options = {
+    maxSizeMB: 0.01,
+    maxWidthOrHeight: 500,
+    useWebWorker: true,
+  };
+
+  const compressedFile = await imageCompression(imageFile, options);
+
+  await uploadBytes(storageRef, compressedFile);
+};
