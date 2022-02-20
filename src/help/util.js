@@ -1,4 +1,4 @@
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import imageCompression from "browser-image-compression";
 
 export const getDate = (d) => {
@@ -55,4 +55,12 @@ export const uploadImage = async (user, imageFile) => {
   const compressedFile = await imageCompression(imageFile, options);
 
   await uploadBytes(storageRef, compressedFile);
+};
+
+export const downloadImage = async (uid) => {
+  const storage = getStorage();
+  const storageRef = ref(storage, `profile/${uid}`);
+  const imgStorageUrl = await getDownloadURL(storageRef);
+  const image = await imgLoad(imgStorageUrl);
+  return URL.createObjectURL(image);
 };

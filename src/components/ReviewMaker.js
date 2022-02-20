@@ -16,9 +16,6 @@ const ReviewMaker = (props) => {
   const [score, setScore] = useState(3);
 
   const date = getDate(new Date());
-
-  console.log(date);
-
   return (
     <Box
       sx={{
@@ -61,7 +58,7 @@ const ReviewMaker = (props) => {
           rows={4}
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          defaultValue="이 곳에 다녀온 경험을 공유해주세요."
+          helperText="이 곳에 다녀온 경험을 공유해주세요."
           sx={{ width: "100%" }}
         />
         <Button
@@ -70,9 +67,9 @@ const ReviewMaker = (props) => {
           sx={{ alignSelf: "center" }}
           onClick={() => {
             let message;
-            updateDocL3("resorts", props.url, "review", date, user.uid, {
+            updateDocL3("resorts", props.url, "reviews", date, user.uid, {
               score: score,
-              createdAt: new Date(),
+              createdAt: new Date().getTime(),
               comment: comment,
             })
               .then((msg) => {
