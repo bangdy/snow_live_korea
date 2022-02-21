@@ -1,5 +1,5 @@
 import React from "react";
-import FullWidthTabs from "components/Tabs";
+import FullWidthTabs from "components/FullWidthTabs";
 import Profile from "page/Profile";
 
 const MyPage = (props) => {

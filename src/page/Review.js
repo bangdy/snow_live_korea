@@ -6,6 +6,8 @@ import ReviewMaker from "components/ReviewMaker";
 import ReviewCard from "components/ReviewCard";
 import { getDate } from "help/util";
 import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import SortTabs from "components/SortTabs";
 
 const Review = (props) => {
   const navigate = useNavigate();
@@ -13,7 +15,7 @@ const Review = (props) => {
 
   const date = getDate(new Date());
 
-  const isExist = reviews && Object.keys(reviews[date]).length > 0;
+  const isExist = reviews[date] && Object.keys(reviews[date]).length > 0;
 
   return (
     <Box
@@ -26,6 +28,14 @@ const Review = (props) => {
       }}>
       <span>리뷰 : {props.info.name}</span>
       <ReviewMaker url={props.info.url} />
+      <SortTabs />
+      <Divider sx={{ marginY: 2, width: "100%" }} />
+      <Typography
+        variant="h6"
+        color="text.secondary"
+        sx={{ alignSelf: "flex-start", marginBottom: 2 }}>
+        리뷰
+      </Typography>
       {isExist > 0 ? (
         Object.keys(reviews[date]).map((uid, i) => (
           <ReviewCard uid={uid} {...reviews[date][uid]} key={i} />
