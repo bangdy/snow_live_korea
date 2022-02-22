@@ -17,8 +17,8 @@ const Main = (props) => {
 
   return (
     <Stack spacing={2} direction="column" sx={{ alignItems: "center" }}>
-      {resorts.collection.map((data, i) => {
-        return <InfoCard key={i} {...data} />;
+      {Object.keys(resorts.collection).map((key, i) => {
+        return <InfoCard key={i} {...resorts.collection[key]} />;
       })}
       <Box>
         <Link to="/resort_editor" style={{ textDecoration: "none" }}>

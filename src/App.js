@@ -149,11 +149,13 @@ function App() {
               <Route path="/" element={<PageHOC name="Main" Component={<Main />} />} />
               <Route path="/login" element={<PageHOC name="Login" Component={<Login />} />} />
               <Route path="/my_page" element={<PageHOC name="MyPage" Component={<MyPage />} />} />
-              {resorts.collection.map((resortObj, i) => (
+              {Object.keys(resorts.collection).map((key, i) => (
                 <Route
                   key={i}
-                  path={`/${resortObj.info.url}`}
-                  element={<PageHOC name="Review" Component={<Review {...resortObj} />} />}
+                  path={`/${resorts.collection[key].info.url}`}
+                  element={
+                    <PageHOC name="Review" Component={<Review {...resorts.collection[key]} />} />
+                  }
                 />
               ))}
               <Route

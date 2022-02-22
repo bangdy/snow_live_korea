@@ -5,15 +5,18 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Rating from "@mui/material/Rating";
 import TextField from "@mui/material/TextField";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { updateDocL3 } from "help/firestore";
 import { getDate } from "help/util";
 import ProfileAvatar from "components/ProfileAvatar";
+import { getResortDocThunk } from "store/resorts";
 
 const ReviewMaker = (props) => {
   const user = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
   const [score, setScore] = useState(3);
+
+  const dispatch = useDispatch();
 
   const date = getDate(new Date());
   return (
@@ -65,20 +68,23 @@ const ReviewMaker = (props) => {
           variant="outlined"
           size="small"
           sx={{ alignSelf: "center" }}
-          onClick={() => {
+          onClick={async () => {
             let message;
-            updateDocL3("resorts", props.url, "reviews", date, user.uid, {
+            message = await updateDocL3("resorts", props.url, "reviews", date, user.uid, {
               score: score,
               createdAt: new Date().getTime(),
               comment: comment,
             })
               .then((msg) => {
                 message = msg;
+                dispatch(getResortDocThunk(props.url));
               })
               .catch((msg) => {
                 message = msg;
               })
-              .finally(() => alert(message));
+              .finally(() => {
+                alert(message);
+              });
           }}>
           리뷰하기
         </Button>
