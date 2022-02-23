@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
@@ -7,15 +7,37 @@ import ReviewCard from "components/ReviewCard";
 import { getDate } from "help/util";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
-import SortTabs from "components/SortTabs";
+import SortToggle from "components/SortToggle";
+import { getDoc } from "help/firestore";
+import { downloadImage } from "help/util";
 
 const Review = (props) => {
   const navigate = useNavigate();
   const { reviews } = props;
-
-  const date = getDate(new Date());
+  const date = getDate(new Date(new Date().setDate(new Date().getDate() - 1)));
 
   const isExist = reviews[date] && Object.keys(reviews[date]).length > 0;
+
+  const [keys, setKeys] = useState(Object.keys(reviews[date] ?? []));
+  const [users, setUsers] = useState({});
+
+  useEffect(() => {
+    const getUsers = async () => {
+      const t = {};
+      for (var uid of keys) {
+        const response = await getDoc("users", uid);
+        let preImgUrl;
+        try {
+          preImgUrl = await downloadImage(uid);
+        } catch (e) {
+          preImgUrl = null;
+        }
+        t[uid] = { ...response, preImgUrl: preImgUrl };
+      }
+      setUsers(t);
+    };
+    getUsers();
+  }, []);
 
   return (
     <Box
@@ -28,20 +50,38 @@ const Review = (props) => {
       }}>
       <span>리뷰 : {props.info.name}</span>
       <ReviewMaker url={props.info.url} />
-      <SortTabs />
+      <SortToggle
+        sx={{ alignSelf: "flex-start" }}
+        tabs={[
+          [
+            "최신순",
+            () => {
+              setKeys(
+                [...keys].sort(
+                  (a, b) => reviews[date][a]["createdAt"] - reviews[date][b]["createdAt"]
+                )
+              );
+            },
+          ],
+          ["공감순", () => {}],
+        ]}
+      />
       <Divider sx={{ marginY: 2, width: "100%" }} />
-      <Typography
-        variant="h6"
-        color="text.secondary"
-        sx={{ alignSelf: "flex-start", marginBottom: 2 }}>
-        리뷰
-      </Typography>
+
       {isExist > 0 ? (
-        Object.keys(reviews[date]).map((uid, i) => (
-          <ReviewCard uid={uid} {...reviews[date][uid]} key={i} />
-        ))
+        <>
+          <Typography
+            variant="h6"
+            color="text.secondary"
+            sx={{ alignSelf: "flex-start", marginBottom: 2 }}>
+            리뷰
+          </Typography>
+          {keys.map((uid, i) => (
+            <ReviewCard uid={uid} {...reviews[date][uid]} user={users?.[uid]} key={i} />
+          ))}
+        </>
       ) : (
-        <Typography variant="body2" color="text.secondary">
+        <Typography sx={{ marginY: 2 }} variant="body2" color="text.secondary">
           오늘의 리뷰가 없습니다
         </Typography>
       )}

@@ -12,7 +12,7 @@ const FitImg = styled.img`
 `;
 
 const ProfileAvatar = (props) => {
-  const { user, isChangigProfile, alterImgUrl, size, uid } = props;
+  const { user, isChangigProfile, alterImgUrl, size, uid, preImgUrl } = props;
   const [imageUrl, setImageUrl] = useState(null);
 
   let profile;
@@ -22,18 +22,20 @@ const ProfileAvatar = (props) => {
       const imgUrl = await downloadImage(uid);
       setImageUrl(imgUrl);
     };
-    if (uid) {
+    if (uid && !preImgUrl) {
       fetch();
     }
   }, []);
 
-  if (isChangigProfile) {
+  if (preImgUrl) {
+    profile = <FitImg src={preImgUrl} />;
+  } else if (isChangigProfile) {
     profile = <FitImg src={alterImgUrl} />;
   } else if (user?.pictureUrl) {
     profile = <FitImg src={user.pictureUrl} />;
   } else if (imageUrl) {
     profile = <FitImg src={imageUrl} />;
-  } else if (user) {
+  } else if (user?.profile) {
     profile = user.profile.nickName[0];
   } else {
     profile = null;

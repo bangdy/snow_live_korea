@@ -63,7 +63,6 @@ function App() {
       setLoading(true);
       return firebase.auth().onAuthStateChanged(
         (user) => {
-          console.log(user);
           if (user) {
             // signed in
             dispatch(setUid({ uid: user.uid, name: user.name }));
