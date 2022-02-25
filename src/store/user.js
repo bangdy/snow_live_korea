@@ -8,7 +8,7 @@ export const getProfileThunk = createAsyncThunk("GET_USER_DOC", async (uid) => {
 });
 
 export const getPictureThunk = createAsyncThunk("GET_PICTURE", async (uid) => {
-  const imageUrl = await downloadImage(uid);
+  const imageUrl = await downloadImage("profile", uid);
   return imageUrl;
 });
 

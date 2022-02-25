@@ -19,7 +19,7 @@ const ProfileAvatar = (props) => {
 
   useEffect(() => {
     const fetch = async () => {
-      const imgUrl = await downloadImage(uid);
+      const imgUrl = await downloadImage("profile", uid);
       setImageUrl(imgUrl);
     };
     if (uid && !preImgUrl) {

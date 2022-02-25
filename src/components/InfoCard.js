@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -7,14 +7,33 @@ import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
 import { Link } from "react-router-dom";
+import CardMedia from "@mui/material/CardMedia";
+import { downloadImage } from "help/util";
 
 const InfoCard = (props) => {
-  const [value, setValue] = useState(3);
   const { name, address, url } = props.info;
 
+  const [imageUrl, setImageUrl] = useState(null);
+
+  console.log(url);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const imgUrl = await downloadImage("resort", url + ".jpg");
+      setImageUrl(imgUrl);
+    };
+    fetch();
+  }, []);
+
   return (
-    <Card sx={{ width: "100%", textAlign: "center", flexGrow: 1, paddingX: 4 }}>
-      <CardContent>
+    <Card sx={{ width: "100%", textAlign: "center", flexGrow: 1, display: "flex" }}>
+      <CardMedia
+        component="img"
+        sx={{ width: 150, height: "auto", objectFit: "contain", marginLeft: 2 }}
+        image={imageUrl}
+        alt="Live from space album cover"
+      />
+      <CardContent sx={{ width: 350, textAlign: "left", paddingLeft: 4 }}>
         <Typography variant="h5" component="div">
           {name}
         </Typography>
@@ -25,23 +44,16 @@ const InfoCard = (props) => {
           direction="row"
           mt={2}
           spacing={2}
-          sx={{ alignItems: "center", justifyContent: "center" }}>
-          <Rating
-            name="simple-controlled"
-            value={value}
-            onChange={(event, newValue) => {
-              setValue(newValue);
-            }}
-            size="large"
-          />
+          sx={{ alignItems: "center", justifyContent: "flex-start" }}>
+          <Rating name="simple-controlled" value={3} readOnly size="large" />
           <Typography variant="span">(4.5 / 4명)</Typography>
         </Stack>
+        <Link to={`/${url}`} style={{ textDecoration: "none" }}>
+          <CardActions sx={{ display: "felx", flex: 1, justifyContent: "center" }}>
+            <Button size="small">리뷰하기</Button>
+          </CardActions>
+        </Link>
       </CardContent>
-      <Link to={`/${url}`} style={{ textDecoration: "none" }}>
-        <CardActions sx={{ display: "felx", flex: 1, justifyContent: "center" }}>
-          <Button size="small">리뷰하기</Button>
-        </CardActions>
-      </Link>
     </Card>
   );
 };

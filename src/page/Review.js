@@ -28,7 +28,7 @@ const Review = (props) => {
         const response = await getDoc("users", uid);
         let preImgUrl;
         try {
-          preImgUrl = await downloadImage(uid);
+          preImgUrl = await downloadImage("profile", uid);
         } catch (e) {
           preImgUrl = null;
         }

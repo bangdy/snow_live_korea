@@ -57,9 +57,9 @@ export const uploadImage = async (user, imageFile) => {
   await uploadBytes(storageRef, compressedFile);
 };
 
-export const downloadImage = async (uid) => {
+export const downloadImage = async (folder, file) => {
   const storage = getStorage();
-  const storageRef = ref(storage, `profile/${uid}`);
+  const storageRef = ref(storage, `${folder}/${file}`);
   const imgStorageUrl = await getDownloadURL(storageRef);
   const image = await imgLoad(imgStorageUrl);
   return URL.createObjectURL(image);
