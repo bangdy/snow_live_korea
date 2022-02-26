@@ -7,20 +7,24 @@ import DatePicker from "@mui/lab/DatePicker";
 import Chip from "@mui/material/Chip";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import koLocale from "date-fns/locale/ko";
 
 function moveDate(date, num) {
-  return new Date().setDate(date.getDate() + num);
+  return new Date(new Date().setDate(date.getDate() + num));
 }
 
 const DateNavigator = (props) => {
   const { date, setDate } = props;
 
   return (
-    <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
-      <Chip icon={<ArrowBackIosNewIcon />} />
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <Stack direction="row" spacing={3} sx={{ alignItems: "center" }}>
+      <Chip
+        label={<ArrowBackIosNewIcon sx={{ marginTop: 0.8 }} />}
+        onClick={() => setDate(moveDate(date, -1))}
+      />
+      <LocalizationProvider dateAdapter={AdapterDateFns} locale={koLocale}>
         <DatePicker
-          label="Basic example"
+          label="Date"
           value={date}
           onChange={(newValue) => {
             setDate(newValue);
@@ -28,7 +32,10 @@ const DateNavigator = (props) => {
           renderInput={(params) => <TextField {...params} />}
         />
       </LocalizationProvider>
-      <Chip icon={<ArrowForwardIosIcon />} />
+      <Chip
+        label={<ArrowForwardIosIcon sx={{ marginTop: 0.8 }} />}
+        onClick={() => setDate(moveDate(date, 1))}
+      />
     </Stack>
   );
 };
