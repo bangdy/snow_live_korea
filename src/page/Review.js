@@ -10,15 +10,21 @@ import Divider from "@mui/material/Divider";
 import SortToggle from "components/SortToggle";
 import { getDoc } from "help/firestore";
 import { downloadImage } from "help/util";
+import TextField from "@mui/material/TextField";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DatePicker from "@mui/lab/DatePicker";
+import DateNavigator from "components/DateNavigator";
 
 const Review = (props) => {
   const navigate = useNavigate();
   const { reviews } = props;
-  const date = getDate(new Date(new Date().setDate(new Date().getDate() - 1)));
+  const [date, setDate] = useState(new Date());
+  const dateString = getDate(date);
 
-  const isExist = reviews[date] && Object.keys(reviews[date]).length > 0;
+  const isExist = reviews[dateString] && Object.keys(reviews[dateString]).length > 0;
 
-  const [keys, setKeys] = useState(Object.keys(reviews[date] ?? []));
+  const [keys, setKeys] = useState(Object.keys(reviews[dateString] ?? []));
   const [users, setUsers] = useState({});
 
   useEffect(() => {
@@ -39,6 +45,8 @@ const Review = (props) => {
     getUsers();
   }, []);
 
+  const [value, setValue] = React.useState(null);
+
   return (
     <Box
       sx={{
@@ -50,6 +58,8 @@ const Review = (props) => {
       }}>
       <span>리뷰 : {props.info.name}</span>
       <ReviewMaker url={props.info.url} />
+      <DateNavigator date={date} setDate={setDate} />
+      <Divider sx={{ marginY: 2, width: "100%" }} />
       <SortToggle
         sx={{ alignSelf: "flex-start" }}
         tabs={[
@@ -58,7 +68,8 @@ const Review = (props) => {
             () => {
               setKeys(
                 [...keys].sort(
-                  (a, b) => reviews[date][a]["createdAt"] - reviews[date][b]["createdAt"]
+                  (a, b) =>
+                    reviews[dateString][a]["createdAt"] - reviews[dateString][b]["createdAt"]
                 )
               );
             },
@@ -66,6 +77,7 @@ const Review = (props) => {
           ["공감순", () => {}],
         ]}
       />
+
       <Divider sx={{ marginY: 2, width: "100%" }} />
 
       {isExist > 0 ? (
@@ -77,7 +89,7 @@ const Review = (props) => {
             리뷰
           </Typography>
           {keys.map((uid, i) => (
-            <ReviewCard uid={uid} {...reviews[date][uid]} user={users?.[uid]} key={i} />
+            <ReviewCard uid={uid} {...reviews[dateString][uid]} user={users?.[uid]} key={i} />
           ))}
         </>
       ) : (

@@ -15,8 +15,6 @@ const InfoCard = (props) => {
 
   const [imageUrl, setImageUrl] = useState(null);
 
-  console.log(url);
-
   useEffect(() => {
     const fetch = async () => {
       const imgUrl = await downloadImage("resort", url + ".jpg");
