@@ -10,10 +10,6 @@ import Divider from "@mui/material/Divider";
 import SortToggle from "components/SortToggle";
 import { getDoc } from "help/firestore";
 import { downloadImage } from "help/util";
-import TextField from "@mui/material/TextField";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DatePicker from "@mui/lab/DatePicker";
 import DateNavigator from "components/DateNavigator";
 
 const Review = (props) => {
@@ -23,9 +19,11 @@ const Review = (props) => {
   const dateString = getDate(date);
 
   const isExist = reviews[dateString] && Object.keys(reviews[dateString]).length > 0;
+  console.log(reviews[dateString]);
 
   const [keys, setKeys] = useState(Object.keys(reviews[dateString] ?? []));
   const [users, setUsers] = useState({});
+  console.log(keys);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -45,7 +43,7 @@ const Review = (props) => {
     getUsers();
   }, []);
 
-  const [value, setValue] = React.useState(null);
+  useEffect(() => setKeys(Object.keys(reviews[dateString] ?? [])), [date]);
 
   return (
     <Box

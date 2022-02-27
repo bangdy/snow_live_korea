@@ -24,6 +24,7 @@ const DateNavigator = (props) => {
       />
       <LocalizationProvider dateAdapter={AdapterDateFns} locale={koLocale}>
         <DatePicker
+          disableMaskedInput={true}
           label="Date"
           value={date}
           onChange={(newValue) => {

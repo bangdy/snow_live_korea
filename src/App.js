@@ -118,18 +118,20 @@ function App() {
   return (
     <Container maxWidth="md" sx={{ height: "100vh", flexGrow: 1 }}>
       <Header />
-      <Box sx={{ flexGrow: 1, marginX: "auto" }}>
-        <AppBar position="static" sx={{ display: "block", height: 70 }}>
-          <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Link to="/" style={{ textDecoration: "none" }}>
-              <Typography variant="h6" component="div" sx={{ color: "white" }}>
-                Snow Live
-              </Typography>
-            </Link>
-            {rightButton}
-          </Toolbar>
-        </AppBar>
-      </Box>
+      <AppBar
+        position="static"
+        sx={{ display: "block", height: 70 }}
+        position="sticky"
+        elevation={0}>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <Typography variant="h6" component="div" sx={{ color: "white" }}>
+              Snow Live
+            </Typography>
+          </Link>
+          {rightButton}
+        </Toolbar>
+      </AppBar>
       <Box
         sx={{
           display: "flex",
