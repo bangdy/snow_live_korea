@@ -9,18 +9,25 @@ import Stack from "@mui/material/Stack";
 import { Link } from "react-router-dom";
 import CardMedia from "@mui/material/CardMedia";
 import { downloadImage } from "help/util";
+import { useSelector, useDispatch } from "react-redux";
+import { saveImageUrl } from "store/resorts";
 
 const InfoCard = (props) => {
   const { name, address, url } = props.info;
+  const dispatch = useDispatch();
+  const resorts = useSelector((state) => state.resorts);
 
-  const [imageUrl, setImageUrl] = useState(null);
+  const [imageUrl, setImageUrl] = useState(resorts?.images[url]);
 
   useEffect(() => {
     const fetch = async () => {
       const imgUrl = await downloadImage("resort", url + ".jpg");
       setImageUrl(imgUrl);
+      dispatch(saveImageUrl({ url: url, imgUrl: imgUrl }));
     };
-    fetch();
+    if (resorts?.images[url] === undefined) {
+      fetch();
+    }
   }, []);
 
   return (

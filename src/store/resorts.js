@@ -17,15 +17,21 @@ export const resorts = createSlice({
   name: "resorts",
   initialState: {
     collection: {},
+    images: {},
   },
-  reducers: {},
+  reducers: {
+    saveImageUrl: (state, { payload }) => {
+      state.images = { ...state.images, [payload.url]: payload.imgUrl };
+    },
+  },
   extraReducers: {
     [getAllDocsThunk.fulfilled]: (state, { payload }) => {
       state.collection = payload;
     },
     [getResortDocThunk.fulfilled]: (state, { payload }) => {
-      console.log(payload["resort"]);
       state.collection = { ...state.collection, [payload["resort"]]: payload.response };
     },
   },
 });
+
+export const { saveImageUrl } = resorts.actions;

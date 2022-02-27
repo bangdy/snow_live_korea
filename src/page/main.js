@@ -12,7 +12,9 @@ const Main = (props) => {
   const resorts = useSelector((state) => state.resorts);
 
   useEffect(() => {
-    dispatch(getAllDocsThunk());
+    if (Object.keys(resorts).length === 0) {
+      dispatch(getAllDocsThunk());
+    }
   }, [dispatch]);
 
   return (

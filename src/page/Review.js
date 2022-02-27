@@ -23,7 +23,6 @@ const Review = (props) => {
 
   const [keys, setKeys] = useState(Object.keys(reviews[dateString] ?? []));
   const [users, setUsers] = useState({});
-  console.log(keys);
 
   useEffect(() => {
     const getUsers = async () => {
