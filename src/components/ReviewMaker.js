@@ -70,21 +70,18 @@ const ReviewMaker = (props) => {
           sx={{ alignSelf: "center" }}
           onClick={async () => {
             let message;
-            message = await updateDocL3("resorts", props.url, "reviews", date, user.uid, {
-              score: score,
-              createdAt: new Date().getTime(),
-              comment: comment,
-            })
-              .then((msg) => {
-                message = msg;
-                dispatch(getResortDocThunk(props.url));
-              })
-              .catch((msg) => {
-                message = msg;
-              })
-              .finally(() => {
-                alert(message);
+            try {
+              message = await updateDocL3("resorts", props.url, "reviews", date, user.uid, {
+                score: score,
+                createdAt: new Date().getTime(),
+                comment: comment,
+                resort: props.url,
               });
+              dispatch(getResortDocThunk(props.url));
+            } catch (e) {
+              message = e;
+            }
+            alert(message);
           }}>
           리뷰하기
         </Button>

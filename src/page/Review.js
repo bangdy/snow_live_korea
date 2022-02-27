@@ -11,15 +11,16 @@ import SortToggle from "components/SortToggle";
 import { getDoc } from "help/firestore";
 import { downloadImage } from "help/util";
 import DateNavigator from "components/DateNavigator";
+import { useSelector } from "react-redux";
 
 const Review = (props) => {
   const navigate = useNavigate();
-  const { reviews } = props;
+  const resorts = useSelector((state) => state.resorts.collection);
+  const reviews = resorts[props.info.url].reviews;
   const [date, setDate] = useState(new Date());
   const dateString = getDate(date);
 
   const isExist = reviews[dateString] && Object.keys(reviews[dateString]).length > 0;
-  console.log(reviews[dateString]);
 
   const [keys, setKeys] = useState(Object.keys(reviews[dateString] ?? []));
   const [users, setUsers] = useState({});
@@ -42,7 +43,7 @@ const Review = (props) => {
     getUsers();
   }, []);
 
-  useEffect(() => setKeys(Object.keys(reviews[dateString] ?? [])), [date]);
+  useEffect(() => setKeys(Object.keys(reviews[dateString] ?? [])), [date, reviews[dateString]]);
 
   return (
     <Box

@@ -16,9 +16,9 @@ export default function SortToggle(props) {
       exclusive
       onChange={handleChange}
       sx={props.sx}>
-      {props.tabs.map((i) => (
-        <ToggleButton value={i[0]} onClick={() => i[1]()}>
-          {i[0]}
+      {props.tabs.map((tab, j) => (
+        <ToggleButton value={tab[0]} onClick={() => tab[1]()} key={j}>
+          {tab[0]}
         </ToggleButton>
       ))}
     </ToggleButtonGroup>
