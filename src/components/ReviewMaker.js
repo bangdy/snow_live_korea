@@ -15,6 +15,7 @@ const ReviewMaker = (props) => {
   const user = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
   const [score, setScore] = useState(3);
+  const [focused, setFocused] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -36,55 +37,64 @@ const ReviewMaker = (props) => {
         mt={2}
         spacing={2}
         sx={{ alignItems: "flex-start", justifyContent: "center", padding: 2, flexGrow: 1 }}>
-        <Stack direction="row">
-          <ProfileAvatar user={user} size={40} />
-          <Typography
-            variant="subtitle1"
-            component="div"
-            sx={{
-              backgroundColor: "white",
-              padding: 0.5,
-            }}>
-            {user.profile.nickName}
-          </Typography>
-        </Stack>
-        <Rating
-          name="simple-controlled"
-          value={score}
-          onChange={(event, newValue) => setScore(newValue)}
-          size="large"
-        />
+        {focused && (
+          <>
+            <Stack direction="row">
+              <ProfileAvatar user={user} size={40} />
+              <Typography
+                variant="subtitle1"
+                component="div"
+                sx={{
+                  backgroundColor: "white",
+                  padding: 0.5,
+                }}>
+                {user.profile.nickName}
+              </Typography>
+            </Stack>
+
+            <Rating
+              name="simple-controlled"
+              value={score}
+              onChange={(event, newValue) => setScore(newValue)}
+              size="large"
+            />
+          </>
+        )}
         <TextField
           id="outlined-multiline-static"
           label="내용"
           multiline
-          rows={4}
+          rows={focused ? 4 : 1}
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           helperText="이 곳에 다녀온 경험을 공유해주세요."
           sx={{ width: "100%" }}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
         />
-        <Button
-          variant="outlined"
-          size="small"
-          sx={{ alignSelf: "center" }}
-          onClick={async () => {
-            let message;
-            try {
-              message = await updateDocL3("resorts", props.url, "reviews", date, user.uid, {
-                score: score,
-                createdAt: new Date().getTime(),
-                comment: comment,
-                resort: props.url,
-              });
-              dispatch(getResortDocThunk(props.url));
-            } catch (e) {
-              message = e;
-            }
-            alert(message);
-          }}>
-          리뷰하기
-        </Button>
+        {focused && (
+          <Button
+            variant="outlined"
+            size="small"
+            sx={{ alignSelf: "center" }}
+            onClick={async () => {
+              let message;
+              try {
+                message = await updateDocL3("resorts", props.url, "reviews", date, user.uid, {
+                  score: score,
+                  createdAt: new Date().getTime(),
+                  comment: comment,
+                  resort: props.url,
+                });
+                dispatch(getResortDocThunk(props.url));
+              } catch (e) {
+                message = e;
+              }
+              alert(message);
+            }}>
+            리뷰하기
+          </Button>
+        )}
       </Stack>
     </Box>
   );
