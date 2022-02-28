@@ -11,9 +11,11 @@ import CardMedia from "@mui/material/CardMedia";
 import { downloadImage } from "help/util";
 import { useSelector, useDispatch } from "react-redux";
 import { saveImageUrl } from "store/resorts";
+import { getDate } from "help/util";
 
 const InfoCard = (props) => {
   const { name, address, url } = props.info;
+  const reviews = props.reviews;
   const dispatch = useDispatch();
   const resorts = useSelector((state) => state.resorts);
 
@@ -29,6 +31,16 @@ const InfoCard = (props) => {
       fetch();
     }
   }, []);
+
+  const today = new Date();
+  const dateString = getDate(today);
+  const revieweesArr = Object.keys(reviews[dateString] ?? {});
+  const revieweeNum = revieweesArr.length;
+
+  const meanScore =
+    revieweeNum > 0
+      ? revieweesArr.reduce((acc, cur) => reviews[dateString][cur].score + acc, 0) / revieweeNum
+      : 0;
 
   return (
     <Card sx={{ width: "100%", textAlign: "center", flexGrow: 1, display: "flex" }}>
@@ -50,8 +62,8 @@ const InfoCard = (props) => {
           mt={2}
           spacing={2}
           sx={{ alignItems: "center", justifyContent: "flex-start" }}>
-          <Rating name="simple-controlled" value={3} readOnly size="large" />
-          <Typography variant="span">(4.5 / 4명)</Typography>
+          <Rating name="simple-controlled" value={meanScore ?? 0} readOnly size="large" />
+          <Typography variant="span">({revieweeNum}명)</Typography>
         </Stack>
         <Link to={`/${url}`} style={{ textDecoration: "none" }}>
           <CardActions sx={{ display: "felx", flex: 1, justifyContent: "center" }}>
