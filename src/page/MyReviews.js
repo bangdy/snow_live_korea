@@ -15,7 +15,6 @@ const MyReviews = (props) => {
         reviews.push(resorts[rst]["reviews"][d][user.uid]);
     })
   );
-  console.log(reviews);
 
   const isExist = reviews.length > 0;
 

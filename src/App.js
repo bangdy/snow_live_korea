@@ -18,7 +18,7 @@ import Typography from "@mui/material/Typography";
 import Login from "./page/Login";
 import Main from "./page/Main";
 import MyPage from "./page/MyPage";
-import Review from "./page/Review";
+import ResortReviews from "./page/ResortReviews";
 import ResortEditor from "./page/ResortEditor";
 import PageHOC from "components/PageHOC";
 import ProfileAvatar from "components/ProfileAvatar";
@@ -155,7 +155,10 @@ function App() {
                   key={i}
                   path={`/${resorts.collection[key].info.url}`}
                   element={
-                    <PageHOC name="Review" Component={<Review {...resorts.collection[key]} />} />
+                    <PageHOC
+                      name="Review"
+                      Component={<ResortReviews {...resorts.collection[key]} />}
+                    />
                   }
                 />
               ))}

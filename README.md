@@ -25,3 +25,8 @@
   - firebase functions 를 이용하여, kakao auth를 통해, 카카오계정 번호를 얻어서 fireabse auth 를 진행하느 방법
 - Firebase storage 에 cors 설정 추가하는 방법
   - https://stove99.github.io/etc/2021/06/09/firebase-storage-cors-setting/
+
+- Custom Hook 을 이용해서 textfield 에 auto focus 하는 방법
+  - https://stackoverflow.com/questions/28889826/how-to-set-focus-on-an-input-field-after-rendering
+
+- 특정 행동하기 전에 사용자에게 의견을 묻은 방법 : window.confirm(msg) 사용

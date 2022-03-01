@@ -11,11 +11,14 @@ import SortToggle from "components/SortToggle";
 import { getDoc } from "help/firestore";
 import { downloadImage } from "help/util";
 import DateNavigator from "components/DateNavigator";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { getResortDocThunk } from "store/resorts";
 
-const Review = (props) => {
+const ResortReviews = (props) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const resorts = useSelector((state) => state.resorts.collection);
+  const currentUserUid = useSelector((state) => state.user.uid);
   const reviews = resorts[props.info.url].reviews;
   const [date, setDate] = useState(new Date());
   const dateString = getDate(date);
@@ -24,6 +27,8 @@ const Review = (props) => {
 
   const [keys, setKeys] = useState(Object.keys(reviews[dateString] ?? []));
   const [users, setUsers] = useState({});
+
+  const [beforeObj, setBeforeObj] = useState(null);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -41,10 +46,17 @@ const Review = (props) => {
       setUsers(t);
     };
     getUsers();
+    dispatch(getResortDocThunk(props.info.url));
   }, []);
 
   useEffect(() => setKeys(Object.keys(reviews[dateString] ?? [])), [date, reviews[dateString]]);
 
+  //Logical Indicator
+  const showReviewMaker =
+    beforeObj ||
+    (!Object.keys(reviews?.[dateString] ?? {}).includes(currentUserUid) &&
+      dateString === getDate(new Date()));
+  // 수정 중이 아니고, 내 리뷰가 당일에 없고, 오늘 일때
   return (
     <Box
       sx={{
@@ -55,8 +67,10 @@ const Review = (props) => {
         flex: 1,
       }}>
       <span>리뷰 : {props.info.name}</span>
-      <ReviewMaker url={props.info.url} />
       <DateNavigator date={date} setDate={setDate} />
+      {showReviewMaker && (
+        <ReviewMaker url={props.info.url} beforeObj={beforeObj} dateString={dateString} />
+      )}
       <Divider sx={{ marginY: 2, width: "100%" }} />
       <SortToggle
         sx={{ alignSelf: "flex-start" }}
@@ -87,7 +101,15 @@ const Review = (props) => {
             리뷰
           </Typography>
           {keys.map((uid, i) => (
-            <ReviewCard uid={uid} {...reviews[dateString][uid]} user={users?.[uid]} key={i} />
+            <ReviewCard
+              uid={uid}
+              {...reviews[dateString][uid]}
+              user={users?.[uid]}
+              key={i}
+              setBeforeObj={setBeforeObj}
+              reviewPage
+              resort={props.info.url}
+            />
           ))}
         </>
       ) : (
@@ -100,4 +122,4 @@ const Review = (props) => {
   );
 };
 
-export default Review;
+export default ResortReviews;

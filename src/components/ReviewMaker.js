@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -7,19 +7,35 @@ import Rating from "@mui/material/Rating";
 import TextField from "@mui/material/TextField";
 import { useSelector, useDispatch } from "react-redux";
 import { updateDocL3 } from "help/firestore";
-import { getDate } from "help/util";
 import ProfileAvatar from "components/ProfileAvatar";
 import { getResortDocThunk } from "store/resorts";
+import { useFocus } from "help/customHooks";
 
 const ReviewMaker = (props) => {
+  const { beforeObj, dateString } = props;
+  const [inputRef, setInputFocus] = useFocus();
+
   const user = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
-  const [score, setScore] = useState(3);
+  const [score, setScore] = useState(null);
   const [focused, setFocused] = useState(false);
 
   const dispatch = useDispatch();
 
-  const date = getDate(new Date());
+  useEffect(() => {
+    setScore(beforeObj?.score ?? null);
+    setComment(beforeObj?.comment ?? "");
+  }, [beforeObj]);
+
+  useEffect(() => {
+    setComment("");
+    setScore(null);
+    setFocused(false);
+  }, [dateString]);
+
+  //Logical Indicator
+  const noShowForReview = comment.length === 0 && !score;
+
   return (
     <Box
       sx={{
@@ -37,40 +53,43 @@ const ReviewMaker = (props) => {
         mt={2}
         spacing={2}
         sx={{ alignItems: "flex-start", justifyContent: "center", padding: 2, flexGrow: 1 }}>
-        {focused && (
-          <>
-            <Stack direction="row">
-              <ProfileAvatar user={user} size={40} />
-              <Typography
-                variant="subtitle1"
-                component="div"
-                sx={{
-                  backgroundColor: "white",
-                  padding: 0.5,
-                }}>
-                {user.profile.nickName}
-              </Typography>
-            </Stack>
+        <>
+          <Stack direction="row">
+            <ProfileAvatar user={user} size={40} />
+            <Typography
+              variant="subtitle1"
+              component="div"
+              sx={{
+                backgroundColor: "white",
+                padding: 0.5,
+              }}>
+              {user.profile.nickName}
+            </Typography>
+          </Stack>
 
-            <Rating
-              name="simple-controlled"
-              value={score}
-              onChange={(event, newValue) => setScore(newValue)}
-              size="large"
-            />
-          </>
-        )}
+          <Rating
+            name="simple-controlled"
+            value={score}
+            onChange={(event, newValue) => {
+              setScore(newValue);
+              setInputFocus();
+            }}
+            size="large"
+          />
+        </>
+
         <TextField
           id="outlined-multiline-static"
           label="내용"
           multiline
-          rows={focused ? 4 : 1}
+          rows={focused ? 5 : 2}
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           helperText="이 곳에 다녀온 경험을 공유해주세요."
           sx={{ width: "100%" }}
           onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
+          onBlur={() => noShowForReview && setFocused(false)}
+          inputRef={inputRef}
         />
         {focused && (
           <Button
@@ -79,16 +98,28 @@ const ReviewMaker = (props) => {
             sx={{ alignSelf: "center" }}
             onClick={async () => {
               let message;
-              try {
-                message = await updateDocL3("resorts", props.url, "reviews", date, user.uid, {
-                  score: score,
-                  createdAt: new Date().getTime(),
-                  comment: comment,
-                  resort: props.url,
-                });
-                dispatch(getResortDocThunk(props.url));
-              } catch (e) {
-                message = e;
+              if (score && comment) {
+                try {
+                  message = await updateDocL3(
+                    "resorts",
+                    props.url,
+                    "reviews",
+                    dateString,
+                    user.uid,
+                    {
+                      score: score,
+                      createdAt: new Date().getTime(),
+                      comment: comment,
+                      resort: props.url,
+                    }
+                  );
+                  dispatch(getResortDocThunk(props.url));
+                } catch (e) {
+                  message = e;
+                }
+              } else {
+                const notInput = score ? "리뷰" : "점수";
+                message = notInput + "가 입력되지 않았습니다.";
               }
               alert(message);
             }}>

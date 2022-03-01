@@ -1,5 +1,6 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
+import { deleteField } from "firebase/firestore";
 
 export const createDoc = async (col, uid, data) => {
   const docRef = firebase.firestore().collection(col).doc(uid);
@@ -46,6 +47,20 @@ export const updateDocL3 = async (col, docId, l1, l2, l3, updatedObj) => {
   try {
     await firebase.firestore().runTransaction(async (transaction) => {
       transaction.update(doc, `${l1}.${l2}.${l3}`, updatedObj);
+    });
+    return "Success";
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
+
+export const deleteDocL3 = async (col, docId, l1, l2, l3) => {
+  const doc = await firebase.firestore().collection(col).doc(docId);
+
+  try {
+    const result = await doc.update({
+      [`${l1}.${l2}.${l3}`]: firebase.firestore.FieldValue.delete(),
     });
     return "Success";
   } catch (err) {
