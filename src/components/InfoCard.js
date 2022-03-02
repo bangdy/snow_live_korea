@@ -12,6 +12,22 @@ import { downloadImage } from "help/util";
 import { useSelector, useDispatch } from "react-redux";
 import { saveImageUrl } from "store/resorts";
 import { getDate } from "help/util";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton";
+import { styled } from "@mui/material/styles";
+import TimeLine from "./TimeLine";
+
+const ExpandMore = styled((props) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+  marginLeft: "auto",
+  transition: theme.transitions.create("transform", {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
 
 const InfoCard = (props) => {
   const { name, address, url } = props.info;
@@ -20,6 +36,11 @@ const InfoCard = (props) => {
   const resorts = useSelector((state) => state.resorts);
 
   const [imageUrl, setImageUrl] = useState(resorts?.images[url]);
+  const [expanded, setExpanded] = useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
 
   useEffect(() => {
     const fetch = async () => {
@@ -43,34 +64,48 @@ const InfoCard = (props) => {
       : 0;
 
   return (
-    <Card sx={{ width: "100%", textAlign: "center", flexGrow: 1, display: "flex" }}>
-      <CardMedia
-        component="img"
-        sx={{ width: 150, height: "auto", objectFit: "contain", marginLeft: 2 }}
-        image={imageUrl}
-        alt="Live from space album cover"
-      />
-      <CardContent sx={{ width: 350, textAlign: "left", paddingLeft: 4 }}>
-        <Typography variant="h5" component="div">
-          {name}
-        </Typography>
-        <Typography variant="body2" mt={2}>
-          {address}
-        </Typography>
-        <Stack
-          direction="row"
-          mt={2}
-          spacing={2}
-          sx={{ alignItems: "center", justifyContent: "flex-start" }}>
-          <Rating name="simple-controlled" value={meanScore ?? 0} readOnly size="large" />
-          <Typography variant="span">({revieweeNum}명)</Typography>
-        </Stack>
-        <Link to={`/${url}`} style={{ textDecoration: "none" }}>
-          <CardActions sx={{ display: "felx", flex: 1, justifyContent: "center" }}>
-            <Button size="small">리뷰하기</Button>
-          </CardActions>
-        </Link>
-      </CardContent>
+    <Card sx={{ width: "100%", textAlign: "center", flexGrow: 1 }}>
+      <Stack direction="row">
+        <CardMedia
+          component="img"
+          sx={{ width: 150, height: "auto", objectFit: "contain", marginLeft: 2 }}
+          image={imageUrl}
+          alt="Live from space album cover"
+        />
+        <CardContent sx={{ width: 350, textAlign: "left", paddingLeft: 4 }}>
+          <Typography variant="h5" component="div">
+            {name}
+          </Typography>
+          <Typography variant="body2" mt={2}>
+            {address}
+          </Typography>
+          <Stack
+            direction="row"
+            mt={2}
+            spacing={2}
+            sx={{ alignItems: "center", justifyContent: "flex-start" }}>
+            <Rating name="simple-controlled" value={meanScore ?? 0} readOnly size="large" />
+            <Typography variant="span">({revieweeNum}명)</Typography>
+          </Stack>
+          <Link to={`/${url}`} style={{ textDecoration: "none" }}>
+            <CardActions sx={{ display: "felx", flex: 1, justifyContent: "center" }}>
+              <Button size="small">리뷰하기</Button>
+            </CardActions>
+          </Link>
+        </CardContent>
+      </Stack>
+      <CardActions disableSpacing>
+        <ExpandMore
+          expand={expanded}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          aria-label="show more">
+          <ExpandMoreIcon />
+        </ExpandMore>
+      </CardActions>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <TimeLine time={props.info} />
+      </Collapse>
     </Card>
   );
 };

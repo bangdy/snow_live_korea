@@ -59,7 +59,7 @@ export const deleteDocL3 = async (col, docId, l1, l2, l3) => {
   const doc = await firebase.firestore().collection(col).doc(docId);
 
   try {
-    const result = await doc.update({
+    await doc.update({
       [`${l1}.${l2}.${l3}`]: firebase.firestore.FieldValue.delete(),
     });
     return "Success";

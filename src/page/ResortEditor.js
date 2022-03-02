@@ -3,10 +3,10 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useNavigate, useLocation } from "react-router-dom";
-
 import { ResortFactory } from "assets/ResortFactory";
 import Button from "@mui/material/Button";
 import { updateDoc, createDoc } from "help/firestore";
+import TimePickerPack from "components/TimePickerPack";
 
 const ResortEditor = (props) => {
   const navigate = useNavigate();
@@ -16,11 +16,12 @@ const ResortEditor = (props) => {
 
   //Logical Indicator
   const forEdit = resort.getObject.url !== undefined;
-
   const onTextChangeHandler = (e) => {
     resort.update(e.target.id, e.target.value);
     e.target.value = resort[e.target.id];
   };
+
+  const timesArr = Object.keys(resort.getObject).filter((i) => i[0] === "t");
 
   return (
     <Box
@@ -67,6 +68,11 @@ const ResortEditor = (props) => {
           />
         </Grid>
       </Grid>
+      {timesArr.map((t, i) => (
+        <Grid item xs={12} sm={12} mt={2} sx={{ width: "100%" }} key={i}>
+          <TimePickerPack id={t} resortFactory={resort} />
+        </Grid>
+      ))}
       <Button
         onClick={() => {
           const dbFunction = forEdit ? updateDoc : createDoc;
