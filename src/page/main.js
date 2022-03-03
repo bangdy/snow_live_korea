@@ -18,7 +18,10 @@ const Main = (props) => {
   }, [dispatch]);
 
   return (
-    <Stack spacing={2} direction="column" sx={{ alignItems: "center" }}>
+    <Stack
+      spacing={2}
+      direction="column"
+      sx={{ alignItems: "center", width: "100%", textAlign: "center", flexGrow: 1 }}>
       {Object.keys(resorts.collection).map((key, i) => {
         return <InfoCard key={i} {...resorts.collection[key]} />;
       })}

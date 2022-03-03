@@ -34,6 +34,7 @@ const InfoCard = (props) => {
   const reviews = props.reviews;
   const dispatch = useDispatch();
   const resorts = useSelector((state) => state.resorts);
+  const isMobile = useSelector((state) => state.user.isMobile);
 
   const [imageUrl, setImageUrl] = useState(resorts?.images[url]);
   const [expanded, setExpanded] = useState(false);
@@ -64,11 +65,11 @@ const InfoCard = (props) => {
       : 0;
 
   return (
-    <Card sx={{ width: "100%", textAlign: "center", flexGrow: 1 }}>
-      <Stack direction="row">
+    <Card>
+      <Stack direction={isMobile ? "column" : "row"} sx={isMobile && { alignItems: "center" }}>
         <CardMedia
           component="img"
-          sx={{ width: 150, height: "auto", objectFit: "contain", marginLeft: 2 }}
+          sx={{ width: "35%", height: "auto", objectFit: "contain", marginLeft: 2 }}
           image={imageUrl}
           alt="Live from space album cover"
         />

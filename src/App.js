@@ -7,7 +7,7 @@ import { Route, Routes, Link } from "react-router-dom";
 import kakaoAuth from "help/kakaoAuth";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import { setUid, getProfileThunk, getPictureThunk } from "store/user";
+import { setUid, getProfileThunk, getPictureThunk, setMobile } from "store/user";
 import { getAllDocsThunk } from "store/resorts";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
@@ -86,6 +86,18 @@ function App() {
 
     return () => unsubscribe();
   }, [dispatch]);
+
+  const handleResize = () => {
+    if (window.innerWidth < 500) {
+      dispatch(setMobile(true));
+    } else {
+      dispatch(setMobile(false));
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+  }, [window.addEventListener]);
 
   let rightButton;
 
