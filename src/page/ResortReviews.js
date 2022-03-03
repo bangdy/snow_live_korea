@@ -108,7 +108,7 @@ const ResortReviews = (props) => {
               key={i}
               setBeforeObj={setBeforeObj}
               reviewPage
-              resort={props.info.url}
+              resortInfo={props.info}
             />
           ))}
         </>

@@ -12,7 +12,7 @@ const MyReviews = (props) => {
   Object.keys(resorts).forEach((rst) =>
     Object.keys(resorts[rst]["reviews"]).forEach((d) => {
       if (resorts[rst]["reviews"][d]?.[user.uid])
-        reviews.push(resorts[rst]["reviews"][d][user.uid]);
+        reviews.push({ ...resorts[rst]["reviews"][d][user.uid], resortInfo: resorts[rst].info });
     })
   );
 
@@ -36,7 +36,7 @@ const MyReviews = (props) => {
             나의 리뷰
           </Typography>
           {reviews.map((rev, i) => (
-            <ReviewCard {...rev} key={i} user={user} uid={user.uid} />
+            <ReviewCard {...rev} key={i} user={user} uid={user.uid} resortInfo={rev.resortInfo} />
           ))}
         </>
       ) : (

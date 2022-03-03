@@ -18,11 +18,13 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useDispatch } from "react-redux";
 import { getResortDocThunk } from "store/resorts";
 import { getDate } from "help/util";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
 
 const timeFormat = "YY.MM.DD HH:mm, (ddd)";
 
 const ReviewCard = (props) => {
-  const { uid, comment, score, createdAt, user, setBeforeObj, reviewPage, resort } = props;
+  const { uid, comment, score, createdAt, user, setBeforeObj, reviewPage, resortInfo } = props;
 
   const [anchorEl, setAnchorEl] = React.useState(false);
 
@@ -81,8 +83,14 @@ const ReviewCard = (props) => {
                   let message;
                   if (window.confirm("정말 리뷰를 지우시겠습니까?")) {
                     try {
-                      message = await deleteDocL3("resorts", resort, "reviews", dateString, uid);
-                      dispatch(getResortDocThunk(resort));
+                      message = await deleteDocL3(
+                        "resorts",
+                        resortInfo.url,
+                        "reviews",
+                        dateString,
+                        uid
+                      );
+                      dispatch(getResortDocThunk(resortInfo.url));
                     } catch (e) {
                       message = e;
                     }
@@ -99,7 +107,12 @@ const ReviewCard = (props) => {
         }
       />
       <CardContent>
-        <Rating name="simple-controlled" value={score} size="large" readOnly />
+        <Stack direction="row" sx={{ justifyContent: "space-between" }} mb={2}>
+          <Rating name="simple-controlled" value={score} size="large" readOnly />
+          {!reviewPage && (
+            <Chip label={resortInfo.name} size="small" color="primary" variant="outlined" />
+          )}
+        </Stack>
         <Typography variant="body2" color="text.secondary">
           {comment}
         </Typography>
