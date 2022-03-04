@@ -93,8 +93,15 @@ const Profile = (props) => {
             justifyContent: "center",
             backgroundColor: "white",
           }}>
-          <Box sx={{ width: "250px", height: "250px", margin: "auto", border: 1 }}>
-            <AvatarImageCropper apply={onImageChange} />
+          <Box
+            sx={{
+              width: "250px",
+              height: "250px",
+              margin: "auto",
+              border: 1,
+              backgroundImage: `url(${img && window.URL.createObjectURL(img)})`,
+            }}>
+            <AvatarImageCropper apply={onImageChange} noWaterMark={Boolean(img)} />
           </Box>
           <Stack direction="row" sx={{ justifyContent: "space-around", width: 350, marginTop: 2 }}>
             <Button variant="outlined" onClick={handleClose}>
@@ -190,7 +197,13 @@ const Profile = (props) => {
             </>
           ) : (
             <>
-              <Button variant="contained" onClick={() => setEdit(!edit)}>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setEdit(!edit);
+                  setAlterImgUrl(null);
+                  setImg(null);
+                }}>
                 수정하기
               </Button>
               <Button variant="outlined" onClick={logoutRequest}>
