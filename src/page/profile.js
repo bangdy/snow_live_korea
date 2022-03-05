@@ -178,7 +178,7 @@ const Profile = (props) => {
                   })
                     .then(() => {
                       if (img) {
-                        uploadImage(user, img);
+                        uploadImage("profile", user.uid, img);
                         dispatch(updatePictureUrl(alterImgUrl));
                       }
                     })

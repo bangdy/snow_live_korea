@@ -45,7 +45,7 @@ const InfoCard = (props) => {
 
   useEffect(() => {
     const fetch = async () => {
-      const imgUrl = await downloadImage("resort", url + ".jpg");
+      const imgUrl = await downloadImage("resort", url);
       setImageUrl(imgUrl);
       dispatch(saveImageUrl({ url: url, imgUrl: imgUrl }));
     };

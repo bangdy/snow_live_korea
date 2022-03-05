@@ -42,9 +42,9 @@ export function imgLoad(url) {
   });
 }
 
-export const uploadImage = async (user, imageFile) => {
+export const uploadImage = async (folder, fileName, imageFile) => {
   const storage = getStorage();
-  const storageRef = ref(storage, `profile/${user.uid}`);
+  const storageRef = ref(storage, `${folder}/${fileName}`);
 
   const options = {
     maxSizeMB: 0.01,
