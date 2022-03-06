@@ -13,7 +13,7 @@ import Stack from "@mui/material/Stack";
 import ImageEditorBox from "components/ImageEditorBox";
 import { uploadImage } from "help/util";
 import { useDispatch, useSelector } from "react-redux";
-import { saveImageUrl } from "store/resorts";
+import { saveImageUrl, getResortDocThunk } from "store/resorts";
 
 const ResortEditor = (props) => {
   const [img, setImg] = useState(null);
@@ -26,7 +26,6 @@ const ResortEditor = (props) => {
   const resortObj = location.state;
   const resort = new ResortFactory(resortObj);
   const resortImg = useSelector((state) => state.resorts.images?.[resort.url]);
-  console.log(resortImg);
 
   //Logical Indicator
   const forEdit = resort.getObject.url !== undefined;
@@ -176,8 +175,11 @@ const ResortEditor = (props) => {
             if (!img || window.confirm("리조트 이미지 사진이 변경됩니다. 진행하시겠습니까")) {
               try {
                 message = await dbFunction("resorts", resort.url, { info: resort.getObject });
-                img && (await uploadImage("resort", resort.url, img));
-                dispatch(saveImageUrl({ url: resort.url, imgUrl: alterImgUrl }));
+                dispatch(getResortDocThunk(resort.url));
+                if (img) {
+                  await uploadImage("resort", resort.url, img);
+                  dispatch(saveImageUrl({ url: resort.url, imgUrl: alterImgUrl }));
+                }
               } catch (e) {
                 message = e;
               }
@@ -185,6 +187,7 @@ const ResortEditor = (props) => {
               message = "최소되었습니다.";
             }
             alert(message);
+            navigate("/");
           }}>
           {forEdit ? "수정하기" : "만들기"}
         </Button>
