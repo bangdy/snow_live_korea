@@ -30,3 +30,19 @@
   - https://stackoverflow.com/questions/28889826/how-to-set-focus-on-an-input-field-after-rendering
 
 - 특정 행동하기 전에 사용자에게 의견을 묻은 방법 : window.confirm(msg) 사용
+
+- 특정 component 의 width 를 동적으로 얻는 방법
+
+  - https://thewebdev.info/2021/05/24/how-to-get-the-width-of-an-element-in-a-react-component/
+
+  - 사용 : src/components/ImageEditorBox.js
+
+    - ```javascript
+      const myContainer = useRef(null);
+      
+        useEffect(() => {
+          setWidth(myContainer.current?.offsetWidth);
+        }, [myContainer.current?.offsetWidth]);
+      ```
+
+      

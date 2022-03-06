@@ -130,11 +130,7 @@ function App() {
   return (
     <Container maxWidth="md" sx={{ height: "100vh", flexGrow: 1 }}>
       <Header />
-      <AppBar
-        position="static"
-        sx={{ display: "block", height: 70 }}
-        position="sticky"
-        elevation={0}>
+      <AppBar position="fixed" sx={{ height: 70 }} elevation={0}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Link to="/" style={{ textDecoration: "none" }}>
             <Typography variant="h6" component="div" sx={{ color: "white" }}>
@@ -153,6 +149,7 @@ function App() {
           marginTop: 1,
           maxWidth: "500px",
           width: "100%",
+          marginTop: "70px",
         }}>
         <>
           {loading ? (

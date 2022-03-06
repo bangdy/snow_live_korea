@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -54,10 +54,6 @@ const ResortEditor = (props) => {
     setOpen(true);
   };
 
-  const myContainer = useRef(null);
-
-  useEffect(() => {}, [myContainer.current?.offsetWidth]);
-
   const style = {
     position: "absolute",
     top: "50%",
@@ -112,8 +108,7 @@ const ResortEditor = (props) => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-        }}
-        ref={myContainer}>
+        }}>
         <Grid container spacing={2} mb={2}>
           <ImageEditorBox
             img={img}
