@@ -9,6 +9,8 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import kImage from "../assets/kakao_login_medium.png";
+import { setLoading } from "store/user";
+import { useDispatch } from "react-redux";
 
 function Copyright(props) {
   return (
@@ -26,9 +28,12 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn(props) {
+  const dispatch = useDispatch();
+
   const redirectUri = window.location.protocol + "//" + window.location.host;
 
   const onClickToAuthorize = () => {
+    dispatch(setLoading(true));
     Kakao.Auth.authorize({
       redirectUri: redirectUri,
     }).catch((err) => console.log(err));

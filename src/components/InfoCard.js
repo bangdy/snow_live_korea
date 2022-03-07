@@ -49,10 +49,10 @@ const InfoCard = (props) => {
       setImageUrl(imgUrl);
       dispatch(saveImageUrl({ url: url, imgUrl: imgUrl }));
     };
-    if (resorts?.images[url] === undefined) {
+    if (!resorts?.images[url]) {
       fetch();
     }
-  }, []);
+  }, [dispatch]);
 
   const today = new Date();
   const dateString = getDate(today);

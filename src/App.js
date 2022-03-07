@@ -3,11 +3,11 @@ import initFirebase from "./help/firebaseConfig";
 import styled from "styled-components";
 import Container from "@mui/material/Container";
 import { useSelector, useDispatch } from "react-redux";
-import { Route, Routes, Link } from "react-router-dom";
+import { Route, Routes, Link, useNavigate } from "react-router-dom";
 import kakaoAuth from "help/kakaoAuth";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import { setUid, getProfileThunk, getPictureThunk, setMobile } from "store/user";
+import { setUid, getProfileThunk, getPictureThunk, setMobile, setLoading } from "store/user";
 import { getAllDocsThunk } from "store/resorts";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
@@ -22,6 +22,7 @@ import ResortReviews from "./page/ResortReviews";
 import ResortEditor from "./page/ResortEditor";
 import PageHOC from "components/PageHOC";
 import ProfileAvatar from "components/ProfileAvatar";
+import Stack from "@mui/material/Stack";
 
 initFirebase();
 
@@ -38,47 +39,47 @@ const Header = styled.div`
 
 function App() {
   const user = useSelector((state) => state.user);
+  const loading = user.loading;
   const resorts = useSelector((state) => state.resorts);
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const redirectUri = window.location.protocol + "//" + window.location.host;
     const getUser = async (kacode) => {
       if (kacode) {
-        return await kakaoAuth(kacode, redirectUri);
+        return kakaoAuth(kacode, redirectUri);
       }
     };
     const kakaoAuthCode = window.location.search.split("=")[1];
     if (kakaoAuthCode) {
-      setLoading(true);
-      getUser(kakaoAuthCode).then(() => setLoading(false));
-      window.history.replaceState(null, null, redirectUri);
+      dispatch(setLoading(true));
+      getUser(kakaoAuthCode).then((r) => navigate("/"));
     }
   }, [dispatch]);
 
   useEffect(() => {
     const authStateListener = () => {
-      setLoading(true);
+      dispatch(setLoading(true));
       return firebase.auth().onAuthStateChanged(
         (user) => {
           if (user) {
             // signed in
             dispatch(setUid({ uid: user.uid, name: user.name }));
-            dispatch(getAllDocsThunk());
-            dispatch(getPictureThunk(user.uid));
-            dispatch(getProfileThunk(user.uid)).then(() => setLoading(false));
+            dispatch(getPictureThunk(user.uid)).then(() =>
+              dispatch(getAllDocsThunk()).then(() => dispatch(setLoading(false)))
+            );
+            dispatch(getProfileThunk(user.uid));
           } else {
             // signed out
             console.log("fail");
-            setLoading(false);
           }
         },
         (error) => {
           // error
           console.log(error);
-          setLoading(false);
+          dispatch(setLoading(false));
         }
       );
     };
@@ -146,14 +147,24 @@ function App() {
           justifyContent: "center",
           alignContent: "center",
           marginX: "auto",
-          marginTop: 1,
           maxWidth: "500px",
           width: "100%",
-          marginTop: "70px",
+          paddingTop: "70px",
+          height: loading ? "50%" : null,
         }}>
         <>
           {loading ? (
-            <CircularProgress mt={3} />
+            <Stack
+              mt={2}
+              direction="column"
+              sx={{
+                flexBasis: 1,
+                alignSelf: "stretch",
+                justifyContent: "center",
+                alignItems: "center",
+              }}>
+              <CircularProgress color="success" size={100} />
+            </Stack>
           ) : (
             <Routes>
               <Route path="/" element={<PageHOC name="Main" Component={<Main />} />} />

@@ -4,18 +4,10 @@ import InfoCard from "components/InfoCard";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import { useSelector, useDispatch } from "react-redux";
-import { getAllDocsThunk } from "store/resorts";
+import { useSelector } from "react-redux";
 
 const Main = (props) => {
-  const dispatch = useDispatch();
   const resorts = useSelector((state) => state.resorts);
-
-  useEffect(() => {
-    if (Object.keys(resorts).length === 0) {
-      dispatch(getAllDocsThunk());
-    }
-  }, [dispatch]);
 
   return (
     <Stack

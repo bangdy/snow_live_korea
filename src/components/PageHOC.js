@@ -29,7 +29,7 @@ const PageHOC = ({ Component, name }) => {
       default:
         break;
     }
-  }, [location]);
+  }, [location, isLogin]);
 
   return Component;
 };

@@ -20,6 +20,7 @@ export const user = createSlice({
     profile: null,
     pictureUrl: null,
     isMobile: false,
+    loading: true,
   },
   reducers: {
     setUid: (state, { payload }) => {
@@ -40,6 +41,9 @@ export const user = createSlice({
     setMobile: (state, { payload }) => {
       state.isMobile = payload;
     },
+    setLoading: (state, { payload }) => {
+      state.loading = payload;
+    },
   },
   extraReducers: {
     [getProfileThunk.fulfilled]: (state, { payload }) => {
@@ -51,4 +55,5 @@ export const user = createSlice({
   },
 });
 
-export const { setUid, logout, updateProfile, updatePictureUrl, setMobile } = user.actions;
+export const { setUid, logout, updateProfile, updatePictureUrl, setMobile, setLoading } =
+  user.actions;
