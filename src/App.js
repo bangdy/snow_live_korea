@@ -72,8 +72,9 @@ function App() {
             );
             dispatch(getProfileThunk(user.uid));
           } else {
-            // signed out
+            // not login
             console.log("fail");
+            dispatch(getAllDocsThunk()).then(() => dispatch(setLoading(false)));
           }
         },
         (error) => {

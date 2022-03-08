@@ -20,7 +20,7 @@ export const user = createSlice({
     profile: null,
     pictureUrl: null,
     isMobile: false,
-    loading: true,
+    loading: false,
   },
   reducers: {
     setUid: (state, { payload }) => {
@@ -31,6 +31,7 @@ export const user = createSlice({
       state.uid = null;
       state.name = null;
       state.profile = null;
+      state.pictureUrl = null;
     },
     updateProfile: (state, { payload }) => {
       state.profile = payload;

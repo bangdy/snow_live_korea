@@ -54,10 +54,11 @@ const ResortReviews = (props) => {
 
   //Logical Indicator
   const showReviewMaker =
-    beforeObj ||
-    (!Object.keys(reviews?.[dateString] ?? {}).includes(currentUserUid) &&
-      dateString === getDate(new Date()));
-  // 수정 중이 아니고, 내 리뷰가 당일에 없고, 오늘 일때
+    currentUserUid &&
+    (beforeObj ||
+      (!Object.keys(reviews?.[dateString] ?? {}).includes(currentUserUid) &&
+        dateString === getDate(new Date())));
+  // 1.로그인을 했고 && ( 2.수정 중이 아니고, 3.내 리뷰가 당일에 없고 4.오늘 일때)
   return (
     <Box
       sx={{
