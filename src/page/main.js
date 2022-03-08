@@ -15,7 +15,7 @@ const Main = (props) => {
       direction="column"
       sx={{ alignItems: "center", width: "100%", textAlign: "center", flexGrow: 1 }}>
       {Object.keys(resorts.collection).map((key, i) => {
-        return <InfoCard key={i} {...resorts.collection[key]} />;
+        return <InfoCard key={i} {...resorts.collection[key]} isInMain />;
       })}
       <Box>
         <Link to="/resort_editor" style={{ textDecoration: "none" }}>

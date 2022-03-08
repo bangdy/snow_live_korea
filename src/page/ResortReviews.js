@@ -13,6 +13,7 @@ import { downloadImage } from "help/util";
 import DateNavigator from "components/DateNavigator";
 import { useSelector, useDispatch } from "react-redux";
 import { getResortDocThunk } from "store/resorts";
+import InfoCard from "components/InfoCard";
 
 const ResortReviews = (props) => {
   const navigate = useNavigate();
@@ -66,7 +67,7 @@ const ResortReviews = (props) => {
         alignItems: "center",
         flex: 1,
       }}>
-      <span>리뷰 : {props.info.name}</span>
+      <InfoCard {...resorts[props.info.url]} style={{ marginBottom: 3 }} />
       <DateNavigator date={date} setDate={setDate} />
       {showReviewMaker && (
         <ReviewMaker url={props.info.url} beforeObj={beforeObj} dateString={dateString} />

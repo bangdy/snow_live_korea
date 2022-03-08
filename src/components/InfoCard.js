@@ -30,6 +30,7 @@ const ExpandMore = styled((props) => {
 }));
 
 const InfoCard = (props) => {
+  const { isInMain, style } = props;
   const { name, address, url } = props.info;
   const reviews = props.reviews;
   const dispatch = useDispatch();
@@ -65,7 +66,7 @@ const InfoCard = (props) => {
       : 0;
 
   return (
-    <Card>
+    <Card sx={style}>
       <Stack direction={isMobile ? "column" : "row"} sx={isMobile && { alignItems: "center" }}>
         <CardMedia
           component="img"
@@ -88,22 +89,26 @@ const InfoCard = (props) => {
             <Rating name="simple-controlled" value={meanScore ?? 0} readOnly size="large" />
             <Typography variant="span">({revieweeNum}명)</Typography>
           </Stack>
-          <Link to={`/${url}`} style={{ textDecoration: "none" }}>
-            <CardActions sx={{ display: "felx", flex: 1, justifyContent: "center" }}>
-              <Button size="small">리뷰하기</Button>
-            </CardActions>
-          </Link>
+          {isInMain && (
+            <Link to={`/${url}`} style={{ textDecoration: "none" }}>
+              <CardActions sx={{ display: "felx", flex: 1, justifyContent: "center" }}>
+                <Button size="small">리뷰하기</Button>
+              </CardActions>
+            </Link>
+          )}
         </CardContent>
       </Stack>
-      <CardActions disableSpacing>
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more">
-          <ExpandMoreIcon />
-        </ExpandMore>
-      </CardActions>
+      {isInMain && (
+        <CardActions disableSpacing>
+          <ExpandMore
+            expand={expanded}
+            onClick={handleExpandClick}
+            aria-expanded={expanded}
+            aria-label="show more">
+            <ExpandMoreIcon />
+          </ExpandMore>
+        </CardActions>
+      )}
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <TimeLine time={props.info} />
       </Collapse>
