@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
@@ -17,6 +18,9 @@ import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import TimeLine from "./TimeLine";
+import Box from "@mui/material/Box";
+import EditIcon from "@mui/icons-material/Edit";
+import { useNavigate } from "react-router-dom";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -30,12 +34,15 @@ const ExpandMore = styled((props) => {
 }));
 
 const InfoCard = (props) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const { isInMain, style } = props;
   const { name, address, url } = props.info;
   const reviews = props.reviews;
-  const dispatch = useDispatch();
   const resorts = useSelector((state) => state.resorts);
-  const isMobile = useSelector((state) => state.user.isMobile);
+  const user = useSelector((state) => state.user);
+  const isMobile = user.isMobile;
 
   const [imageUrl, setImageUrl] = useState(resorts?.images[url]);
   const [expanded, setExpanded] = useState(false);
@@ -65,9 +72,12 @@ const InfoCard = (props) => {
       ? revieweesArr.reduce((acc, cur) => reviews[dateString][cur].score + acc, 0) / revieweeNum
       : 0;
 
+  //Logical Indicator
+  const showEditButton = !isInMain && user.profile.isAdmin;
+
   return (
     <Card sx={style}>
-      <Stack direction={isMobile ? "column" : "row"} sx={isMobile && { alignItems: "center" }}>
+      <Stack direction={isMobile ? "column" : "row"} sx={isMobile ? { alignItems: "center" } : {}}>
         <CardMedia
           component="img"
           sx={{ width: "35%", height: "auto", objectFit: "contain", marginLeft: 2 }}
@@ -75,9 +85,23 @@ const InfoCard = (props) => {
           alt="Live from space album cover"
         />
         <CardContent sx={{ width: 350, textAlign: "left", paddingLeft: 4 }}>
-          <Typography variant="h5" component="div">
-            {name}
-          </Typography>
+          <CardHeader
+            sx={{ padding: 0 }}
+            action={
+              showEditButton && (
+                <IconButton
+                  aria-label="settings"
+                  onClick={() => navigate("/resort_editor", { state: props.info })}>
+                  <EditIcon />
+                </IconButton>
+              )
+            }
+            title={
+              <Typography variant="h5" component="div">
+                {name}
+              </Typography>
+            }
+          />
           <Typography variant="body2" mt={2}>
             {address}
           </Typography>
@@ -89,18 +113,18 @@ const InfoCard = (props) => {
             <Rating name="simple-controlled" value={meanScore ?? 0} readOnly size="large" />
             <Typography variant="span">({revieweeNum}명)</Typography>
           </Stack>
-          {isInMain && (
-            <Link to={`/${url}`} style={{ textDecoration: "none" }}>
-              <CardActions sx={{ display: "felx", flex: 1, justifyContent: "center" }}>
-                <Button size="small">리뷰하기</Button>
-              </CardActions>
-            </Link>
-          )}
         </CardContent>
       </Stack>
       {isInMain && (
-        <CardActions disableSpacing>
+        <CardActions disableSpacing sx={{ justifyContent: "space-between" }}>
+          <Box sx={{ width: 40 }}></Box>
+          <Link to={`/${url}`} style={{ textDecoration: "none" }}>
+            <CardActions sx={{ display: "felx", flex: 1, justifyContent: "center" }}>
+              <Button size="small">리뷰하기</Button>
+            </CardActions>
+          </Link>
           <ExpandMore
+            sx={{ marginLeft: 0, alignSelf: "center", justifySelf: "flex-end" }}
             expand={expanded}
             onClick={handleExpandClick}
             aria-expanded={expanded}

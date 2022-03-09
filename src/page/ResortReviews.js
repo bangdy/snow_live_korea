@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import { useNavigate } from "react-router-dom";
 import ReviewMaker from "components/ReviewMaker";
 import ReviewCard from "components/ReviewCard";
 import { getDate } from "help/util";
@@ -16,7 +14,6 @@ import { getResortDocThunk } from "store/resorts";
 import InfoCard from "components/InfoCard";
 
 const ResortReviews = (props) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const resorts = useSelector((state) => state.resorts.collection);
   const currentUserUid = useSelector((state) => state.user.uid);
@@ -119,7 +116,6 @@ const ResortReviews = (props) => {
           오늘의 리뷰가 없습니다
         </Typography>
       )}
-      <Button onClick={() => navigate("/resort_editor", { state: props.info })}>수정하기</Button>
     </Box>
   );
 };
