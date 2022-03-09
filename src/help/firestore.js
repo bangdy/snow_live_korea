@@ -1,6 +1,5 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
-import { deleteField } from "firebase/firestore";
 
 export const createDoc = async (col, uid, data) => {
   const docRef = firebase.firestore().collection(col).doc(uid);
@@ -11,9 +10,13 @@ export const createDoc = async (col, uid, data) => {
   if (isExist) {
     throw "Is Exist";
   }
-  docRef.set(data);
-
-  return "Success";
+  try {
+    docRef.set(data);
+    return "Success";
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
 };
 
 export const getDoc = async (col, docId) => {
@@ -24,6 +27,7 @@ export const getDoc = async (col, docId) => {
     return snapshot.data();
   } catch (err) {
     console.log(err);
+    throw err;
   }
 };
 
@@ -37,7 +41,7 @@ export const updateDoc = async (col, docId, updatedObj) => {
     return "Success";
   } catch (err) {
     console.log(err);
-    return err;
+    throw err;
   }
 };
 
@@ -51,7 +55,7 @@ export const updateDocL3 = async (col, docId, l1, l2, l3, updatedObj) => {
     return "Success";
   } catch (err) {
     console.log(err);
-    return err;
+    throw err;
   }
 };
 
@@ -65,7 +69,7 @@ export const deleteDocL3 = async (col, docId, l1, l2, l3) => {
     return "Success";
   } catch (err) {
     console.log(err);
-    return err;
+    throw err;
   }
 };
 
@@ -77,5 +81,6 @@ export const getAllDocs = async (col) => {
     return result;
   } catch (err) {
     console.log(err);
+    throw err;
   }
 };

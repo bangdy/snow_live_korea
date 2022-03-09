@@ -1,9 +1,6 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
 import InfoCard from "components/InfoCard";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
 import { useSelector } from "react-redux";
 
 const Main = (props) => {
@@ -17,11 +14,6 @@ const Main = (props) => {
       {Object.keys(resorts.collection).map((key, i) => {
         return <InfoCard key={i} {...resorts.collection[key]} isInMain />;
       })}
-      <Box>
-        <Link to="/resort_editor" style={{ textDecoration: "none" }}>
-          <Button variant="outlined">만들기</Button>
-        </Link>
-      </Box>
     </Stack>
   );
 };

@@ -17,6 +17,8 @@ import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import IconButton from "@mui/material/IconButton";
 import ProfileAvatar from "components/ProfileAvatar";
 import { uploadImage } from "help/util";
+import { Link } from "react-router-dom";
+import Typography from "@mui/material/Typography";
 
 const Profile = (props) => {
   const user = useSelector((state) => state.user);
@@ -130,7 +132,9 @@ const Profile = (props) => {
           <PhotoCamera sx={{ width: 40, height: 40 }} />
         </IconButton>
         <Box sx={{ display: "block", textAlign: "left", width: "100%", padding: 2 }}>
-          <h3>닉네임</h3>
+          <Typography variant="h5" mb={2}>
+            닉네임
+          </Typography>
           <Input
             defaultValue="Hello world"
             inputProps={ariaLabel}
@@ -141,7 +145,7 @@ const Profile = (props) => {
           />
         </Box>
         <Box sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
-          <h3>내 탈거</h3>
+          <Typography variant="h5">내 탈거</Typography>
         </Box>
         <Box sx={{ width: "100%", padding: 2, display: "flex", justifyContent: "space-around" }}>
           <ToggleButton
@@ -154,6 +158,20 @@ const Profile = (props) => {
             <DownhillSkiingRounded sx={{ fontSize: 80 }} />
           </ToggleButton>
         </Box>
+        {user.profile.isAdmin && (
+          <>
+            <Box
+              sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
+              <Typography variant="h5">관리자 영역</Typography>
+            </Box>
+            <Box>
+              <Link to="/resort_editor" style={{ textDecoration: "none" }}>
+                <Button variant="outlined">Resort 만들기</Button>
+              </Link>
+            </Box>
+          </>
+        )}
+
         <Stack direction="row" spacing={2} mt={10}>
           {editable ? (
             <>
@@ -173,8 +191,14 @@ const Profile = (props) => {
                 variant="contained"
                 onClick={() => {
                   const func = fullfilledUser ? updateDoc : createDoc;
+                  const updatedProfile = {
+                    nickName: nickName,
+                    ski: ski,
+                    board: board,
+                    isAdmin: user.profile.isAdmin ?? false,
+                  };
                   func("users", user.uid, {
-                    profile: { nickName: nickName, ski: ski, board: board },
+                    profile: updatedProfile,
                   })
                     .then(() => {
                       if (img) {
@@ -188,9 +212,10 @@ const Profile = (props) => {
                       if (!fullfilledUser) {
                         window.location.href = "/";
                       } else {
-                        dispatch(updateProfile({ nickName: nickName, ski: ski, board: board }));
+                        dispatch(updateProfile(updatedProfile));
                       }
-                    });
+                    })
+                    .catch((e) => alert(e));
                 }}>
                 저장
               </Button>

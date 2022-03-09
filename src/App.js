@@ -66,6 +66,7 @@ function App() {
         (user) => {
           if (user) {
             // signed in
+            dispatch(setLoading(true));
             dispatch(setUid({ uid: user.uid, name: user.name }));
             dispatch(getPictureThunk(user.uid)).then(() =>
               dispatch(getAllDocsThunk()).then(() => dispatch(setLoading(false)))
