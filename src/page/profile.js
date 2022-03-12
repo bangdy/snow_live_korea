@@ -158,7 +158,7 @@ const Profile = (props) => {
             <DownhillSkiingRounded sx={{ fontSize: 80 }} />
           </ToggleButton>
         </Box>
-        {user.profile.isAdmin && (
+        {user.profile?.isAdmin && (
           <>
             <Box
               sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
@@ -195,7 +195,7 @@ const Profile = (props) => {
                     nickName: nickName,
                     ski: ski,
                     board: board,
-                    isAdmin: user.profile.isAdmin ?? false,
+                    isAdmin: user.profile?.isAdmin ?? false,
                   };
                   func("users", user.uid, {
                     profile: updatedProfile,
