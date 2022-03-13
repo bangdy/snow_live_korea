@@ -29,12 +29,14 @@ const MyReviews = (props) => {
       }}>
       {isExist > 0 ? (
         <>
-          <Typography
-            variant="h6"
-            color="text.secondary"
-            sx={{ alignSelf: "flex-start", marginBottom: 2 }}>
-            나의 리뷰
-          </Typography>
+          <Box>
+            <Typography
+              variant="h6"
+              color="text.secondary"
+              sx={{ alignSelf: "flex-start", marginBottom: 2 }}>
+              나의 리뷰
+            </Typography>
+          </Box>
           {reviews.map((rev, i) => (
             <ReviewCard {...rev} key={i} user={user} uid={user.uid} resortInfo={rev.resortInfo} />
           ))}

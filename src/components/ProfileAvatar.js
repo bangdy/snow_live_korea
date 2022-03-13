@@ -25,6 +25,8 @@ const ProfileAvatar = (props) => {
     if (uid && !preImgUrl) {
       fetch();
     }
+
+    return () => setImageUrl(null);
   }, []);
 
   if (preImgUrl) {

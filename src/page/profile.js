@@ -136,7 +136,6 @@ const Profile = (props) => {
             닉네임
           </Typography>
           <Input
-            defaultValue="Hello world"
             inputProps={ariaLabel}
             readOnly={!editable}
             value={nickName}
