@@ -54,8 +54,8 @@ function App() {
     };
     const kakaoAuthCode = window.location.search.split("=")[1];
     if (kakaoAuthCode) {
-      dispatch(setLoading(true));
-      getUser(kakaoAuthCode).then((r) => navigate("/"));
+      navigate("/loading");
+      getUser(kakaoAuthCode);
     }
   }, [dispatch]);
 
@@ -73,7 +73,7 @@ function App() {
             dispatch(setLoading(true));
             dispatch(setUid({ uid: user.uid, name: user.name }));
             dispatch(getPictureThunk(user.uid));
-            dispatch(getProfileThunk(user.uid));
+            dispatch(getProfileThunk(user.uid)).then((r) => navigate("/"));
           } else {
             // not login
             console.log("fail");
@@ -105,6 +105,21 @@ function App() {
   }, [window.addEventListener]);
 
   let rightButton;
+
+  const currentPath = window.location.pathname;
+  const LoadingItem = (
+    <Stack
+      mt={2}
+      direction="column"
+      sx={{
+        flexBasis: 1,
+        alignSelf: "stretch",
+        justifyContent: "center",
+        alignItems: "center",
+      }}>
+      <CircularProgress color="success" size={100} />
+    </Stack>
+  );
 
   if (loading) {
     rightButton = "";
@@ -154,21 +169,11 @@ function App() {
           maxWidth: "500px",
           width: "100%",
           paddingTop: "70px",
-          height: loading ? "50%" : null,
+          height: loading || currentPath == "/loading" ? "50%" : null,
         }}>
         <>
           {loading ? (
-            <Stack
-              mt={2}
-              direction="column"
-              sx={{
-                flexBasis: 1,
-                alignSelf: "stretch",
-                justifyContent: "center",
-                alignItems: "center",
-              }}>
-              <CircularProgress color="success" size={100} />
-            </Stack>
+            LoadingItem
           ) : (
             <Routes>
               <Route path="/" element={<PageHOC name="Main" Component={<Main />} />} />
@@ -190,6 +195,7 @@ function App() {
                 path="/resort_editor"
                 element={<PageHOC name="ResortEditor" Component={<ResortEditor />} />}
               />
+              <Route path="/loading" element={LoadingItem} />
             </Routes>
           )}
         </>
