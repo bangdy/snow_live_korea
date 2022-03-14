@@ -60,6 +60,10 @@ function App() {
   }, [dispatch]);
 
   useEffect(() => {
+    dispatch(getAllDocsThunk());
+  }, [dispatch]);
+
+  useEffect(() => {
     const authStateListener = () => {
       dispatch(setLoading(true));
       return firebase.auth().onAuthStateChanged(
@@ -68,14 +72,12 @@ function App() {
             // signed in
             dispatch(setLoading(true));
             dispatch(setUid({ uid: user.uid, name: user.name }));
-            dispatch(getPictureThunk(user.uid)).then(() =>
-              dispatch(getAllDocsThunk()).then(() => dispatch(setLoading(false)))
-            );
+            dispatch(getPictureThunk(user.uid));
             dispatch(getProfileThunk(user.uid));
           } else {
             // not login
             console.log("fail");
-            dispatch(getAllDocsThunk()).then(() => dispatch(setLoading(false)));
+            dispatch(setLoading(false));
           }
         },
         (error) => {

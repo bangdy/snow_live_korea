@@ -47,8 +47,12 @@ export const user = createSlice({
     },
   },
   extraReducers: {
+    [getProfileThunk.pending]: (state, { payload }) => {
+      state.loading = true;
+    },
     [getProfileThunk.fulfilled]: (state, { payload }) => {
       state.profile = payload ?? null;
+      state.loading = false;
     },
     [getPictureThunk.fulfilled]: (state, { payload }) => {
       state.pictureUrl = payload ?? null;
