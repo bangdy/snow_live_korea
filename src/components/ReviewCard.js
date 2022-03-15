@@ -39,11 +39,12 @@ const ReviewCard = (props) => {
   const dispatch = useDispatch();
 
   const dateString = getDate(new Date(createdAt));
+  const preImgUrl = user?.preImgUrl;
 
   return (
     <Card sx={{ width: "100%", marginBottom: 1 }}>
       <CardHeader
-        avatar={<ProfileAvatar user={user} size={40} uid={uid} preImgUrl={user?.preImgUrl} />}
+        avatar={<ProfileAvatar user={user} size={40} uid={uid} preImgUrl={preImgUrl} />}
         title={user ? user.profile.nickName : ""}
         subheader={date.format(new Date(createdAt), timeFormat)}
         action={

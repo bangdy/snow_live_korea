@@ -82,7 +82,7 @@ const InfoCard = (props) => {
           component="img"
           sx={{ width: "35%", height: "auto", objectFit: "contain", marginLeft: 2 }}
           image={imageUrl}
-          alt="Live from space album cover"
+          alt="Resort's Logo Image"
         />
         <CardContent sx={{ width: 350, textAlign: "left", paddingLeft: 4 }}>
           <CardHeader

@@ -20,7 +20,7 @@ const ImageEditorBox = (props) => {
           component="img"
           sx={{ width: "35%", height: "auto", marginX: "auto" }}
           image={alterImgUrl}
-          alt="Live from space album cover"
+          alt="Image Editor's Image"
         />
       ) : (
         <Box
