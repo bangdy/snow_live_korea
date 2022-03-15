@@ -16,7 +16,7 @@ import AvatarImageCropper from "react-avatar-image-cropper";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import IconButton from "@mui/material/IconButton";
 import ProfileAvatar from "components/ProfileAvatar";
-import { uploadImage } from "help/util";
+import { uploadImage, removeImage } from "help/util";
 import { Link } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 
@@ -26,6 +26,7 @@ const Profile = (props) => {
   const [img, setImg] = useState(null);
   const [alterImgUrl, setAlterImgUrl] = useState(null);
   const [edit, setEdit] = useState(false);
+  const [deleteImg, setDeleteImg] = useState(false);
   const dispatch = useDispatch();
 
   //Logical Indicator
@@ -108,6 +109,15 @@ const Profile = (props) => {
           <Stack direction="row" sx={{ justifyContent: "space-around", width: 350, marginTop: 2 }}>
             <Button variant="outlined" onClick={handleClose}>
               취소
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                handleClose();
+                setAlterImgUrl(" ");
+                setDeleteImg(true);
+              }}>
+              지우기
             </Button>
             <Button variant="contained" onClick={handleOk}>
               확인
@@ -196,6 +206,7 @@ const Profile = (props) => {
                     board: board,
                     isAdmin: user.profile?.isAdmin ?? false,
                   };
+
                   func("users", user.uid, {
                     profile: updatedProfile,
                   })
@@ -203,6 +214,13 @@ const Profile = (props) => {
                       if (img) {
                         uploadImage("profile", user.uid, img);
                         dispatch(updatePictureUrl(alterImgUrl));
+                      } else if (deleteImg) {
+                        if (window.confirm("정말 프로필 사진을 지우시겠습니까?")) {
+                          removeImage("profile", user.uid);
+                          dispatch(updatePictureUrl(null));
+                        } else {
+                          throw "취소 되었습니다.";
+                        }
                       }
                     })
                     .then(() => {

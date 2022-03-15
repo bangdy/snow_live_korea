@@ -1,4 +1,4 @@
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import imageCompression from "browser-image-compression";
 
 export const getDate = (d) => {
@@ -60,7 +60,31 @@ export const uploadImage = async (folder, fileName, imageFile) => {
 export const downloadImage = async (folder, file) => {
   const storage = getStorage();
   const storageRef = ref(storage, `${folder}/${file}`);
-  const imgStorageUrl = await getDownloadURL(storageRef);
-  const image = await imgLoad(imgStorageUrl);
-  return URL.createObjectURL(image);
+  try {
+    const imgStorageUrl = await getDownloadURL(storageRef);
+    const image = await imgLoad(imgStorageUrl);
+    return URL.createObjectURL(image);
+  } catch (err) {
+    if (err.code === "storage/object-not-found") {
+      return null;
+    } else {
+      throw err;
+    }
+  }
+};
+
+export const removeImage = async (folder, file) => {
+  const storage = getStorage();
+  const storageRef = ref(storage, `${folder}/${file}`);
+  try {
+    const result = await deleteObject(storageRef);
+    console.log(result);
+    return result;
+  } catch (err) {
+    if (err.code === "storage/object-not-found") {
+      return null;
+    } else {
+      throw err;
+    }
+  }
 };
