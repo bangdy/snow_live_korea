@@ -224,7 +224,7 @@ const Profile = (props) => {
                       }
                     })
                     .then(() => {
-                      alert("수정이 완료되었습니다.");
+                      alert(`${fullfilledUser ? "수정" : "등록"}이 완료되었습니다.`);
                       setEdit(!edit);
                       if (!fullfilledUser) {
                         window.location.href = "/";

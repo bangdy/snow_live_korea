@@ -4,8 +4,36 @@
 
 - 시작 : 211229
 
+### 서비스 User Flow
+
+User 상태 : not Login / Member profile x / Member profile o / Member & admin
+
+Page :  home / login / my_page  / 각각의 resort
+
+
+
+##### Case 1 : 첫 가입
+
+- login 페이지로 이동
+- 카카오 인증을 통해, 계정 생성
+- 계정 생성 후, 프로필을 등록하기 위해 my_page 의 profile 입력 tab 으로 이동 (다른 곳으로 이동 불가)
+- 프로필을 등록 후, main 페이지로 이동
+
+
+
+
+
+-------
+
+
+
+
+
+## About Project
+
 ### 프로젝트 소정의 목표
 
+- open source
 - no css files
 
 ### 배운 내용

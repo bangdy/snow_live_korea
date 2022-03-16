@@ -2,9 +2,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getDoc } from "help/firestore";
 import { downloadImage } from "help/util";
 
-export const getProfileThunk = createAsyncThunk("GET_USER_DOC", async (uid) => {
+export const getProfileThunk = createAsyncThunk("GET_PROFILE", async (uid) => {
   const response = await getDoc("users", uid);
-  return response.profile;
+  return response?.profile;
 });
 
 export const getPictureThunk = createAsyncThunk("GET_PICTURE", async (uid) => {

@@ -5,7 +5,6 @@ import { useTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useSelector } from "react-redux";
 
@@ -40,10 +39,15 @@ function a11yProps(index) {
 export default function FullWidthTabs(props) {
   const theme = useTheme();
   const user = useSelector((state) => state.user);
-  const [value, setValue] = React.useState(user.profile ? 0 : 1);
+  const fullfilledUser = user.uid && user.profile;
+  const [value, setValue] = React.useState(fullfilledUser ? 0 : 1);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    if (fullfilledUser) {
+      setValue(newValue);
+    } else {
+      alert("프로필 등록을 먼저 해주세요.");
+    }
   };
 
   const handleChangeIndex = (index) => {
@@ -68,6 +72,7 @@ export default function FullWidthTabs(props) {
       <SwipeableViews
         axis={theme.direction === "rtl" ? "x-reverse" : "x"}
         index={value}
+        disabled={!fullfilledUser}
         onChangeIndex={handleChangeIndex}>
         {props.pages.map((obj, i) => (
           <TabPanel key={i} value={value} index={i} dir={theme.direction}>
