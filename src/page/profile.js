@@ -21,7 +21,7 @@ import { Link } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import SpeedDial from "components/SpeedDial";
 import LogoutIcon from "@mui/icons-material/Logout";
-import SaveIcon from "@mui/icons-material/Save";
+import EditIcon from "@mui/icons-material/Edit";
 
 const Profile = (props) => {
   const user = useSelector((state) => state.user);
@@ -73,8 +73,16 @@ const Profile = (props) => {
   };
 
   const actions = [
+    {
+      icon: <EditIcon />,
+      name: "Edit Profile",
+      onClick: () => {
+        setEdit(!edit);
+        setAlterImgUrl(null);
+        setImg(null);
+      },
+    },
     { icon: <LogoutIcon />, name: "Logout", onClick: logoutRequest },
-    { icon: <SaveIcon />, name: "Save" },
   ];
 
   const style = {
@@ -247,17 +255,7 @@ const Profile = (props) => {
               </Button>
             </>
           ) : (
-            <>
-              <Button
-                variant="contained"
-                onClick={() => {
-                  setEdit(!edit);
-                  setAlterImgUrl(null);
-                  setImg(null);
-                }}>
-                수정하기
-              </Button>
-            </>
+            <></>
           )}
         </Stack>
       </Stack>
