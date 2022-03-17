@@ -19,6 +19,9 @@ import ProfileAvatar from "components/ProfileAvatar";
 import { uploadImage, removeImage } from "help/util";
 import { Link } from "react-router-dom";
 import Typography from "@mui/material/Typography";
+import SpeedDial from "components/SpeedDial";
+import LogoutIcon from "@mui/icons-material/Logout";
+import SaveIcon from "@mui/icons-material/Save";
 
 const Profile = (props) => {
   const user = useSelector((state) => state.user);
@@ -68,6 +71,11 @@ const Profile = (props) => {
     setImg(null);
     setOpen(false);
   };
+
+  const actions = [
+    { icon: <LogoutIcon />, name: "Logout", onClick: logoutRequest },
+    { icon: <SaveIcon />, name: "Save" },
+  ];
 
   const style = {
     position: "absolute",
@@ -125,7 +133,8 @@ const Profile = (props) => {
           </Stack>
         </Stack>
       </Modal>
-      <Stack sx={{ alignItems: "center" }}>
+      <Stack sx={{ alignItems: "center", position: "relative" }}>
+        <SpeedDial actions={actions} />
         <ProfileAvatar
           user={user}
           isChangigProfile={isChangigProfile}
@@ -133,7 +142,7 @@ const Profile = (props) => {
           alterImgUrl={alterImgUrl}
         />
         <IconButton
-          sx={{ position: "relative", top: -30, left: 80 }}
+          sx={{ position: "relative", top: -30, left: 0 }}
           disabled={!editable}
           color="primary"
           aria-label="upload picture"
@@ -247,9 +256,6 @@ const Profile = (props) => {
                   setImg(null);
                 }}>
                 수정하기
-              </Button>
-              <Button variant="outlined" onClick={logoutRequest}>
-                로그아웃!
               </Button>
             </>
           )}
