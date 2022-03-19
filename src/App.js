@@ -39,6 +39,7 @@ const Header = styled.div`
 
 function App() {
   const user = useSelector((state) => state.user);
+  const [currentWidth, setCurrentWidth] = useState(window.innerWidth);
   const loading = user.loading;
   const resorts = useSelector((state) => state.resorts);
   const navigate = useNavigate();
@@ -93,7 +94,7 @@ function App() {
   }, [dispatch]);
 
   const handleResize = () => {
-    if (window.innerWidth < 500) {
+    if (window.innerWidth < 480) {
       dispatch(setMobile(true));
     } else {
       dispatch(setMobile(false));
@@ -102,6 +103,7 @@ function App() {
 
   useEffect(() => {
     window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", () => setCurrentWidth(window.innerWidth));
   }, [window.addEventListener]);
 
   let rightButton;
@@ -150,8 +152,13 @@ function App() {
   return (
     <Container maxWidth="md" sx={{ height: "100vh", flexGrow: 1 }}>
       <Header />
-      <AppBar position="fixed" sx={{ height: 70 }} elevation={0}>
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+      <AppBar position="fixed" sx={{ height: 70, alignItems: "center" }} elevation={0}>
+        <Toolbar
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: currentWidth > 860 ? "860px" : "100%",
+          }}>
           <Link to="/" style={{ textDecoration: "none" }}>
             <Typography variant="h6" component="div" sx={{ color: "white" }}>
               Snow Live
