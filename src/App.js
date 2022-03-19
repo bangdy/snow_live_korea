@@ -94,7 +94,7 @@ function App() {
   }, [dispatch]);
 
   const handleResize = () => {
-    if (window.innerWidth < 480) {
+    if (window.innerWidth < 576) {
       dispatch(setMobile(true));
     } else {
       dispatch(setMobile(false));
@@ -157,7 +157,7 @@ function App() {
           sx={{
             display: "flex",
             justifyContent: "space-between",
-            width: currentWidth > 860 ? "860px" : "100%",
+            width: currentWidth > 768 ? "768px" : "100%",
           }}>
           <Link to="/" style={{ textDecoration: "none" }}>
             <Typography variant="h6" component="div" sx={{ color: "white" }}>

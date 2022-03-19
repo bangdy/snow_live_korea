@@ -20,11 +20,13 @@ import { getResortDocThunk } from "store/resorts";
 import { getDate } from "help/util";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
+import { useSelector } from "react-redux";
 
 const timeFormat = "YY.MM.DD HH:mm, (ddd)";
 
 const ReviewCard = (props) => {
   const { uid, comment, score, createdAt, user, setBeforeObj, reviewPage, resortInfo } = props;
+  const curUser = useSelector((state) => state.user);
 
   const [anchorEl, setAnchorEl] = React.useState(false);
 
@@ -48,63 +50,65 @@ const ReviewCard = (props) => {
         title={user ? user.profile.nickName : ""}
         subheader={date.format(new Date(createdAt), timeFormat)}
         action={
-          <div>
-            <IconButton
-              aria-label="settings"
-              onClick={handleClick}
-              id="basic-button"
-              aria-controls={open ? "basic-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}>
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}>
-              {reviewPage && (
+          curUser.uid === uid && (
+            <div>
+              <IconButton
+                aria-label="settings"
+                onClick={handleClick}
+                id="basic-button"
+                aria-controls={open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}>
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}>
+                {reviewPage && (
+                  <MenuItem
+                    onClick={() => {
+                      handleClose();
+                      setBeforeObj({ comment, score });
+                    }}>
+                    <ListItemIcon>
+                      <EditIcon />
+                    </ListItemIcon>
+                    <ListItemText>수정하기</ListItemText>
+                  </MenuItem>
+                )}
                 <MenuItem
-                  onClick={() => {
+                  onClick={async () => {
                     handleClose();
-                    setBeforeObj({ comment, score });
+                    let message;
+                    if (window.confirm("정말 리뷰를 지우시겠습니까?")) {
+                      try {
+                        message = await deleteDocL3(
+                          "resorts",
+                          resortInfo.url,
+                          "reviews",
+                          dateString,
+                          uid
+                        );
+                        dispatch(getResortDocThunk(resortInfo.url));
+                      } catch (e) {
+                        message = e;
+                      }
+                      alert(message);
+                    }
                   }}>
                   <ListItemIcon>
-                    <EditIcon />
+                    <DeleteForeverIcon />
                   </ListItemIcon>
-                  <ListItemText>수정하기</ListItemText>
+                  <ListItemText>지우기</ListItemText>
                 </MenuItem>
-              )}
-              <MenuItem
-                onClick={async () => {
-                  handleClose();
-                  let message;
-                  if (window.confirm("정말 리뷰를 지우시겠습니까?")) {
-                    try {
-                      message = await deleteDocL3(
-                        "resorts",
-                        resortInfo.url,
-                        "reviews",
-                        dateString,
-                        uid
-                      );
-                      dispatch(getResortDocThunk(resortInfo.url));
-                    } catch (e) {
-                      message = e;
-                    }
-                    alert(message);
-                  }
-                }}>
-                <ListItemIcon>
-                  <DeleteForeverIcon />
-                </ListItemIcon>
-                <ListItemText>지우기</ListItemText>
-              </MenuItem>
-            </Menu>
-          </div>
+              </Menu>
+            </div>
+          )
         }
       />
       <CardContent>

@@ -225,7 +225,7 @@ const Profile = (props) => {
                   };
 
                   try {
-                    const result = await func("users", user.uid, {
+                    await func("users", user.uid, {
                       profile: updatedProfile,
                     });
                     if (img) {
