@@ -215,7 +215,7 @@ const Profile = (props) => {
               )}
               <Button
                 variant="contained"
-                onClick={() => {
+                onClick={async () => {
                   const func = fullfilledUser ? updateDoc : createDoc;
                   const updatedProfile = {
                     nickName: nickName,
@@ -224,32 +224,31 @@ const Profile = (props) => {
                     isAdmin: user.profile?.isAdmin ?? false,
                   };
 
-                  func("users", user.uid, {
-                    profile: updatedProfile,
-                  })
-                    .then(() => {
-                      if (img) {
-                        uploadImage("profile", user.uid, img);
-                        dispatch(updatePictureUrl(alterImgUrl));
-                      } else if (deleteImg) {
-                        if (window.confirm("정말 프로필 사진을 지우시겠습니까?")) {
-                          removeImage("profile", user.uid);
-                          dispatch(updatePictureUrl(null));
-                        } else {
-                          throw "취소 되었습니다.";
-                        }
-                      }
-                    })
-                    .then(() => {
-                      alert(`${fullfilledUser ? "수정" : "등록"}이 완료되었습니다.`);
-                      setEdit(!edit);
-                      if (!fullfilledUser) {
-                        window.location.href = "/";
+                  try {
+                    const result = await func("users", user.uid, {
+                      profile: updatedProfile,
+                    });
+                    if (img) {
+                      uploadImage("profile", user.uid, img);
+                      dispatch(updatePictureUrl(alterImgUrl));
+                    } else if (deleteImg) {
+                      if (window.confirm("정말 프로필 사진을 지우시겠습니까?")) {
+                        removeImage("profile", user.uid);
+                        dispatch(updatePictureUrl(null));
                       } else {
-                        dispatch(updateProfile(updatedProfile));
+                        throw "취소 되었습니다.";
                       }
-                    })
-                    .catch((e) => alert(e));
+                    }
+                    alert(`${fullfilledUser ? "수정" : "등록"}이 완료되었습니다.`);
+                    setEdit(!edit);
+                    if (!fullfilledUser) {
+                      window.location.href = "/";
+                    } else {
+                      dispatch(updateProfile(updatedProfile));
+                    }
+                  } catch (err) {
+                    alert(err);
+                  }
                 }}>
                 저장
               </Button>

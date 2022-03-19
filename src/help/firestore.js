@@ -11,7 +11,7 @@ export const createDoc = async (col, uid, data) => {
     throw "Is Exist";
   }
   try {
-    docRef.set(data);
+    await docRef.set(data);
     return "Success";
   } catch (err) {
     console.log(err);
