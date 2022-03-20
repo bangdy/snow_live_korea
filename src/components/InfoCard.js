@@ -21,7 +21,7 @@ import TimeLine from "./TimeLine";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import { useNavigate } from "react-router-dom";
-import AccessibilityNewIcon from "@mui/icons-material/AccessibilityNew";
+import DirectionsWalkIcon from "@mui/icons-material/DirectionsWalk";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -113,9 +113,9 @@ const InfoCard = (props) => {
             sx={{ alignItems: "center", justifyContent: "flex-start" }}>
             <Rating name="simple-controlled" value={meanScore ?? 0} readOnly size="large" />
             <Stack direction="row">
-              <Typography variant="subtitle2"> ( {meanScore} 점 / </Typography>
-              <AccessibilityNewIcon fontSize="small" sx={{ marginLeft: 0.5 }} />
-              <Typography variant="subtitle2">{revieweeNum} )</Typography>
+              <Typography variant="subtitle2"> {meanScore.toPrecision(2)} / </Typography>
+              <DirectionsWalkIcon fontSize="small" sx={{ marginLeft: 0.5 }} />
+              <Typography variant="subtitle2">{revieweeNum} </Typography>
             </Stack>
           </Stack>
         </CardContent>

@@ -29,25 +29,30 @@ const ResortReviews = (props) => {
   const [beforeObj, setBeforeObj] = useState(null);
 
   useEffect(() => {
-    const getUsers = async () => {
-      const t = {};
-      for (var uid of keys) {
-        const response = await getDoc("users", uid);
-        let preImgUrl;
-        try {
-          preImgUrl = await downloadImage("profile", uid);
-        } catch (e) {
-          preImgUrl = null;
-        }
-        t[uid] = { ...response, preImgUrl: preImgUrl };
-      }
-      setUsers(t);
-    };
-    getUsers();
     dispatch(getResortDocThunk(props.info.url));
   }, []);
 
   useEffect(() => setKeys(Object.keys(reviews[dateString] ?? [])), [date, reviews[dateString]]);
+
+  useEffect(() => {
+    const getUsers = async () => {
+      const t = { ...users };
+      for (var uid of keys) {
+        if (!Object.keys(users).includes(uid)) {
+          const response = await getDoc("users", uid);
+          let preImgUrl;
+          try {
+            preImgUrl = await downloadImage("profile", uid);
+          } catch (e) {
+            preImgUrl = null;
+          }
+          t[uid] = { ...response, preImgUrl: preImgUrl };
+        }
+      }
+      setUsers(t);
+    };
+    getUsers();
+  }, [keys]);
 
   //Logical Indicator
   const showReviewMaker =
