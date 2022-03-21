@@ -19,7 +19,10 @@ Page :  home / login / my_page  / 각각의 resort
 - 계정 생성 후, 프로필을 등록하기 위해 my_page 의 profile 입력 tab 으로 이동 (다른 곳으로 이동 불가)
 - 프로필을 등록 후, main 페이지로 이동
 
+##### Case 2 : 로그아웃
 
+- my_page 에서 profile 탭으로 이동, SpeedDial 을 눌러, 로그아웃 진행
+- 프로필을 등록하지 않아도, 로그아웃 가능 (프로필은 최초 1회 등록 필수)
 
 
 
@@ -74,3 +77,6 @@ Page :  home / login / my_page  / 각각의 resort
       ```
 
       
+
+- 현재 device 가 Mobile 인지 Pc 인지 구분하는 방법
+  - https://dev.to/timhuang/a-simple-way-to-detect-if-browser-is-on-a-mobile-device-with-javascript-44j3

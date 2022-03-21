@@ -23,6 +23,7 @@ import ResortEditor from "./page/ResortEditor";
 import PageHOC from "components/PageHOC";
 import ProfileAvatar from "components/ProfileAvatar";
 import Stack from "@mui/material/Stack";
+import { isMobile } from "help/util";
 
 initFirebase();
 
@@ -94,7 +95,7 @@ function App() {
   }, [dispatch]);
 
   const handleResize = () => {
-    if (window.innerWidth < 576) {
+    if (window.innerWidth < 760 || isMobile()) {
       dispatch(setMobile(true));
     } else {
       dispatch(setMobile(false));
@@ -102,9 +103,10 @@ function App() {
   };
 
   useEffect(() => {
+    handleResize();
     window.addEventListener("resize", handleResize);
     window.addEventListener("resize", () => setCurrentWidth(window.innerWidth));
-  }, [window.addEventListener]);
+  }, []);
 
   let rightButton;
 
