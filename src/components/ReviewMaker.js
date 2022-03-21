@@ -111,6 +111,7 @@ const ReviewMaker = (props) => {
                       createdAt: new Date().getTime(),
                       comment: comment,
                       resort: props.url,
+                      equipment: user.profile.myRide,
                     }
                   );
                   dispatch(getResortDocThunk(props.url));

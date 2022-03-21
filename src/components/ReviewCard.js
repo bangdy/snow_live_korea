@@ -21,11 +21,14 @@ import { getDate } from "help/util";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { useSelector } from "react-redux";
+import MyRideButton from "components/MyRideButton";
+import Divider from "@mui/material/Divider";
 
 const timeFormat = "YY.MM.DD HH:mm, (ddd)";
 
 const ReviewCard = (props) => {
-  const { uid, comment, score, createdAt, user, setBeforeObj, reviewPage, resortInfo } = props;
+  const { uid, comment, score, createdAt, user, setBeforeObj, reviewPage, resortInfo, equipment } =
+    props;
   const curUser = useSelector((state) => state.user);
 
   const [anchorEl, setAnchorEl] = React.useState(false);
@@ -114,9 +117,20 @@ const ReviewCard = (props) => {
       <CardContent>
         <Stack direction="row" sx={{ justifyContent: "space-between" }} mb={2}>
           <Rating name="simple-controlled" value={score} size="large" readOnly />
-          {!reviewPage && (
-            <Chip label={resortInfo.name} size="small" color="primary" variant="outlined" />
-          )}
+          <Stack direction="row">
+            <MyRideButton myRide={equipment} equipment={equipment} size={30} />
+            {!reviewPage && (
+              <>
+                <Divider
+                  orientation="vertical"
+                  variant="middle"
+                  flexItem
+                  sx={{ marginX: 1, marginY: 0 }}
+                />
+                <Chip label={resortInfo.name} size="small" color="primary" variant="outlined" />
+              </>
+            )}
+          </Stack>
         </Stack>
         <Typography variant="body2" color="text.secondary">
           {comment}

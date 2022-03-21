@@ -22,6 +22,8 @@ import Typography from "@mui/material/Typography";
 import SpeedDial from "components/SpeedDial";
 import LogoutIcon from "@mui/icons-material/Logout";
 import EditIcon from "@mui/icons-material/Edit";
+import EditOffIcon from "@mui/icons-material/EditOff";
+import MyRideButton from "components/MyRideButton";
 
 const Profile = (props) => {
   const user = useSelector((state) => state.user);
@@ -38,8 +40,7 @@ const Profile = (props) => {
   const isChangigProfile = editable && alterImgUrl;
 
   const [nickName, setNickName] = useState(fullfilledUser ? user.profile.nickName : "");
-  const [ski, setSki] = useState(fullfilledUser ? user.profile.ski : false);
-  const [board, setBoard] = useState(fullfilledUser ? user.profile.board : false);
+  const [myRide, setMyRide] = useState(fullfilledUser ? user.profile.myRide : "board");
   const ariaLabel = { "aria-label": "description" };
 
   const handleChange = (event) => editable && setNickName(event.target.value);
@@ -74,7 +75,7 @@ const Profile = (props) => {
 
   const actions = [
     {
-      icon: <EditIcon />,
+      icon: edit ? <EditOffIcon /> : <EditIcon />,
       name: "Edit Profile",
       onClick: () => {
         setEdit(!edit);
@@ -158,69 +159,16 @@ const Profile = (props) => {
           onClick={handleOpen}>
           <PhotoCamera sx={{ width: 40, height: 40 }} />
         </IconButton>
-        <Box sx={{ display: "block", textAlign: "left", width: "100%", padding: 2 }}>
-          <Typography variant="h5" mb={2}>
-            닉네임
-          </Typography>
-          <Input
-            inputProps={ariaLabel}
-            readOnly={!editable}
-            value={nickName}
-            onChange={handleChange}
-            sx={{ width: "100%" }}
-          />
-        </Box>
-        <Box sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
-          <Typography variant="h5">내 탈거</Typography>
-        </Box>
-        <Box sx={{ width: "100%", padding: 2, display: "flex", justifyContent: "space-around" }}>
-          <ToggleButton
-            value="check"
-            selected={board}
-            onChange={() => editable && setBoard(!board)}>
-            <SnowboardingRounded sx={{ fontSize: 80 }} />
-          </ToggleButton>
-          <ToggleButton value="check" selected={ski} onChange={() => editable && setSki(!ski)}>
-            <DownhillSkiingRounded sx={{ fontSize: 80 }} />
-          </ToggleButton>
-        </Box>
-        {user.profile?.isAdmin && (
-          <>
-            <Box
-              sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
-              <Typography variant="h5">관리자 영역</Typography>
-            </Box>
-            <Box>
-              <Link to="/resort_editor" style={{ textDecoration: "none" }}>
-                <Button variant="outlined">Resort 만들기</Button>
-              </Link>
-            </Box>
-          </>
-        )}
-
-        <Stack direction="row" spacing={2} mt={10}>
+        <Stack direction="row" spacing={2} sx={{ height: 40 }}>
           {editable ? (
             <>
-              {fullfilledUser && (
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    setEdit(!edit);
-                    setNickName(user.profile.nickName);
-                    setSki(user.profile.ski);
-                    setBoard(user.profile.board);
-                  }}>
-                  취소
-                </Button>
-              )}
               <Button
                 variant="contained"
                 onClick={async () => {
                   const func = fullfilledUser ? updateDoc : createDoc;
                   const updatedProfile = {
                     nickName: nickName,
-                    ski: ski,
-                    board: board,
+                    myRide: myRide,
                     isAdmin: user.profile?.isAdmin ?? false,
                   };
 
@@ -257,6 +205,50 @@ const Profile = (props) => {
             <></>
           )}
         </Stack>
+        <Box mt={2} sx={{ display: "block", textAlign: "left", width: "100%", padding: 2 }}>
+          <Typography variant="h5" mb={2}>
+            닉네임
+          </Typography>
+          <Input
+            inputProps={ariaLabel}
+            readOnly={!editable}
+            value={nickName}
+            onChange={handleChange}
+            sx={{ width: "100%" }}
+          />
+        </Box>
+        <Box sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
+          <Typography variant="h5">내 탈거</Typography>
+        </Box>
+        <Box sx={{ width: "100%", padding: 2, display: "flex", justifyContent: "space-around" }}>
+          <MyRideButton
+            myRide={myRide}
+            setMyRide={setMyRide}
+            editable={editable}
+            equipment={"board"}
+            size={100}
+          />
+          <MyRideButton
+            myRide={myRide}
+            setMyRide={setMyRide}
+            editable={editable}
+            equipment={"ski"}
+            size={100}
+          />
+        </Box>
+        {user.profile?.isAdmin && (
+          <>
+            <Box
+              sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
+              <Typography variant="h5">관리자 영역</Typography>
+            </Box>
+            <Box>
+              <Link to="/resort_editor" style={{ textDecoration: "none" }}>
+                <Button variant="outlined">Resort 만들기</Button>
+              </Link>
+            </Box>
+          </>
+        )}
       </Stack>
     </>
   );
