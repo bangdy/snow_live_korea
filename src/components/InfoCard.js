@@ -22,6 +22,7 @@ import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import { useNavigate } from "react-router-dom";
 import DirectionsWalkIcon from "@mui/icons-material/DirectionsWalk";
+import Divider from "@mui/material/Divider";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -110,11 +111,21 @@ const InfoCard = (props) => {
             direction="row"
             mt={2}
             spacing={2}
-            sx={{ alignItems: "center", justifyContent: "flex-start" }}>
+            sx={{
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+            }}>
             <Rating name="simple-controlled" value={meanScore ?? 0} readOnly size="large" />
-            <Stack direction="row">
-              <Typography variant="subtitle2"> {meanScore.toPrecision(2)} / </Typography>
-              <DirectionsWalkIcon fontSize="small" sx={{ marginLeft: 0.5 }} />
+            <Stack direction="row" sx={{ justifyContent: "center", alignContent: "center" }}>
+              <Typography variant="subtitle2"> {meanScore.toPrecision(2)}</Typography>
+              <Divider
+                orientation="vertical"
+                variant="middle"
+                flexItem
+                sx={{ marginX: 0.5, marginY: 0 }}
+              />
+              <DirectionsWalkIcon fontSize="small" />
               <Typography variant="subtitle2">{revieweeNum} </Typography>
             </Stack>
           </Stack>

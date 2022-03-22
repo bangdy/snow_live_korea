@@ -74,11 +74,14 @@ export default function FullWidthTabs(props) {
         index={value}
         disabled={!fullfilledUser}
         onChangeIndex={handleChangeIndex}>
-        {props.pages.map((obj, i) => (
-          <TabPanel key={i} value={value} index={i} dir={theme.direction}>
-            {obj.page}
-          </TabPanel>
-        ))}
+        {props.pages.map((obj, i) => {
+          const Page = obj.page;
+          return (
+            <TabPanel key={i} value={value} index={i} dir={theme.direction}>
+              <Page />
+            </TabPanel>
+          );
+        })}
       </SwipeableViews>
     </Box>
   );

@@ -5,12 +5,12 @@ import Profile from "page/Profile";
 
 const MyPage = (props) => {
   const reviews = {
-    page: <MyReviews />,
+    page: MyReviews,
     name: "기록",
   };
 
   const profile = {
-    page: <Profile />,
+    page: Profile,
     name: "Profile",
   };
 
