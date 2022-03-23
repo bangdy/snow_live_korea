@@ -12,6 +12,9 @@ import DateNavigator from "components/DateNavigator";
 import { useSelector, useDispatch } from "react-redux";
 import { getResortDocThunk } from "store/resorts";
 import InfoCard from "components/InfoCard";
+import Stack from "@mui/material/Stack";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import IconButton from "@mui/material/IconButton";
 
 const ResortReviews = (props) => {
   const dispatch = useDispatch();
@@ -98,12 +101,21 @@ const ResortReviews = (props) => {
 
       {isExist > 0 ? (
         <>
-          <Typography
-            variant="h6"
-            color="text.secondary"
-            sx={{ alignSelf: "flex-start", marginBottom: 2 }}>
-            리뷰
-          </Typography>
+          <Stack direction="row" justifyContent="space-between" sx={{ width: "100%" }}>
+            <Typography
+              variant="h6"
+              color="text.secondary"
+              sx={{ alignSelf: "flex-start", marginBottom: 2 }}>
+              리뷰
+            </Typography>
+            <IconButton
+              aria-label="refresh"
+              sx={{ alignSelf: "flex-start", padding: 1 }}
+              onClick={() => dispatch(getResortDocThunk(props.info.url))}>
+              <RefreshIcon fontSize="small" />
+            </IconButton>
+            <Box></Box>
+          </Stack>
           {keys.map((uid, i) => (
             <ReviewCard
               uid={uid}
