@@ -112,6 +112,7 @@ const ReviewMaker = (props) => {
                       comment: comment,
                       resort: props.url,
                       equipment: user.profile.myRide,
+                      likes: [],
                     }
                   );
                   dispatch(getResortDocThunk(props.url));
