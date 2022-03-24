@@ -23,6 +23,13 @@ export const resorts = createSlice({
     saveImageUrl: (state, { payload }) => {
       state.images = { ...state.images, [payload.url]: payload.imgUrl };
     },
+    updateLikes: (state, { payload }) => {
+      const { url, dateString, uid, newArr } = payload;
+      const updatedResort = state.collection[url];
+      console.log(updatedResort);
+      updatedResort["reviews"][dateString][uid]["likes"] = newArr;
+      state.collection = { ...state.collection, [url]: updatedResort };
+    },
   },
   extraReducers: {
     [getAllDocsThunk.fulfilled]: (state, { payload }) => {
@@ -34,4 +41,4 @@ export const resorts = createSlice({
   },
 });
 
-export const { saveImageUrl } = resorts.actions;
+export const { saveImageUrl, updateLikes } = resorts.actions;

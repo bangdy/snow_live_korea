@@ -16,20 +16,36 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useDispatch } from "react-redux";
-import { getResortDocThunk } from "store/resorts";
+import { getResortDocThunk, updateLikes } from "store/resorts";
 import { getDate } from "help/util";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { useSelector } from "react-redux";
 import MyRideButton from "components/MyRideButton";
 import Divider from "@mui/material/Divider";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import Box from "@mui/material/Box";
+import { updateDocL4 } from "help/firestore";
 
 const timeFormat = "YY.MM.DD HH:mm, (ddd)";
 
 const ReviewCard = (props) => {
-  const { uid, comment, score, createdAt, user, setBeforeObj, reviewPage, resortInfo, equipment } =
-    props;
+  const {
+    uid,
+    comment,
+    score,
+    createdAt,
+    user,
+    setBeforeObj,
+    reviewPage,
+    resortInfo,
+    equipment,
+    likes,
+    dateString,
+  } = props;
   const curUser = useSelector((state) => state.user);
+
+  console.log(likes);
 
   const [anchorEl, setAnchorEl] = React.useState(false);
 
@@ -43,7 +59,6 @@ const ReviewCard = (props) => {
   };
   const dispatch = useDispatch();
 
-  const dateString = getDate(new Date(createdAt));
   const preImgUrl = user?.preImgUrl;
 
   return (
@@ -135,6 +150,53 @@ const ReviewCard = (props) => {
         <Typography variant="body2" color="text.secondary">
           {comment}
         </Typography>
+        <Divider
+          orientation="horizontal"
+          variant="middle"
+          flexItem
+          sx={{ marginTop: 2, marginX: 0 }}
+        />
+        <Box sx={{ marginX: "auto", width: "100%", textAlign: "center" }}>
+          <IconButton
+            aria-label="like"
+            onClick={async () => {
+              let message;
+              let newArr;
+              if (likes.includes(curUser.uid)) {
+                newArr = likes.filter((i) => i !== curUser.uid);
+              } else {
+                newArr = [...likes];
+                newArr.push(curUser.uid);
+              }
+              try {
+                message = await updateDocL4(
+                  "resorts",
+                  resortInfo.url,
+                  "reviews",
+                  dateString,
+                  uid,
+                  "likes",
+                  newArr
+                );
+                dispatch(
+                  updateLikes({
+                    url: resortInfo.url,
+                    dateString: dateString,
+                    uid: uid,
+                    newArr: newArr,
+                  })
+                );
+              } catch (e) {
+                message = e;
+                alert(message);
+              }
+            }}>
+            <FavoriteBorderIcon fontSize="small" />
+          </IconButton>
+          <Typography variant="caption" color="text.secondary">
+            {likes?.length}
+          </Typography>
+        </Box>
       </CardContent>
     </Card>
   );

@@ -125,6 +125,7 @@ const ResortReviews = (props) => {
               setBeforeObj={setBeforeObj}
               reviewPage
               resortInfo={props.info}
+              dateString={dateString}
             />
           ))}
         </>

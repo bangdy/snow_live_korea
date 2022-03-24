@@ -1,3 +1,4 @@
+import { Looks4Outlined } from "@mui/icons-material";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 
@@ -51,6 +52,20 @@ export const updateDocL3 = async (col, docId, l1, l2, l3, updatedObj) => {
   try {
     await firebase.firestore().runTransaction(async (transaction) => {
       transaction.update(doc, `${l1}.${l2}.${l3}`, updatedObj);
+    });
+    return "Success";
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+export const updateDocL4 = async (col, docId, l1, l2, l3, l4, updatedObj) => {
+  const doc = await firebase.firestore().collection(col).doc(docId);
+
+  try {
+    await firebase.firestore().runTransaction(async (transaction) => {
+      transaction.update(doc, `${l1}.${l2}.${l3}.${l4}`, updatedObj);
     });
     return "Success";
   } catch (err) {
