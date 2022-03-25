@@ -10,9 +10,12 @@ import { updateDocL3 } from "help/firestore";
 import ProfileAvatar from "components/ProfileAvatar";
 import { getResortDocThunk } from "store/resorts";
 import { useFocus } from "help/customHooks";
+import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
+import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
 
 const ReviewMaker = (props) => {
-  const { beforeObj, dateString } = props;
+  const { beforeObj, dateString, setBeforeObj } = props;
   const [inputRef, setInputFocus] = useFocus();
 
   const user = useSelector((state) => state.user);
@@ -23,48 +26,55 @@ const ReviewMaker = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setScore(beforeObj?.score ?? null);
-    setComment(beforeObj?.comment ?? "");
-  }, [beforeObj]);
-
-  useEffect(() => {
     setComment("");
     setScore(null);
     setFocused(false);
   }, [dateString]);
 
+  useEffect(() => {
+    setScore(beforeObj?.score ?? null);
+    setComment(beforeObj?.comment ?? "");
+  }, [beforeObj]);
+
   //Logical Indicator
   const noShowForReview = comment.length === 0 && !score;
 
+  console.log(beforeObj);
+
   return (
-    <Box
+    <Paper
+      elevation={2}
       sx={{
         display: "flex",
         flex: 1,
         width: "100%",
-        border: 1,
-        borderRadius: 1,
         marginY: 3,
         marginLeft: 0,
         borderColor: "gray",
       }}>
       <Stack
         direction="column"
-        mt={2}
         spacing={2}
         sx={{ alignItems: "flex-start", justifyContent: "center", padding: 2, flexGrow: 1 }}>
         <>
-          <Stack direction="row">
-            <ProfileAvatar user={user} size={40} />
-            <Typography
-              variant="subtitle1"
-              component="div"
-              sx={{
-                backgroundColor: "white",
-                padding: 0.5,
-              }}>
-              {user.profile.nickName}
-            </Typography>
+          <Stack direction="row" sx={{ width: "100%" }} justifyContent="space-between">
+            <Stack direction="row">
+              <ProfileAvatar user={user} size={40} />
+              <Typography
+                variant="subtitle1"
+                component="div"
+                sx={{
+                  backgroundColor: "white",
+                  padding: 0.5,
+                }}>
+                {user.profile.nickName}
+              </Typography>
+            </Stack>
+            {beforeObj?.score && (
+              <IconButton onClick={() => setBeforeObj(null)}>
+                <HighlightOffOutlinedIcon size="small" color="secondary" />
+              </IconButton>
+            )}
           </Stack>
 
           <Rating
@@ -125,11 +135,11 @@ const ReviewMaker = (props) => {
               }
               alert(message);
             }}>
-            리뷰하기
+            {beforeObj?.score ? "수정하기" : "리뷰하기"}
           </Button>
         )}
       </Stack>
-    </Box>
+    </Paper>
   );
 };
 

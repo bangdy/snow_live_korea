@@ -74,9 +74,14 @@ const ResortReviews = (props) => {
         flex: 1,
       }}>
       <InfoCard {...resorts[props.info.url]} style={{ marginBottom: 3 }} />
-      <DateNavigator date={date} setDate={setDate} />
+      <DateNavigator date={date} setDate={setDate} setBeforeObj={setBeforeObj} />
       {showReviewMaker && (
-        <ReviewMaker url={props.info.url} beforeObj={beforeObj} dateString={dateString} />
+        <ReviewMaker
+          url={props.info.url}
+          beforeObj={beforeObj}
+          setBeforeObj={setBeforeObj}
+          dateString={dateString}
+        />
       )}
       <Divider sx={{ marginY: 2, width: "100%" }} />
       <SortToggle

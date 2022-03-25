@@ -14,13 +14,16 @@ function moveDate(date, num) {
 }
 
 const DateNavigator = (props) => {
-  const { date, setDate } = props;
+  const { date, setDate, setBeforeObj } = props;
 
   return (
     <Stack direction="row" spacing={3} sx={{ alignItems: "center" }} mt={2}>
       <Chip
         label={<ArrowBackIosNewIcon sx={{ marginTop: 0.8 }} />}
-        onClick={() => setDate(moveDate(date, -1))}
+        onClick={() => {
+          setDate(moveDate(date, -1));
+          setBeforeObj(null);
+        }}
       />
       <LocalizationProvider dateAdapter={AdapterDateFns} locale={koLocale}>
         <DatePicker
@@ -29,13 +32,17 @@ const DateNavigator = (props) => {
           value={date}
           onChange={(newValue) => {
             setDate(newValue);
+            setBeforeObj(null);
           }}
           renderInput={(params) => <TextField {...params} />}
         />
       </LocalizationProvider>
       <Chip
         label={<ArrowForwardIosIcon sx={{ marginTop: 0.8 }} />}
-        onClick={() => setDate(moveDate(date, 1))}
+        onClick={() => {
+          setDate(moveDate(date, 1));
+          setBeforeObj(null);
+        }}
       />
     </Stack>
   );
