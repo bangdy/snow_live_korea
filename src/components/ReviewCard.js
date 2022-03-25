@@ -17,13 +17,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useDispatch } from "react-redux";
 import { getResortDocThunk, updateLikes } from "store/resorts";
-import { getDate } from "help/util";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { useSelector } from "react-redux";
 import MyRideButton from "components/MyRideButton";
 import Divider from "@mui/material/Divider";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import Box from "@mui/material/Box";
 import { updateDocL4 } from "help/firestore";
 
@@ -43,13 +43,16 @@ const ReviewCard = (props) => {
     likes,
     dateString,
   } = props;
+
+  const dispatch = useDispatch();
   const curUser = useSelector((state) => state.user);
-
-  console.log(likes);
-
   const [anchorEl, setAnchorEl] = React.useState(false);
-
   const open = Boolean(anchorEl);
+  const preImgUrl = user?.preImgUrl;
+
+  //Logical Indicator
+  const iLikeIt = likes?.includes(curUser.uid);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -57,9 +60,6 @@ const ReviewCard = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const dispatch = useDispatch();
-
-  const preImgUrl = user?.preImgUrl;
 
   return (
     <Card sx={{ width: "100%", marginBottom: 1 }}>
@@ -133,18 +133,18 @@ const ReviewCard = (props) => {
         <Stack direction="row" sx={{ justifyContent: "space-between" }} mb={2}>
           <Rating name="simple-controlled" value={score} size="large" readOnly />
           <Stack direction="row">
-            <MyRideButton myRide={equipment} equipment={equipment} size={30} />
             {!reviewPage && (
               <>
+                <Chip label={resortInfo.name} size="small" color="primary" variant="outlined" />
                 <Divider
                   orientation="vertical"
                   variant="middle"
                   flexItem
                   sx={{ marginX: 1, marginY: 0 }}
                 />
-                <Chip label={resortInfo.name} size="small" color="primary" variant="outlined" />
               </>
             )}
+            <MyRideButton myRide={equipment} equipment={equipment} size={30} />
           </Stack>
         </Stack>
         <Typography variant="body2" color="text.secondary">
@@ -159,6 +159,7 @@ const ReviewCard = (props) => {
         <Box sx={{ marginX: "auto", width: "100%", textAlign: "center" }}>
           <IconButton
             aria-label="like"
+            disabled={!reviewPage}
             onClick={async () => {
               let message;
               let newArr;
@@ -191,7 +192,11 @@ const ReviewCard = (props) => {
                 alert(message);
               }
             }}>
-            <FavoriteBorderIcon fontSize="small" />
+            {iLikeIt ? (
+              <ThumbUpIcon color="primary" fontSize="small" />
+            ) : (
+              <ThumbUpAltOutlinedIcon fontSize="small" />
+            )}
           </IconButton>
           <Typography variant="caption" color="text.secondary">
             {likes?.length}
