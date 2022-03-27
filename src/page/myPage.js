@@ -2,11 +2,17 @@ import React from "react";
 import FullWidthTabs from "components/FullWidthTabs";
 import MyReviews from "page/MyReviews";
 import Profile from "page/Profile";
+import CalendarLog from "page/CalendarLog";
 
 const MyPage = (props) => {
+  const logs = {
+    page: CalendarLog,
+    name: "기록",
+  };
+
   const reviews = {
     page: MyReviews,
-    name: "기록",
+    name: "리뷰모음",
   };
 
   const profile = {
@@ -14,7 +20,7 @@ const MyPage = (props) => {
     name: "Profile",
   };
 
-  const pages = [reviews, profile];
+  const pages = [logs, reviews, profile];
 
   return <FullWidthTabs pages={pages} />;
 };
