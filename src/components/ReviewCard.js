@@ -60,7 +60,6 @@ const ReviewCard = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   return (
     <Card sx={{ width: "100%", marginBottom: 1 }}>
       <CardHeader
@@ -129,7 +128,13 @@ const ReviewCard = (props) => {
           )
         }
       />
-      <CardContent>
+      <CardContent
+        sx={{
+          ":last-child": {
+            padding: 2,
+            paddingBottom: 1,
+          },
+        }}>
         <Stack direction="row" sx={{ justifyContent: "space-between" }} mb={2}>
           <Rating name="simple-controlled" value={score} size="large" readOnly />
           <Stack direction="row">

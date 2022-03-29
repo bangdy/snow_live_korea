@@ -39,8 +39,6 @@ const ReviewMaker = (props) => {
   //Logical Indicator
   const noShowForReview = comment.length === 0 && !score;
 
-  console.log(beforeObj);
-
   return (
     <Paper
       elevation={2}
