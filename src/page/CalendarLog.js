@@ -77,6 +77,8 @@ const CalendarLog = (props) => {
           type: "progressbar",
         }}
         modules={[Pagination]}
+        touchStartForcePreventDefault={true}
+        touchMoveStopPropagation={true}
         className="mySwiper">
         <SwiperSlide>{cal(lastMonth)}</SwiperSlide>
         <SwiperSlide>{cal(midDay)}</SwiperSlide>
