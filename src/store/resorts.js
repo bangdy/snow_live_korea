@@ -18,6 +18,7 @@ export const resorts = createSlice({
   initialState: {
     collection: {},
     images: {},
+    colors: {},
   },
   reducers: {
     saveImageUrl: (state, { payload }) => {
@@ -34,6 +35,9 @@ export const resorts = createSlice({
   extraReducers: {
     [getAllDocsThunk.fulfilled]: (state, { payload }) => {
       state.collection = payload;
+      const colors = {};
+      Object.keys(payload).map((r) => (colors[r] = payload[r].info.color));
+      state.colors = colors;
     },
     [getResortDocThunk.fulfilled]: (state, { payload }) => {
       state.collection = { ...state.collection, [payload["resort"]]: payload.response };

@@ -8,17 +8,29 @@ import "swiper/css";
 import "swiper/css/pagination";
 import dateTime from "date-and-time";
 import { useSelector } from "react-redux";
-import styled from "styled-components";
+import { styled } from "@mui/material/styles";
+// import styled from "styled-components";
 import Stack from "@mui/material/Stack";
 
-const Dot = styled.div`
-  height: 8px;
-  width: 8px;
-  background-color: #f87171;
-  border-radius: 50%;
-  display: flex;
-  margin-left: 1px;
-`;
+// const Dot = styled.div`
+//   height: 8px;
+//   width: 8px;
+//   background-color: #f87171;
+//   border-radius: 50%;
+//   display: flex;
+//   margin-left: 1px;
+// `;
+
+const Dot2 = styled((props) => {
+  const { color, ...other } = props;
+  return <Box {...other} sx={{ backgroundColor: color }} />;
+})(({ theme, color }) => ({
+  height: "8px",
+  width: "8px",
+  borderRadius: "50%",
+  display: "flex",
+  marginLeft: "1px",
+}));
 
 const dayFormat = "DD";
 const timeFormat = "YYYY-MM-DD";
@@ -27,7 +39,9 @@ const CalendarLog = (props) => {
   const midDay = new Date();
   midDay.setDate(15);
 
-  const resorts = useSelector((state) => state.resorts.collection);
+  const resortStore = useSelector((state) => state.resorts);
+  const resorts = resortStore.collection;
+  const colors = resortStore.colors;
   const user = useSelector((state) => state.user);
 
   const reviews = [];
@@ -48,16 +62,19 @@ const CalendarLog = (props) => {
         formatDay={(locale, date) => dateTime.format(date, dayFormat)}
         showNeighboringMonth={false}
         tileContent={({ date, view }) => {
-          if (
-            reviews.find(
-              (x) =>
-                dateTime.format(new Date(x.createdAt), timeFormat) ===
-                dateTime.format(date, timeFormat)
-            )
-          ) {
+          const founds = reviews.filter(
+            (x) =>
+              dateTime.format(new Date(x.createdAt), timeFormat) ===
+              dateTime.format(date, timeFormat)
+          );
+          console.log(founds);
+          if (founds.length > 0) {
             return (
               <Stack direction="row" justifyContent="center">
-                <Dot />
+                {founds.map((found) => {
+                  console.log(found);
+                  return <Dot2 color={colors[found.resort]} />;
+                })}
               </Stack>
             );
           }
