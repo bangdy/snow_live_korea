@@ -5,6 +5,7 @@ export class ResortFactory {
     this.name = data?.name;
     this.address = data?.address;
     this.url = data?.url;
+    this.color = data?.color;
     this.t1Start = data?.t1Start ?? defaultTime;
     this.t1Finish = data?.t1Finish ?? defaultTime;
     this.t2Start = data?.t2Start ?? defaultTime;

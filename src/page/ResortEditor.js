@@ -14,6 +14,8 @@ import ImageEditorBox from "components/ImageEditorBox";
 import { uploadImage } from "help/util";
 import { useDispatch, useSelector } from "react-redux";
 import { saveImageUrl, getResortDocThunk } from "store/resorts";
+import { CirclePicker } from "react-color";
+import Chip from "@mui/material/Chip";
 
 const ResortEditor = (props) => {
   const [img, setImg] = useState(null);
@@ -24,7 +26,8 @@ const ResortEditor = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const resortObj = location.state;
-  const resort = new ResortFactory(resortObj);
+  const [resort, setResort] = useState(new ResortFactory(resortObj)); // 이게 없으면, 매번 reset 이 된다.
+  const [color, setColor] = useState(resort.getObject.color);
   const resortImg = useSelector((state) => state.resorts.images?.[resort.url]);
 
   //Logical Indicator
@@ -32,6 +35,11 @@ const ResortEditor = (props) => {
   const onTextChangeHandler = (e) => {
     resort.update(e.target.id, e.target.value);
     e.target.value = resort[e.target.id];
+  };
+
+  const onColorChangeHandler = (cObj) => {
+    resort.update("color", cObj["hex"]);
+    setColor(cObj["hex"]);
   };
 
   const timesArr = Object.keys(resort.getObject).filter((i) => i[0] === "t");
@@ -154,6 +162,25 @@ const ResortEditor = (props) => {
             />
           </Grid>
         </Grid>
+        <Grid
+          container
+          mt={2}
+          spacing={2}
+          marginX={10}
+          paddingY={2}
+          sx={{ border: 1, borderColor: "#d1d1d1" }}>
+          <Grid item xs={6} sm={6}>
+            색상
+          </Grid>
+          <Grid item xs={6} sm={6} sx={{ textAlign: "center" }}>
+            <Chip label="컬러" sx={{ backgroundColor: color }} />
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <Stack direction="row" justifyContent="center">
+              <CirclePicker onChange={onColorChangeHandler} />
+            </Stack>
+          </Grid>
+        </Grid>
         {timesArr.map((t, i) => (
           <Grid item xs={12} sm={12} mt={2} sx={{ width: "100%" }} key={i}>
             <TimePickerPack id={t} resortFactory={resort} />
@@ -161,7 +188,7 @@ const ResortEditor = (props) => {
         ))}
 
         <Button
-          sx={{ marginTop: 2 }}
+          sx={{ marginTop: 4 }}
           variant="outlined"
           onClick={async () => {
             const dbFunction = forEdit ? updateDoc : createDoc;
