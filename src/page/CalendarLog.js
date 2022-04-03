@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -9,22 +9,14 @@ import "swiper/css/pagination";
 import dateTime from "date-and-time";
 import { useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
-// import styled from "styled-components";
 import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
+import ReviewCard from "components/ReviewCard";
 
-// const Dot = styled.div`
-//   height: 8px;
-//   width: 8px;
-//   background-color: #f87171;
-//   border-radius: 50%;
-//   display: flex;
-//   margin-left: 1px;
-// `;
-
-const Dot2 = styled((props) => {
+const Dot = styled((props) => {
   const { color, ...other } = props;
   return <Box {...other} sx={{ backgroundColor: color }} />;
-})(({ theme, color }) => ({
+})(({ theme }) => ({
   height: "8px",
   width: "8px",
   borderRadius: "50%",
@@ -34,11 +26,12 @@ const Dot2 = styled((props) => {
 
 const dayFormat = "DD";
 const timeFormat = "YYYY-MM-DD";
+const midDay = new Date();
+midDay.setDate(15);
+const memoFounds = {};
 
 const CalendarLog = (props) => {
-  const midDay = new Date();
-  midDay.setDate(15);
-
+  const [selectedDay, setSelectedDay] = useState(null);
   const resortStore = useSelector((state) => state.resorts);
   const resorts = resortStore.collection;
   const colors = resortStore.colors;
@@ -54,6 +47,10 @@ const CalendarLog = (props) => {
   const lastMonth = dateTime.addMonths(midDay, -1);
   const nextMonth = dateTime.addMonths(midDay, 1);
 
+  const selectedDaysReviews = selectedDay
+    ? memoFounds[dateTime.format(selectedDay, timeFormat)]
+    : [];
+
   const cal = (d) => (
     <Stack direction="row" justifyContent="center">
       <Calendar
@@ -61,19 +58,25 @@ const CalendarLog = (props) => {
         defaultValue={d}
         formatDay={(locale, date) => dateTime.format(date, dayFormat)}
         showNeighboringMonth={false}
+        onChange={(date) => {
+          if (Object.keys(memoFounds).includes(dateTime.format(date, timeFormat))) {
+            setSelectedDay(date);
+          } else {
+            setSelectedDay(null);
+          }
+        }}
         tileContent={({ date, view }) => {
           const founds = reviews.filter(
             (x) =>
               dateTime.format(new Date(x.createdAt), timeFormat) ===
               dateTime.format(date, timeFormat)
           );
-          console.log(founds);
           if (founds.length > 0) {
+            memoFounds[dateTime.format(date, timeFormat)] = founds;
             return (
               <Stack direction="row" justifyContent="center">
                 {founds.map((found) => {
-                  console.log(found);
-                  return <Dot2 color={colors[found.resort]} />;
+                  return <Dot color={colors[found.resort]} />;
                 })}
               </Stack>
             );
@@ -101,6 +104,10 @@ const CalendarLog = (props) => {
         <SwiperSlide>{cal(midDay)}</SwiperSlide>
         <SwiperSlide>{cal(nextMonth)}</SwiperSlide>
       </Swiper>
+      <Divider sx={{ marginY: 3, width: "100%" }} />
+      {selectedDaysReviews.map((rev, i) => (
+        <ReviewCard {...rev} key={i} user={user} uid={user.uid} resortInfo={rev.resortInfo} />
+      ))}
     </Box>
   );
 };
