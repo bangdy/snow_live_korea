@@ -75,7 +75,7 @@ const InfoCard = (props) => {
       : 0;
 
   //Logical Indicator
-  const showEditButton = !isInMain && user.profile.isAdmin;
+  const showEditButton = !isInMain && user.profile?.isAdmin;
 
   return (
     <Card sx={style}>
