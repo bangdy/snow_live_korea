@@ -132,6 +132,7 @@ const ReviewMaker = (props) => {
                 message = notInput + "가 입력되지 않았습니다.";
               }
               alert(message);
+              setBeforeObj(null);
             }}>
             {beforeObj?.score ? "수정하기" : "리뷰하기"}
           </Button>

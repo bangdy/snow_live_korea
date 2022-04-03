@@ -23,6 +23,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useNavigate } from "react-router-dom";
 import DirectionsWalkIcon from "@mui/icons-material/DirectionsWalk";
 import Divider from "@mui/material/Divider";
+import { getJSON } from "help/util";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -40,7 +41,7 @@ const InfoCard = (props) => {
   const navigate = useNavigate();
 
   const { isInMain, style } = props;
-  const { name, address, url } = props.info;
+  const { name, address, url, cityName } = props.info;
   const reviews = props.reviews;
   const resorts = useSelector((state) => state.resorts);
   const user = useSelector((state) => state.user);
@@ -48,6 +49,7 @@ const InfoCard = (props) => {
 
   const [imageUrl, setImageUrl] = useState(resorts?.images[url]);
   const [expanded, setExpanded] = useState(false);
+  const [curTemper, setCurTemper] = useState(null);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -63,6 +65,15 @@ const InfoCard = (props) => {
       fetch();
     }
   }, [dispatch]);
+
+  useEffect(() => {
+    getJSON(
+      `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=8d7142f069a815bdbb1de64693bd81f6&units=metric`,
+      (err, data) => {
+        setCurTemper(data.main.temp);
+      }
+    );
+  }, []);
 
   const today = new Date();
   const dateString = getDate(today);
@@ -107,6 +118,7 @@ const InfoCard = (props) => {
           <Typography variant="body2" mt={2}>
             {address}
           </Typography>
+          <Typography variant="caption"> 기온 : {curTemper} ℃</Typography>
           <Stack
             direction="row"
             mt={2}

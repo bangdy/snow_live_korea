@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import { DownhillSkiingRounded, SnowboardingRounded } from "@mui/icons-material";
-import ToggleButton from "@mui/material/ToggleButton";
 import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
 import { useSelector } from "react-redux";
