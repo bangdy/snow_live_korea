@@ -22,6 +22,9 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import EditIcon from "@mui/icons-material/Edit";
 import EditOffIcon from "@mui/icons-material/EditOff";
 import MyRideButton from "components/MyRideButton";
+import date from "date-and-time";
+
+const timeFormat = "YY.MM.DD - HH:mm";
 
 const Profile = (props) => {
   const user = useSelector((state) => state.user);
@@ -168,6 +171,7 @@ const Profile = (props) => {
                     nickName: nickName,
                     myRide: myRide,
                     isAdmin: user.profile?.isAdmin ?? false,
+                    createdAt: user.profile?.createdAt ?? new Date().getTime(),
                   };
 
                   try {
@@ -233,6 +237,12 @@ const Profile = (props) => {
             equipment={"ski"}
             size={100}
           />
+        </Box>
+        <Box sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
+          <Typography variant="h5">가입일</Typography>
+          <Typography variant="body2" mt={2}>
+            {date.format(new Date(user.profile.createdAt), timeFormat)}
+          </Typography>
         </Box>
         {user.profile?.isAdmin && (
           <>
