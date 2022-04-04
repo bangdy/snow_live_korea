@@ -24,6 +24,8 @@ import { useNavigate } from "react-router-dom";
 import DirectionsWalkIcon from "@mui/icons-material/DirectionsWalk";
 import Divider from "@mui/material/Divider";
 import { getJSON } from "help/util";
+import FilterHdrIcon from "@mui/icons-material/FilterHdr";
+import DeviceThermostatIcon from "@mui/icons-material/DeviceThermostat";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -116,9 +118,13 @@ const InfoCard = (props) => {
             }
           />
           <Typography variant="body2" mt={2}>
+            <FilterHdrIcon fontSize="small" />
             {address}
           </Typography>
-          <Typography variant="caption"> 기온 : {curTemper} ℃</Typography>
+          <Typography variant="caption">
+            {" "}
+            <DeviceThermostatIcon fontSize="small" /> {curTemper} ℃
+          </Typography>
           <Stack
             direction="row"
             mt={2}
