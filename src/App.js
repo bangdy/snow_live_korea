@@ -29,12 +29,11 @@ initFirebase();
 
 const Header = styled.div`
   width: 100%;
-  position: fixed;
+  position: relative;
   left: 0;
   top: 0;
   padding: 0 10% 0 10%;
-  z-index: -1;
-  height: 70px;
+  z-index: 100;
   background-color: #1976d2;
 `;
 
@@ -152,9 +151,17 @@ function App() {
   }
 
   return (
-    <Container maxWidth="md" sx={{ height: "100vh", flexGrow: 1 }}>
-      <Header />
-      <AppBar position="fixed" sx={{ height: 70, alignItems: "center" }} elevation={0}>
+    <Box sx={{ height: "100vh", flexGrow: 1, overflow: "visible", zIndex: 10, paddingX: 0 }}>
+      <AppBar
+        position={currentPath === "/my_page" ? "relative" : "fixed"}
+        sx={{
+          height: 70,
+          alignItems: "center",
+          zIndex: 100,
+          marginBottom: currentPath === "/my_page" ? "-70px" : 0,
+        }}
+        elevation={0}>
+        <Header />
         <Toolbar
           sx={{
             display: "flex",
@@ -209,7 +216,7 @@ function App() {
           )}
         </>
       </Box>
-    </Container>
+    </Box>
   );
 }
 
