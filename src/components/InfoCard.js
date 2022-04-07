@@ -99,7 +99,12 @@ const InfoCard = (props) => {
           image={imageUrl}
           alt="Resort's Logo Image"
         />
-        <CardContent sx={{ width: 350, textAlign: "left", paddingLeft: 4 }}>
+        <CardContent
+          sx={{
+            width: isMobile ? window.screen.width - 32 : "65%",
+            textAlign: "left",
+            paddingLeft: 4,
+          }}>
           <CardHeader
             sx={{ padding: 0 }}
             action={

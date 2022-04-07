@@ -72,6 +72,7 @@ const ResortReviews = (props) => {
         flexDirection: "column",
         alignItems: "center",
         flex: 1,
+        paddingX: 2,
       }}>
       <InfoCard {...resorts[props.info.url]} style={{ marginBottom: 3 }} />
       <DateNavigator date={date} setDate={setDate} setBeforeObj={setBeforeObj} />

@@ -151,7 +151,15 @@ function App() {
   }
 
   return (
-    <Box sx={{ height: "100vh", flexGrow: 1, overflow: "visible", zIndex: 10, paddingX: 0 }}>
+    <Box
+      sx={{
+        height: "100vh",
+        flexGrow: 1,
+        overflow: "visible",
+        zIndex: 10,
+        paddingX: 0,
+        marginX: "auto",
+      }}>
       <AppBar
         position={currentPath === "/my_page" ? "relative" : "fixed"}
         sx={{
