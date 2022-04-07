@@ -23,6 +23,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import EditOffIcon from "@mui/icons-material/EditOff";
 import MyRideButton from "components/MyRideButton";
 import date from "date-and-time";
+import { useNavigate } from "react-router-dom";
 
 const timeFormat = "YY.MM.DD - HH:mm";
 
@@ -34,6 +35,7 @@ const Profile = (props) => {
   const [edit, setEdit] = useState(false);
   const [deleteImg, setDeleteImg] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   //Logical Indicator
   const fullfilledUser = user.uid && user.profile;
@@ -56,6 +58,7 @@ const Profile = (props) => {
       .signOut()
       .then(() => {
         alert("logout");
+        navigate("/");
         dispatch(logout());
       });
   };
