@@ -87,3 +87,17 @@ Page :  home / login / my_page  / 각각의 resort
 
 - 현재 device 가 Mobile 인지 Pc 인지 구분하는 방법
   - https://dev.to/timhuang/a-simple-way-to-detect-if-browser-is-on-a-mobile-device-with-javascript-44j3
+
+
+
+- fade-in, custom hook 만들기
+
+  - https://shylog.com/react-custom-hooks-scroll-animation-fadein/
+
+  - 로직
+
+    1. FadeIn Animation을 구현한다.
+
+    2. 특정 스크롤 시점에 Animation을 실행 시키도록 트리거 이벤트를 만든다.
+
+    3. Animation 트리거 이벤트를 DOM에 지정한다.
