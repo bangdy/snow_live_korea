@@ -18,6 +18,7 @@ import Typography from "@mui/material/Typography";
 import Login from "./page/Login";
 import Main from "./page/Main";
 import MyPage from "./page/MyPage";
+import About from "./page/About";
 import ResortReviews from "./page/ResortReviews";
 import ResortEditor from "./page/ResortEditor";
 import PageHOC from "components/PageHOC";
@@ -128,7 +129,7 @@ function App() {
     rightButton = "";
   } else if (user.uid) {
     rightButton = (
-      <Link to="/my_page" style={{ textDecoration: "none" }}>
+      <Link to="/about" style={{ textDecoration: "none" }}>
         <ProfileAvatar user={user} size={40} />
       </Link>
     );
@@ -218,6 +219,10 @@ function App() {
               <Route
                 path="/resort_editor"
                 element={<PageHOC name="ResortEditor" Component={<ResortEditor />} />}
+              />
+              <Route
+                path="/about"
+                element={<PageHOC name="ResortEditor" Component={<About />} />}
               />
               <Route path="/loading" element={LoadingItem} />
             </Routes>
