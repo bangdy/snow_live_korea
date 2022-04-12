@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import initFirebase from "./help/firebaseConfig";
 import styled from "styled-components";
-import Container from "@mui/material/Container";
 import { useSelector, useDispatch } from "react-redux";
 import { Route, Routes, Link, useNavigate } from "react-router-dom";
 import kakaoAuth from "help/kakaoAuth";
@@ -14,6 +13,9 @@ import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
+import Stack from "@mui/material/Stack";
 
 import Login from "./page/Login";
 import Main from "./page/Main";
@@ -23,8 +25,8 @@ import ResortReviews from "./page/ResortReviews";
 import ResortEditor from "./page/ResortEditor";
 import PageHOC from "components/PageHOC";
 import ProfileAvatar from "components/ProfileAvatar";
-import Stack from "@mui/material/Stack";
 import { isMobile } from "help/util";
+import SpeedDial from "components/SpeedDial";
 
 initFirebase();
 
@@ -110,6 +112,21 @@ function App() {
 
   let rightButton;
 
+  <IconButton
+    sx={{
+      border: 1,
+      backgroundColor: "#f9f9f9",
+    }}
+    color="primary"
+    aria-label="upload picture"
+    component="span">
+    <QuestionMarkIcon sx={{ width: 20, height: 20 }} />
+  </IconButton>;
+
+  const actions = [
+    { icon: <QuestionMarkIcon />, name: "Logout", onClick: () => navigate("/about") },
+  ];
+
   const currentPath = window.location.pathname;
   const LoadingItem = (
     <Stack
@@ -129,7 +146,7 @@ function App() {
     rightButton = "";
   } else if (user.uid) {
     rightButton = (
-      <Link to="/about" style={{ textDecoration: "none" }}>
+      <Link to="/my_page" style={{ textDecoration: "none" }}>
         <ProfileAvatar user={user} size={40} />
       </Link>
     );
@@ -152,7 +169,8 @@ function App() {
   }
 
   return (
-    <Box
+    <Stack
+      direction="column"
       sx={{
         height: "100vh",
         flexGrow: 1,
@@ -229,7 +247,17 @@ function App() {
           )}
         </>
       </Box>
-    </Box>
+      <Box
+        pr={2}
+        sx={{
+          position: user.isMobile ? "sticky" : "fixed",
+          right: !user.isMobile && 100,
+          bottom: 30,
+          alignSelf: "flex-end",
+        }}>
+        <SpeedDial actions={actions} />
+      </Box>
+    </Stack>
   );
 }
 

@@ -5,11 +5,7 @@ import SpeedDialAction from "@mui/material/SpeedDialAction";
 
 const BasicSpeedDial = (props) => {
   return (
-    <SpeedDial
-      ariaLabel="SpeedDial basic example"
-      direction="down"
-      sx={{ position: "absolute", top: 0, right: -20 }}
-      icon={<SpeedDialIcon />}>
+    <SpeedDial ariaLabel="SpeedDial basic example" direction="up" icon={<SpeedDialIcon />}>
       {props.actions.map((action) => (
         <SpeedDialAction
           key={action.name}
