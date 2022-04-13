@@ -27,6 +27,7 @@ import PageHOC from "components/PageHOC";
 import ProfileAvatar from "components/ProfileAvatar";
 import { isMobile } from "help/util";
 import SpeedDial from "components/SpeedDial";
+import { NavActionsContext } from "help/customHooks";
 
 initFirebase();
 
@@ -43,6 +44,8 @@ const Header = styled.div`
 function App() {
   const user = useSelector((state) => state.user);
   const [currentWidth, setCurrentWidth] = useState(window.innerWidth);
+  const [actions, setActions] = useState([]);
+  const value2 = { actions, setActions };
   const loading = user.loading;
   const resorts = useSelector((state) => state.resorts);
   const navigate = useNavigate();
@@ -112,21 +115,6 @@ function App() {
 
   let rightButton;
 
-  <IconButton
-    sx={{
-      border: 1,
-      backgroundColor: "#f9f9f9",
-    }}
-    color="primary"
-    aria-label="upload picture"
-    component="span">
-    <QuestionMarkIcon sx={{ width: 20, height: 20 }} />
-  </IconButton>;
-
-  const actions = [
-    { icon: <QuestionMarkIcon />, name: "Logout", onClick: () => navigate("/about") },
-  ];
-
   const currentPath = window.location.pathname;
   const LoadingItem = (
     <Stack
@@ -169,95 +157,99 @@ function App() {
   }
 
   return (
-    <Stack
-      direction="column"
-      sx={{
-        height: "100vh",
-        flexGrow: 1,
-        overflow: "visible",
-        zIndex: 10,
-        paddingX: 0,
-        marginX: "auto",
-      }}>
-      <AppBar
-        position={currentPath === "/my_page" ? "relative" : "fixed"}
+    <NavActionsContext.Provider value={value2}>
+      <Stack
+        direction="column"
         sx={{
-          height: 70,
-          alignItems: "center",
-          zIndex: 100,
-          marginBottom: currentPath === "/my_page" ? "-70px" : 0,
-        }}
-        elevation={0}>
-        <Header />
-        <Toolbar
+          height: "100vh",
+          flexGrow: 1,
+          overflow: "visible",
+          zIndex: 10,
+          paddingX: 0,
+          marginX: "auto",
+        }}>
+        <AppBar
+          position={currentPath === "/my_page" ? "relative" : "fixed"}
+          sx={{
+            height: 70,
+            alignItems: "center",
+            zIndex: 100,
+            marginBottom: currentPath === "/my_page" ? "-70px" : 0,
+          }}
+          elevation={0}>
+          <Header />
+          <Toolbar
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: currentWidth > 768 ? "768px" : "100%",
+            }}>
+            <Link to="/" style={{ textDecoration: "none" }}>
+              <Typography variant="h6" component="div" sx={{ color: "white" }}>
+                Snow Live
+              </Typography>
+            </Link>
+            {rightButton}
+          </Toolbar>
+        </AppBar>
+
+        <Box
           sx={{
             display: "flex",
-            justifyContent: "space-between",
-            width: currentWidth > 768 ? "768px" : "100%",
+            justifyContent: "center",
+            alignContent: "center",
+            marginX: "auto",
+            maxWidth: "500px",
+            width: "100%",
+            paddingTop: "70px",
+            height: loading || currentPath == "/loading" ? "50%" : null,
           }}>
-          <Link to="/" style={{ textDecoration: "none" }}>
-            <Typography variant="h6" component="div" sx={{ color: "white" }}>
-              Snow Live
-            </Typography>
-          </Link>
-          {rightButton}
-        </Toolbar>
-      </AppBar>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignContent: "center",
-          marginX: "auto",
-          maxWidth: "500px",
-          width: "100%",
-          paddingTop: "70px",
-          height: loading || currentPath == "/loading" ? "50%" : null,
-        }}>
-        <>
-          {loading ? (
-            LoadingItem
-          ) : (
-            <Routes>
-              <Route path="/" element={<PageHOC name="Main" Component={<Main />} />} />
-              <Route path="/login" element={<PageHOC name="Login" Component={<Login />} />} />
-              <Route path="/my_page" element={<PageHOC name="MyPage" Component={<MyPage />} />} />
-              {Object.keys(resorts.collection).map((key, i) => (
+          <>
+            {loading ? (
+              LoadingItem
+            ) : (
+              <Routes>
+                <Route path="/" element={<PageHOC name="Main" Component={<Main />} />} />
+                <Route path="/login" element={<PageHOC name="Login" Component={<Login />} />} />
+                <Route path="/my_page" element={<PageHOC name="MyPage" Component={<MyPage />} />} />
+                {Object.keys(resorts.collection).map((key, i) => (
+                  <Route
+                    key={i}
+                    path={`/${resorts.collection[key].info.url}`}
+                    element={
+                      <PageHOC
+                        name="Review"
+                        Component={<ResortReviews {...resorts.collection[key]} />}
+                      />
+                    }
+                  />
+                ))}
                 <Route
-                  key={i}
-                  path={`/${resorts.collection[key].info.url}`}
-                  element={
-                    <PageHOC
-                      name="Review"
-                      Component={<ResortReviews {...resorts.collection[key]} />}
-                    />
-                  }
+                  path="/resort_editor"
+                  element={<PageHOC name="ResortEditor" Component={<ResortEditor />} />}
                 />
-              ))}
-              <Route
-                path="/resort_editor"
-                element={<PageHOC name="ResortEditor" Component={<ResortEditor />} />}
-              />
-              <Route
-                path="/about"
-                element={<PageHOC name="ResortEditor" Component={<About />} />}
-              />
-              <Route path="/loading" element={LoadingItem} />
-            </Routes>
-          )}
-        </>
-      </Box>
-      <Box
-        pr={2}
-        sx={{
-          position: user.isMobile ? "sticky" : "fixed",
-          right: !user.isMobile && 100,
-          bottom: 30,
-          alignSelf: "flex-end",
-        }}>
-        <SpeedDial actions={actions} />
-      </Box>
-    </Stack>
+                <Route
+                  path="/about"
+                  element={<PageHOC name="ResortEditor" Component={<About />} />}
+                />
+                <Route path="/loading" element={LoadingItem} />
+              </Routes>
+            )}
+          </>
+        </Box>
+
+        <Box
+          pr={2}
+          sx={{
+            position: user.isMobile ? "sticky" : "fixed",
+            right: !user.isMobile && 100,
+            bottom: 30,
+            alignSelf: "flex-end",
+          }}>
+          <SpeedDial actions={actions} />
+        </Box>
+      </Stack>
+    </NavActionsContext.Provider>
   );
 }
 

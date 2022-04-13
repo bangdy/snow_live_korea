@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 
 export const useFocus = () => {
   const htmlElRef = useRef(null);
@@ -45,3 +45,8 @@ export const useScrollFadeIn = () => {
     },
   };
 };
+
+export const NavActionsContext = React.createContext({
+  actions: [],
+  setActions: () => {},
+});

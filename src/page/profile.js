@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -24,10 +24,13 @@ import EditOffIcon from "@mui/icons-material/EditOff";
 import MyRideButton from "components/MyRideButton";
 import date from "date-and-time";
 import { useNavigate } from "react-router-dom";
+import { NavActionsContext } from "help/customHooks";
 
 const timeFormat = "YY.MM.DD - HH:mm";
 
 const Profile = (props) => {
+  const { actions, setActions } = useContext(NavActionsContext);
+
   const user = useSelector((state) => state.user);
   const [open, setOpen] = useState(false);
   const [img, setImg] = useState(null);
@@ -77,7 +80,7 @@ const Profile = (props) => {
     setOpen(false);
   };
 
-  const actions = [
+  const currentActions = [
     {
       icon: edit ? <EditOffIcon /> : <EditIcon />,
       name: "Edit Profile",
@@ -89,6 +92,10 @@ const Profile = (props) => {
     },
     { icon: <LogoutIcon />, name: "Logout", onClick: logoutRequest },
   ];
+
+  useEffect(() => {
+    setActions(currentActions);
+  }, []);
 
   const style = {
     position: "absolute",
@@ -147,7 +154,7 @@ const Profile = (props) => {
         </Stack>
       </Modal>
       <Stack sx={{ alignItems: "center", position: "relative" }}>
-        <SpeedDial actions={actions} />
+        <SpeedDial actions={currentActions} />
         <ProfileAvatar
           user={user}
           isChangigProfile={isChangigProfile}
