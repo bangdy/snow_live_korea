@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
+import { NavActionsContext } from "help/customHooks";
 
 const PageHOC = ({ Component, name }) => {
   const user = useSelector((state) => state.user);
+  const { setActions } = useContext(NavActionsContext);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,6 +31,10 @@ const PageHOC = ({ Component, name }) => {
       default:
         break;
     }
+  }, [location, isLogin]);
+
+  useEffect(() => {
+    setActions([]);
   }, [location, isLogin]);
 
   return Component;

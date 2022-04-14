@@ -101,3 +101,11 @@ Page :  home / login / my_page  / 각각의 resort
     2. 특정 스크롤 시점에 Animation을 실행 시키도록 트리거 이벤트를 만든다.
 
     3. Animation 트리거 이벤트를 DOM에 지정한다.
+
+- children 의 data를 parent 로 올리는 심플 모델
+  - https://javascript.plainenglish.io/how-to-pass-props-from-child-to-parent-component-in-react-d90752ff4d01
+
+
+
+- useContext 사용 하는 명확한 예제 코드
+  - https://stackoverflow.com/questions/41030361/how-to-update-react-context-from-inside-a-child-component

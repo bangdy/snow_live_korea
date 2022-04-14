@@ -17,7 +17,6 @@ import ProfileAvatar from "components/ProfileAvatar";
 import { uploadImage, removeImage } from "help/util";
 import { Link } from "react-router-dom";
 import Typography from "@mui/material/Typography";
-import SpeedDial from "components/SpeedDial";
 import LogoutIcon from "@mui/icons-material/Logout";
 import EditIcon from "@mui/icons-material/Edit";
 import EditOffIcon from "@mui/icons-material/EditOff";
@@ -29,7 +28,7 @@ import { NavActionsContext } from "help/customHooks";
 const timeFormat = "YY.MM.DD - HH:mm";
 
 const Profile = (props) => {
-  const { actions, setActions } = useContext(NavActionsContext);
+  const { setActions } = useContext(NavActionsContext);
 
   const user = useSelector((state) => state.user);
   const [open, setOpen] = useState(false);
@@ -95,7 +94,7 @@ const Profile = (props) => {
 
   useEffect(() => {
     setActions(currentActions);
-  }, []);
+  }, [edit]);
 
   const style = {
     position: "absolute",
@@ -154,7 +153,6 @@ const Profile = (props) => {
         </Stack>
       </Modal>
       <Stack sx={{ alignItems: "center", position: "relative" }}>
-        <SpeedDial actions={currentActions} />
         <ProfileAvatar
           user={user}
           isChangigProfile={isChangigProfile}

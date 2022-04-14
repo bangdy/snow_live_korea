@@ -108,7 +108,7 @@ const CalendarLog = (props) => {
   return (
     <Box>
       <Stack direction="row" spacing={1} mb={2}>
-        {seasons.map((y) => {
+        {seasons.map((y, i) => {
           const s = String(y).slice(2);
           const e = String(Number(s) + 1);
           return (
@@ -117,6 +117,7 @@ const CalendarLog = (props) => {
               color="primary"
               variant={y === season.getFullYear() ? "filled" : "outlined"}
               onClick={() => setSeason(new Date(y, 11, 15))}
+              key={i}
             />
           );
         })}
@@ -134,7 +135,7 @@ const CalendarLog = (props) => {
         touchMoveStopPropagation={true}
         className="mySwiper">
         {[0, 1, 2, 3].map((i) => (
-          <SwiperSlide>{cal(dateTime.addMonths(season, i))}</SwiperSlide>
+          <SwiperSlide key={i}>{cal(dateTime.addMonths(season, i))}</SwiperSlide>
         ))}
       </Swiper>
       <Divider sx={{ marginY: 3, width: "100%" }} />

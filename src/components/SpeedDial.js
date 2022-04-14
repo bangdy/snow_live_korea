@@ -18,12 +18,12 @@ const BasicSpeedDial = (props) => {
 
   return (
     <SpeedDial ariaLabel="SpeedDial basic example" direction="up" icon={<SpeedDialIcon />}>
-      {BasicActions.map((action) => (
+      {BasicActions.map((action, i) => (
         <SpeedDialAction
-          key={action.name}
           icon={action.icon}
           tooltipTitle={action.name}
           onClick={action.onClick}
+          key={i}
         />
       ))}
     </SpeedDial>
