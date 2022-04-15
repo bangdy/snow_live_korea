@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import SwipeableViews from "react-swipeable-views";
 import { useTheme } from "@mui/material/styles";
@@ -7,6 +7,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { useSelector } from "react-redux";
+import { NavActionsContext } from "help/customHooks";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -40,7 +41,8 @@ export default function FullWidthTabs(props) {
   const theme = useTheme();
   const user = useSelector((state) => state.user);
   const fullfilledUser = user.uid && user.profile;
-  const [value, setValue] = React.useState(fullfilledUser ? 0 : 1);
+  const [value, setValue] = useState(fullfilledUser ? 0 : 1);
+  const { setActions } = useContext(NavActionsContext);
 
   const handleChange = (event, newValue) => {
     if (fullfilledUser) {
@@ -53,6 +55,10 @@ export default function FullWidthTabs(props) {
   const handleChangeIndex = (index) => {
     setValue(index);
   };
+
+  useEffect(() => {
+    setActions([]);
+  }, [value]);
 
   return (
     <Box sx={{ bgcolor: "background.paper,", width: "100%" }}>
