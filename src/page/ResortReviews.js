@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Box from "@mui/material/Box";
 import ReviewMaker from "components/ReviewMaker";
 import ReviewCard from "components/ReviewCard";
@@ -15,13 +15,18 @@ import InfoCard from "components/InfoCard";
 import Stack from "@mui/material/Stack";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import IconButton from "@mui/material/IconButton";
+import { NavActionsContext } from "help/customHooks";
+import EditIcon from "@mui/icons-material/Edit";
+import EditOffIcon from "@mui/icons-material/EditOff";
 
 const ResortReviews = (props) => {
   const dispatch = useDispatch();
+  const { setActions } = useContext(NavActionsContext);
   const resorts = useSelector((state) => state.resorts.collection);
   const currentUserUid = useSelector((state) => state.user.uid);
   const reviews = resorts[props.info.url].reviews;
   const [date, setDate] = useState(new Date());
+  const [onReview, setOnReview] = useState(true);
   const dateString = getDate(date);
 
   const isExist = reviews[dateString] && Object.keys(reviews[dateString]).length > 0;
@@ -31,11 +36,21 @@ const ResortReviews = (props) => {
 
   const [beforeObj, setBeforeObj] = useState(null);
 
+  const currentActions = [
+    {
+      icon: onReview ? <EditOffIcon /> : <EditIcon />,
+      name: "Review 하기",
+      onClick: () => setOnReview(!onReview),
+    },
+  ];
+
+  console.log(onReview);
+
   useEffect(() => {
     dispatch(getResortDocThunk(props.info.url));
   }, []);
 
-  useEffect(() => setKeys(Object.keys(reviews[dateString] ?? [])), [date, reviews[dateString]]);
+  useEffect(() => setKeys(Object.keys(reviews[dateString] ?? [])), [date, dateString]);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -57,6 +72,10 @@ const ResortReviews = (props) => {
     getUsers();
   }, [keys]);
 
+  useEffect(() => {
+    setActions(currentActions);
+  }, [onReview]);
+
   //Logical Indicator
   const showReviewMaker =
     currentUserUid &&
@@ -76,10 +95,11 @@ const ResortReviews = (props) => {
       }}>
       <InfoCard {...resorts[props.info.url]} style={{ marginBottom: 3 }} />
       <DateNavigator date={date} setDate={setDate} setBeforeObj={setBeforeObj} />
-      {showReviewMaker && (
+      {onReview && showReviewMaker && (
         <ReviewMaker
           url={props.info.url}
           beforeObj={beforeObj}
+          setOnReview={setOnReview}
           setBeforeObj={setBeforeObj}
           dateString={dateString}
         />

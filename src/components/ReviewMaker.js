@@ -15,7 +15,7 @@ import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 
 const ReviewMaker = (props) => {
-  const { beforeObj, dateString, setBeforeObj } = props;
+  const { beforeObj, dateString, setBeforeObj, setOnReview } = props;
   const [inputRef, setInputFocus] = useFocus();
 
   const user = useSelector((state) => state.user);
@@ -68,11 +68,13 @@ const ReviewMaker = (props) => {
                 {user.profile.nickName}
               </Typography>
             </Stack>
-            {beforeObj?.score && (
-              <IconButton onClick={() => setBeforeObj(null)}>
-                <HighlightOffOutlinedIcon size="small" color="secondary" />
-              </IconButton>
-            )}
+            <IconButton
+              onClick={() => {
+                beforeObj && setBeforeObj(null);
+                setOnReview(false);
+              }}>
+              <HighlightOffOutlinedIcon size="small" color="secondary" />
+            </IconButton>
           </Stack>
 
           <Rating
