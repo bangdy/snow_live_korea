@@ -25,7 +25,7 @@ const About = (props) => {
           component="img"
           image="https://i.pinimg.com/564x/5f/f1/e1/5ff1e13a12243507b209e11713264597.jpg"
           alt="image"
-          sx={{ height: "auto", objectFit: "contain" }}
+          sx={{ width: "100%", minHeight: 500, objectFit: "contain" }}
         />
       </Section>
       <Section>
@@ -44,7 +44,7 @@ const About = (props) => {
           component="img"
           image="https://i.pinimg.com/564x/96/b6/04/96b6040be9d3bbd283bdec2970b0089c.jpg"
           alt="image"
-          sx={{ height: "auto", objectFit: "contain" }}
+          sx={{ width: "100%", minHeight: 500, objectFit: "contain" }}
         />
       </Section>
       <Section>
@@ -64,7 +64,7 @@ const About = (props) => {
           component="img"
           image="https://i.pinimg.com/564x/73/ff/a1/73ffa1fc45dc2283712fa4075582d8d7.jpg"
           alt="image"
-          sx={{ height: "auto", objectFit: "contain" }}
+          sx={{ width: "100%", minHeight: 500, objectFit: "contain" }}
         />
       </Section>
       <Section>
