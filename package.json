@@ -9,6 +9,8 @@
     "@mui/icons-material": "^5.5.1",
     "@mui/lab": "^5.0.0-alpha.75",
     "@mui/material": "^5.5.3",
+    "@nivo/bar": "^0.79.1",
+    "@nivo/core": "^0.79.0",
     "@reduxjs/toolkit": "^1.8.1",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^13.0.0",
