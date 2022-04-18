@@ -5,9 +5,41 @@ import { ResponsiveBar } from "@nivo/bar";
 // no chart will be rendered.
 // website examples showcase many properties,
 // you'll often use just a few of them.
+
+const data2 = [
+  {
+    date: "3/14",
+    rating: 4.5,
+  },
+  {
+    date: "3/15",
+    rating: 4.9,
+  },
+  {
+    date: "3/16",
+    rating: 3.7,
+  },
+  {
+    date: "3/17",
+    rating: 3.1,
+  },
+  {
+    date: "3/18",
+    rating: 2.5,
+  },
+  {
+    date: "3/19",
+    rating: 3.7,
+  },
+  {
+    date: "3/20",
+    rating: 4.8,
+  },
+];
+
 const BarChart = ({ data /* see data tab */ }) => (
   <ResponsiveBar
-    data={data}
+    data={data2}
     keys={["rating"]}
     minValue={0}
     maxValue={5}
