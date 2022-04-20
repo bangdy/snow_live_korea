@@ -16,10 +16,7 @@ function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
+      Snow Live / {new Date().getFullYear()}
       {"."}
     </Typography>
   );
@@ -53,7 +50,7 @@ export default function SignIn(props) {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5" sx={{ marginBottom: 4 }}>
-            간편로그인
+            간편로그인 / 간편가입
           </Typography>
 
           <Button variant="text">
