@@ -5,6 +5,8 @@ import CardMedia from "@mui/material/CardMedia";
 import { useScrollFadeIn } from "help/customHooks";
 import Section from "components/Section";
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import GitHubIcon from "@mui/icons-material/GitHub";
 
 const About = (props) => {
   const animatedItem = useScrollFadeIn();
@@ -58,7 +60,7 @@ const About = (props) => {
         </Box>
       </Section>
 
-      <Section mt={10}>
+      <Section>
         <CardMedia
           {...animatedItem5}
           component="img"
@@ -73,6 +75,25 @@ const About = (props) => {
             이번 시즌 나의 하루하루의 기록을 남겨놓으세요.
           </Typography>
         </Box>
+      </Section>
+      <Section mt={10}>
+        <Stack
+          mt={4}
+          direction="column"
+          sx={{ alignItems: "center", width: "100%", textAlign: "center" }}>
+          <Divider
+            orientation="horizontal"
+            variant="middle"
+            flexItem
+            sx={{ alignSelf: "stretch" }}
+          />
+          <Typography variant="caption" mt={2} mb={1}>
+            Snow Live 는 open source 로 운영 됩니다.
+          </Typography>
+          <a href="https://github.com/bangdy/snow_live_korea" target="_blank">
+            <GitHubIcon fontSize="large" />
+          </a>
+        </Stack>
       </Section>
     </Stack>
   );
