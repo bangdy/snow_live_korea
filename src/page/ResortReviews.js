@@ -18,6 +18,7 @@ import IconButton from "@mui/material/IconButton";
 import { NavActionsContext } from "help/customHooks";
 import EditIcon from "@mui/icons-material/Edit";
 import EditOffIcon from "@mui/icons-material/EditOff";
+import BarChart from "components/BarChart";
 
 const ResortReviews = (props) => {
   const dispatch = useDispatch();
@@ -43,8 +44,6 @@ const ResortReviews = (props) => {
       onClick: () => setOnReview(!onReview),
     },
   ];
-
-  console.log(onReview);
 
   useEffect(() => {
     dispatch(getResortDocThunk(props.info.url));
@@ -95,6 +94,9 @@ const ResortReviews = (props) => {
       }}>
       <InfoCard {...resorts[props.info.url]} style={{ marginBottom: 3 }} />
       <DateNavigator date={date} setDate={setDate} setBeforeObj={setBeforeObj} />
+      <Stack sx={{ height: 300, width: "100%" }}>
+        <BarChart />
+      </Stack>
       {onReview && showReviewMaker && (
         <ReviewMaker
           url={props.info.url}
