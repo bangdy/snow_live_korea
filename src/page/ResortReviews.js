@@ -49,7 +49,10 @@ const ResortReviews = (props) => {
     dispatch(getResortDocThunk(props.info.url));
   }, []);
 
-  useEffect(() => setKeys(Object.keys(reviews[dateString] ?? [])), [date, dateString]);
+  useEffect(
+    () => setKeys(Object.keys(reviews[dateString] ?? [])),
+    [date, dateString, reviews[dateString]]
+  );
 
   useEffect(() => {
     const getUsers = async () => {
