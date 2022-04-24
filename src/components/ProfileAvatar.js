@@ -51,6 +51,7 @@ const ProfileAvatar = (props) => {
         height: size,
         fontSize: size * 0.75,
         border: 1,
+        ...props?.sx,
       }}>
       {profile}
     </Avatar>

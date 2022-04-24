@@ -24,6 +24,7 @@ import MyRideButton from "components/MyRideButton";
 import date from "date-and-time";
 import { useNavigate } from "react-router-dom";
 import { NavActionsContext } from "help/customHooks";
+import { useTheme } from "@mui/material/styles";
 
 const timeFormat = "YY.MM.DD - HH:mm";
 
@@ -38,6 +39,7 @@ const Profile = (props) => {
   const [deleteImg, setDeleteImg] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   //Logical Indicator
   const fullfilledUser = user.uid && user.profile;
@@ -152,12 +154,20 @@ const Profile = (props) => {
           </Stack>
         </Stack>
       </Modal>
-      <Stack sx={{ alignItems: "center", position: "relative" }}>
+      <Stack direction="column" sx={{ alignItems: "center", position: "relative" }}>
+        <Box
+          sx={{
+            alignSelf: "stretch",
+            height: 120,
+            background: `linear-gradient(${theme.palette.primary.light}, #ffffff)`,
+            position: "relative",
+          }}></Box>
         <ProfileAvatar
           user={user}
           isChangigProfile={isChangigProfile}
-          size={200}
+          size={100}
           alterImgUrl={alterImgUrl}
+          sx={{ marginTop: -10 }}
         />
         <IconButton
           sx={{ position: "relative", top: -30, left: 0 }}
@@ -168,6 +178,9 @@ const Profile = (props) => {
           onClick={handleOpen}>
           <PhotoCamera sx={{ width: 40, height: 40 }} />
         </IconButton>
+        <Typography variant="h5" mb={2}>
+          {nickName}
+        </Typography>
         <Stack direction="row" spacing={2} sx={{ height: 40 }}>
           {editable ? (
             <>
