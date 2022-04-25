@@ -25,6 +25,7 @@ import date from "date-and-time";
 import { useNavigate } from "react-router-dom";
 import { NavActionsContext } from "help/customHooks";
 import { useTheme } from "@mui/material/styles";
+import Divider from "@mui/material/Divider";
 
 const timeFormat = "YY.MM.DD - HH:mm";
 
@@ -181,6 +182,42 @@ const Profile = (props) => {
         <Typography variant="h5" mb={2}>
           {nickName}
         </Typography>
+        <Stack
+          direction="row"
+          mt={2}
+          justifyContent="space-around"
+          sx={{ height: 40, width: "80%" }}>
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="caption" fontWeight={800}>
+              24
+            </Typography>
+            <Typography variant="h6">Ridings</Typography>
+          </Box>
+          <Divider
+            orientation="vertical"
+            variant="middle"
+            flexItem
+            sx={{ marginX: 0.5, marginY: 0 }}
+          />
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="caption" fontWeight={800}>
+              10
+            </Typography>
+            <Typography variant="h6">Followers</Typography>
+          </Box>
+          <Divider
+            orientation="vertical"
+            variant="middle"
+            flexItem
+            sx={{ marginX: 0.5, marginY: 0 }}
+          />
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="caption" fontWeight={800}>
+              120
+            </Typography>
+            <Typography variant="h6">Likes</Typography>
+          </Box>
+        </Stack>
         <Stack direction="row" spacing={2} sx={{ height: 40 }}>
           {editable ? (
             <>
