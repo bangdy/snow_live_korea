@@ -1,31 +1,27 @@
 import React, { useState, useContext, useEffect } from "react";
-import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Input from "@mui/material/Input";
-import { useSelector } from "react-redux";
-import { createDoc, updateDoc } from "help/firestore";
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import { logout, updateProfile, updatePictureUrl } from "store/user";
-import { useDispatch } from "react-redux";
 import Modal from "@mui/material/Modal";
-import AvatarImageCropper from "react-avatar-image-cropper";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import IconButton from "@mui/material/IconButton";
-import ProfileAvatar from "components/ProfileAvatar";
-import { uploadImage, removeImage } from "help/util";
-import { Link } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import LogoutIcon from "@mui/icons-material/Logout";
 import EditIcon from "@mui/icons-material/Edit";
 import EditOffIcon from "@mui/icons-material/EditOff";
-import MyRideButton from "components/MyRideButton";
-import date from "date-and-time";
-import { useNavigate } from "react-router-dom";
-import { NavActionsContext } from "help/customHooks";
 import { useTheme } from "@mui/material/styles";
 import Divider from "@mui/material/Divider";
+
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, Link } from "react-router-dom";
+import date from "date-and-time";
+
+import ProfileAvatar from "components/ProfileAvatar";
+import ProfileEditor from "components/ProfileEditor";
+import { createDoc, updateDoc } from "help/firestore";
+import { uploadImage, removeImage } from "help/util";
+import { NavActionsContext } from "help/customHooks";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import { logout, updateProfile, updatePictureUrl } from "store/user";
 
 const timeFormat = "YY.MM.DD - HH:mm";
 
@@ -49,7 +45,6 @@ const Profile = (props) => {
 
   const [nickName, setNickName] = useState(fullfilledUser ? user.profile.nickName : "");
   const [myRide, setMyRide] = useState(fullfilledUser ? user.profile.myRide : "board");
-  const ariaLabel = { "aria-label": "description" };
 
   const handleChange = (event) => editable && setNickName(event.target.value);
 
@@ -74,7 +69,6 @@ const Profile = (props) => {
 
   const handleOk = () => {
     setAlterImgUrl(window.URL.createObjectURL(img));
-    setOpen(false);
   };
 
   const handleClose = () => {
@@ -90,6 +84,7 @@ const Profile = (props) => {
         setEdit(!edit);
         setAlterImgUrl(null);
         setImg(null);
+        if (!open) handleOpen();
       },
     },
     { icon: <LogoutIcon />, name: "Logout", onClick: logoutRequest },
@@ -99,17 +94,40 @@ const Profile = (props) => {
     setActions(currentActions);
   }, [edit]);
 
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    maxWidth: 600,
-    width: 500,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
+  const updateProfileFunc = async () => {
+    const func = fullfilledUser ? updateDoc : createDoc;
+    const updatedProfile = {
+      nickName: nickName,
+      myRide: myRide,
+      isAdmin: user.profile?.isAdmin ?? false,
+      createdAt: user.profile?.createdAt ?? new Date().getTime(),
+    };
+
+    try {
+      await func("users", user.uid, {
+        profile: updatedProfile,
+      });
+      if (img) {
+        uploadImage("profile", user.uid, img);
+        dispatch(updatePictureUrl(alterImgUrl));
+      } else if (deleteImg) {
+        if (window.confirm("정말 프로필 사진을 지우시겠습니까?")) {
+          removeImage("profile", user.uid);
+          dispatch(updatePictureUrl(null));
+        } else {
+          throw "취소 되었습니다.";
+        }
+      }
+      alert(`${fullfilledUser ? "수정" : "등록"}이 완료되었습니다.`);
+      setEdit(!edit);
+      if (!fullfilledUser) {
+        window.location.href = "/";
+      } else {
+        dispatch(updateProfile(updatedProfile));
+      }
+    } catch (err) {
+      alert(err);
+    }
   };
 
   return (
@@ -119,41 +137,23 @@ const Profile = (props) => {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
-        <Stack
-          sx={{
-            ...style,
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: "white",
-          }}>
-          <Box
-            sx={{
-              width: "250px",
-              height: "250px",
-              margin: "auto",
-              border: 1,
-              backgroundImage: `url(${img && window.URL.createObjectURL(img)})`,
-            }}>
-            <AvatarImageCropper apply={onImageChange} noWaterMark={Boolean(img)} />
-          </Box>
-          <Stack direction="row" sx={{ justifyContent: "space-around", width: 350, marginTop: 2 }}>
-            <Button variant="outlined" onClick={handleClose}>
-              취소
-            </Button>
-            <Button
-              variant="outlined"
-              onClick={() => {
-                handleClose();
-                setAlterImgUrl(" ");
-                setDeleteImg(true);
-              }}>
-              지우기
-            </Button>
-            <Button variant="contained" onClick={handleOk}>
-              확인
-            </Button>
-          </Stack>
-        </Stack>
+        <ProfileEditor
+          onImageChange={onImageChange}
+          img={img}
+          handleClose={handleClose}
+          setAlterImgUrl={setAlterImgUrl}
+          setDeleteImg={setDeleteImg}
+          handleOk={handleOk}
+          editable={editable}
+          updateProfileFunc={updateProfileFunc}
+          user={user}
+          nickName={nickName}
+          myRide={myRide}
+          setMyRide={setMyRide}
+          handleChange={handleChange}
+          isChangigProfile={isChangigProfile}
+          alterImgUrl={alterImgUrl}
+        />
       </Modal>
       <Stack direction="column" sx={{ alignItems: "center", position: "relative" }}>
         <Box
@@ -163,22 +163,8 @@ const Profile = (props) => {
             background: `linear-gradient(${theme.palette.primary.light}, #ffffff)`,
             position: "relative",
           }}></Box>
-        <ProfileAvatar
-          user={user}
-          isChangigProfile={isChangigProfile}
-          size={100}
-          alterImgUrl={alterImgUrl}
-          sx={{ marginTop: -10 }}
-        />
-        <IconButton
-          sx={{ position: "relative", top: -30, left: 0 }}
-          disabled={!editable}
-          color="primary"
-          aria-label="upload picture"
-          component="span"
-          onClick={handleOpen}>
-          <PhotoCamera sx={{ width: 40, height: 40 }} />
-        </IconButton>
+        <ProfileAvatar user={user} size={100} sx={{ marginTop: -10 }} />
+
         <Typography variant="h5" mb={2}>
           {nickName}
         </Typography>
@@ -218,84 +204,6 @@ const Profile = (props) => {
             <Typography variant="h6">Likes</Typography>
           </Box>
         </Stack>
-        <Stack direction="row" spacing={2} sx={{ height: 40 }}>
-          {editable ? (
-            <>
-              <Button
-                variant="contained"
-                onClick={async () => {
-                  const func = fullfilledUser ? updateDoc : createDoc;
-                  const updatedProfile = {
-                    nickName: nickName,
-                    myRide: myRide,
-                    isAdmin: user.profile?.isAdmin ?? false,
-                    createdAt: user.profile?.createdAt ?? new Date().getTime(),
-                  };
-
-                  try {
-                    await func("users", user.uid, {
-                      profile: updatedProfile,
-                    });
-                    if (img) {
-                      uploadImage("profile", user.uid, img);
-                      dispatch(updatePictureUrl(alterImgUrl));
-                    } else if (deleteImg) {
-                      if (window.confirm("정말 프로필 사진을 지우시겠습니까?")) {
-                        removeImage("profile", user.uid);
-                        dispatch(updatePictureUrl(null));
-                      } else {
-                        throw "취소 되었습니다.";
-                      }
-                    }
-                    alert(`${fullfilledUser ? "수정" : "등록"}이 완료되었습니다.`);
-                    setEdit(!edit);
-                    if (!fullfilledUser) {
-                      window.location.href = "/";
-                    } else {
-                      dispatch(updateProfile(updatedProfile));
-                    }
-                  } catch (err) {
-                    alert(err);
-                  }
-                }}>
-                저장
-              </Button>
-            </>
-          ) : (
-            <></>
-          )}
-        </Stack>
-        <Box mt={2} sx={{ display: "block", textAlign: "left", width: "100%", padding: 2 }}>
-          <Typography variant="h5" mb={2}>
-            닉네임
-          </Typography>
-          <Input
-            inputProps={ariaLabel}
-            readOnly={!editable}
-            value={nickName}
-            onChange={handleChange}
-            sx={{ width: "100%" }}
-          />
-        </Box>
-        <Box sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
-          <Typography variant="h5">내 탈거</Typography>
-        </Box>
-        <Box sx={{ width: "100%", padding: 2, display: "flex", justifyContent: "space-around" }}>
-          <MyRideButton
-            myRide={myRide}
-            setMyRide={setMyRide}
-            editable={editable}
-            equipment={"board"}
-            size={100}
-          />
-          <MyRideButton
-            myRide={myRide}
-            setMyRide={setMyRide}
-            editable={editable}
-            equipment={"ski"}
-            size={100}
-          />
-        </Box>
         <Box sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
           <Typography variant="h5">가입일</Typography>
           <Typography variant="body2" mt={2}>
@@ -305,7 +213,13 @@ const Profile = (props) => {
         {user.profile?.isAdmin && (
           <>
             <Box
-              sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
+              sx={{
+                display: "block",
+                textAlign: "left",
+                width: "100%",
+                padding: 2,
+                marginTop: 2,
+              }}>
               <Typography variant="h5">관리자 영역</Typography>
             </Box>
             <Box>
