@@ -78,13 +78,13 @@ const Profile = (props) => {
 
   const currentActions = [
     {
-      icon: edit ? <EditOffIcon /> : <EditIcon />,
+      icon: <EditIcon />,
       name: "Edit Profile",
       onClick: () => {
-        setEdit(!edit);
+        setEdit(true);
         setAlterImgUrl(null);
         setImg(null);
-        if (!open) handleOpen();
+        handleOpen();
       },
     },
     { icon: <LogoutIcon />, name: "Logout", onClick: logoutRequest },
@@ -124,6 +124,7 @@ const Profile = (props) => {
         window.location.href = "/";
       } else {
         dispatch(updateProfile(updatedProfile));
+        setOpen(false);
       }
     } catch (err) {
       alert(err);

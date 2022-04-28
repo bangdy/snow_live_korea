@@ -59,12 +59,13 @@ const ProfileEditor = (props) => {
       <Modal
         open={innerOpen}
         onClose={handleClose}
-        hideBackdrop
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
         <Stack
           sx={{
             ...style,
+            position: "relative",
+            top: "40%",
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: "white",
