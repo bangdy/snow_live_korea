@@ -1,3 +1,5 @@
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
 import React, { useState, useContext, useEffect } from "react";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
@@ -6,10 +8,8 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import LogoutIcon from "@mui/icons-material/Logout";
 import EditIcon from "@mui/icons-material/Edit";
-import EditOffIcon from "@mui/icons-material/EditOff";
 import { useTheme } from "@mui/material/styles";
 import Divider from "@mui/material/Divider";
-
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import date from "date-and-time";
@@ -19,8 +19,6 @@ import ProfileEditor from "components/ProfileEditor";
 import { createDoc, updateDoc } from "help/firestore";
 import { uploadImage, removeImage } from "help/util";
 import { NavActionsContext } from "help/customHooks";
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
 import { logout, updateProfile, updatePictureUrl } from "store/user";
 
 const timeFormat = "YY.MM.DD - HH:mm";
@@ -141,7 +139,6 @@ const Profile = (props) => {
         <ProfileEditor
           onImageChange={onImageChange}
           img={img}
-          handleClose={handleClose}
           setAlterImgUrl={setAlterImgUrl}
           setDeleteImg={setDeleteImg}
           handleOk={handleOk}

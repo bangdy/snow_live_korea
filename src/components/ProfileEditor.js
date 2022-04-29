@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -8,11 +7,10 @@ import Input from "@mui/material/Input";
 import Modal from "@mui/material/Modal";
 import IconButton from "@mui/material/IconButton";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import AvatarImageCropper from "react-avatar-image-cropper";
 
 import MyRideButton from "components/MyRideButton";
 import ProfileAvatar from "components/ProfileAvatar";
-
-import AvatarImageCropper from "react-avatar-image-cropper";
 
 const style = {
   position: "absolute",
@@ -31,7 +29,6 @@ const ProfileEditor = (props) => {
   const {
     onImageChange,
     img,
-    handleClose,
     setAlterImgUrl,
     setDeleteImg,
     handleOk,
@@ -58,7 +55,7 @@ const ProfileEditor = (props) => {
     <>
       <Modal
         open={innerOpen}
-        onClose={handleClose}
+        onClose={handleInnerClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
         <Stack
