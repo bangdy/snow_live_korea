@@ -16,10 +16,8 @@ import date from "date-and-time";
 
 import ProfileAvatar from "components/ProfileAvatar";
 import ProfileEditor from "components/ProfileEditor";
-import { createDoc, updateDoc } from "help/firestore";
-import { uploadImage, removeImage } from "help/util";
 import { NavActionsContext } from "help/customHooks";
-import { logout, updateProfile, updatePictureUrl } from "store/user";
+import { logout } from "store/user";
 
 const timeFormat = "YY.MM.DD - HH:mm";
 
@@ -28,23 +26,16 @@ const Profile = (props) => {
 
   const user = useSelector((state) => state.user);
   const [open, setOpen] = useState(false);
+  const [edit, setEdit] = useState(false);
   const [img, setImg] = useState(null);
   const [alterImgUrl, setAlterImgUrl] = useState(null);
-  const [edit, setEdit] = useState(false);
-  const [deleteImg, setDeleteImg] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const theme = useTheme();
 
   //Logical Indicator
   const fullfilledUser = user.uid && user.profile;
-  const editable = !fullfilledUser || edit;
-  const isChangigProfile = editable && alterImgUrl;
-
-  const [nickName, setNickName] = useState(fullfilledUser ? user.profile.nickName : "");
-  const [myRide, setMyRide] = useState(fullfilledUser ? user.profile.myRide : "board");
-
-  const handleChange = (event) => editable && setNickName(event.target.value);
 
   const onImageChange = (file) => {
     file && setImg(file);
@@ -92,43 +83,6 @@ const Profile = (props) => {
     setActions(currentActions);
   }, [edit]);
 
-  const updateProfileFunc = async () => {
-    const func = fullfilledUser ? updateDoc : createDoc;
-    const updatedProfile = {
-      nickName: nickName,
-      myRide: myRide,
-      isAdmin: user.profile?.isAdmin ?? false,
-      createdAt: user.profile?.createdAt ?? new Date().getTime(),
-    };
-
-    try {
-      await func("users", user.uid, {
-        profile: updatedProfile,
-      });
-      if (img) {
-        uploadImage("profile", user.uid, img);
-        dispatch(updatePictureUrl(alterImgUrl));
-      } else if (deleteImg) {
-        if (window.confirm("정말 프로필 사진을 지우시겠습니까?")) {
-          removeImage("profile", user.uid);
-          dispatch(updatePictureUrl(null));
-        } else {
-          throw "취소 되었습니다.";
-        }
-      }
-      alert(`${fullfilledUser ? "수정" : "등록"}이 완료되었습니다.`);
-      setEdit(!edit);
-      if (!fullfilledUser) {
-        window.location.href = "/";
-      } else {
-        dispatch(updateProfile(updatedProfile));
-        setOpen(false);
-      }
-    } catch (err) {
-      alert(err);
-    }
-  };
-
   return (
     <>
       <Modal
@@ -139,18 +93,16 @@ const Profile = (props) => {
         <ProfileEditor
           onImageChange={onImageChange}
           img={img}
+          edit={edit}
+          setEdit={setEdit}
+          setOpen={setOpen}
           setAlterImgUrl={setAlterImgUrl}
-          setDeleteImg={setDeleteImg}
           handleOk={handleOk}
-          editable={editable}
-          updateProfileFunc={updateProfileFunc}
           user={user}
-          nickName={nickName}
-          myRide={myRide}
-          setMyRide={setMyRide}
-          handleChange={handleChange}
-          isChangigProfile={isChangigProfile}
           alterImgUrl={alterImgUrl}
+          handleClose={handleClose}
+          fullfilledUser={fullfilledUser}
+          dispatch={dispatch}
         />
       </Modal>
       <Stack direction="column" sx={{ alignItems: "center", position: "relative" }}>
@@ -164,8 +116,17 @@ const Profile = (props) => {
         <ProfileAvatar user={user} size={100} sx={{ marginTop: -10 }} />
 
         <Typography variant="h5" mb={2}>
-          {nickName}
+          {user.profile.nickName}
         </Typography>
+        <Stack
+          direction="column"
+          alignItems="stretch"
+          px={4}
+          sx={{ textAlign: "left", width: "100%" }}>
+          <Typography variant="caption" mb={2}>
+            {user.profile?.introduce ?? "소개 없음"}
+          </Typography>
+        </Stack>
         <Stack
           direction="row"
           mt={2}

@@ -4,11 +4,15 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Input from "@mui/material/Input";
+import TextField from "@mui/material/TextField";
 import Modal from "@mui/material/Modal";
 import IconButton from "@mui/material/IconButton";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import AvatarImageCropper from "react-avatar-image-cropper";
 
+import { createDoc, updateDoc } from "help/firestore";
+import { uploadImage, removeImage } from "help/util";
+import { updateProfile, updatePictureUrl } from "store/user";
 import MyRideButton from "components/MyRideButton";
 import ProfileAvatar from "components/ProfileAvatar";
 
@@ -29,19 +33,29 @@ const ProfileEditor = (props) => {
   const {
     onImageChange,
     img,
+    edit,
+    setEdit,
+    setOpen,
     setAlterImgUrl,
-    setDeleteImg,
     handleOk,
-    editable,
-    updateProfileFunc,
     user,
-    nickName,
-    myRide,
-    setMyRide,
-    handleChange,
-    isChangigProfile,
     alterImgUrl,
+    handleClose,
+    fullfilledUser,
+    dispatch,
   } = props;
+
+  const [nickName, setNickName] = useState(fullfilledUser ? user.profile.nickName : "");
+  const [myRide, setMyRide] = useState(fullfilledUser ? user.profile.myRide : "board");
+  const [introduce, setIntroduce] = useState(fullfilledUser ? user.profile?.introduce : "");
+
+  const [deleteImg, setDeleteImg] = useState(false);
+
+  //Logical Indicator
+  const editable = !fullfilledUser || edit;
+  const isChangigProfile = editable && alterImgUrl;
+
+  const handleChange = (event, setFunc) => editable && setFunc(event.target.value);
 
   const [innerOpen, setInnerOpen] = useState(false);
 
@@ -49,6 +63,44 @@ const ProfileEditor = (props) => {
   const handleInnerOk = () => {
     handleOk();
     setInnerOpen(false);
+  };
+
+  const updateProfileFunc = async () => {
+    const func = fullfilledUser ? updateDoc : createDoc;
+    const updatedProfile = {
+      nickName: nickName,
+      myRide: myRide,
+      introduce: introduce,
+      isAdmin: user.profile?.isAdmin ?? false,
+      createdAt: user.profile?.createdAt ?? new Date().getTime(),
+    };
+
+    try {
+      await func("users", user.uid, {
+        profile: updatedProfile,
+      });
+      if (img) {
+        uploadImage("profile", user.uid, img);
+        dispatch(updatePictureUrl(alterImgUrl));
+      } else if (deleteImg) {
+        if (window.confirm("정말 프로필 사진을 지우시겠습니까?")) {
+          removeImage("profile", user.uid);
+          dispatch(updatePictureUrl(null));
+        } else {
+          throw "취소 되었습니다.";
+        }
+      }
+      alert(`${fullfilledUser ? "수정" : "등록"}이 완료되었습니다.`);
+      setEdit(!edit);
+      if (!fullfilledUser) {
+        window.location.href = "/";
+      } else {
+        dispatch(updateProfile(updatedProfile));
+        setOpen(false);
+      }
+    } catch (err) {
+      alert(err);
+    }
   };
 
   return (
@@ -121,19 +173,31 @@ const ProfileEditor = (props) => {
         </IconButton>
 
         <Box mt={2} sx={{ display: "block", textAlign: "left", width: "100%", padding: 2 }}>
-          <Typography variant="h5" mb={2}>
+          <Typography variant="h6" mb={2}>
             닉네임
           </Typography>
           <Input
             inputProps="description"
             readOnly={!editable}
             value={nickName}
-            onChange={handleChange}
+            onChange={(event) => handleChange(event, setNickName)}
             sx={{ width: "100%" }}
           />
         </Box>
         <Box sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
-          <Typography variant="h5">내 탈거</Typography>
+          <Typography variant="h6">소개</Typography>
+          <TextField
+            sx={{ width: "100%" }}
+            id="outlined-multiline-static"
+            multiline
+            value={introduce}
+            onChange={(event) => handleChange(event, setIntroduce)}
+            rows={4}
+            defaultValue={"나 자신에 대해 소개해주세요~!"}
+          />
+        </Box>
+        <Box sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
+          <Typography variant="h6">내 탈거</Typography>
         </Box>
         <Box sx={{ width: "100%", padding: 2, display: "flex", justifyContent: "space-around" }}>
           <MyRideButton
@@ -151,16 +215,13 @@ const ProfileEditor = (props) => {
             size={100}
           />
         </Box>
-        <Stack direction="row" spacing={2} sx={{ height: 40 }}>
-          {editable ? (
-            <>
-              <Button variant="contained" onClick={updateProfileFunc}>
-                저장
-              </Button>
-            </>
-          ) : (
-            <></>
-          )}
+        <Stack direction="row" spacing={2} mt={4} sx={{ height: 40 }}>
+          <Button variant="outlined" onClick={handleClose}>
+            취소
+          </Button>
+          <Button variant="contained" onClick={updateProfileFunc}>
+            저장
+          </Button>
         </Stack>
       </Stack>
     </>
