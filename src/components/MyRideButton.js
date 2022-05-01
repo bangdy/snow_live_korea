@@ -2,7 +2,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import { DownhillSkiingRounded, SnowboardingRounded } from "@mui/icons-material";
 
 const MyRideButton = (props) => {
-  const { editable, equipment, setMyRide, myRide, size } = props;
+  const { editable, equipment, setMyRide, myRide, size, sx, ...leftOver } = props;
 
   let MyRide;
   if (equipment === "ski") {
@@ -15,7 +15,8 @@ const MyRideButton = (props) => {
 
   return (
     <ToggleButton
-      sx={{ width: size, height: size, borderRadius: 0.1 * size }}
+      {...leftOver}
+      sx={{ width: size, height: size, borderRadius: 0.1 * size, ...sx }}
       disabled={!editable}
       value="check"
       selected={equipment === myRide}

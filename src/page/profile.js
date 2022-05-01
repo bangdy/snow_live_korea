@@ -3,6 +3,7 @@ import "firebase/compat/auth";
 import React, { useState, useContext, useEffect } from "react";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
@@ -20,8 +21,9 @@ import ProfileAvatar from "components/ProfileAvatar";
 import ProfileEditor from "components/ProfileEditor";
 import { NavActionsContext } from "help/customHooks";
 import { logout } from "store/user";
+import MyRideButton from "components/MyRideButton";
 
-const timeFormat = "YY.MM.DD - HH:mm";
+const timeFormat = "YY.MM.DD";
 
 const Profile = (props) => {
   const { setActions } = useContext(NavActionsContext);
@@ -115,15 +117,43 @@ const Profile = (props) => {
             background: `linear-gradient(${theme.palette.primary.light}, #ffffff)`,
             position: "relative",
           }}></Box>
-        <ProfileAvatar user={user} size={100} sx={{ marginTop: -10 }} />
+        <Grid container spacing={2} mt={-10}>
+          <Grid item xs={4} sm={4}>
+            <ProfileAvatar user={user} size={100} sx={{ marginX: "auto" }} />
+          </Grid>
+          <Grid item xs={8} sm={8}>
+            <Stack
+              direction="column"
+              justifyContent="space-evenly"
+              alignItems="flex-start"
+              sx={{ height: "100%" }}>
+              <Stack direction="row" justifyContent={"space-between"} sx={{ width: "100%" }}>
+                <Typography variant="h5" zIndex={100}>
+                  {user.profile.nickName}
+                </Typography>
+                <MyRideButton
+                  myRide={user.profile.myRide}
+                  equipment={user.profile.myRide}
+                  size={30}
+                  sx={{ marginRight: 10 }}
+                />
+              </Stack>
+              <Stack direction="row" zIndex={100}>
+                <InstagramIcon />
+              </Stack>
+              <Box>
+                <Typography variant="caption" mt={2}>
+                  Since {date.format(new Date(user.profile.createdAt), timeFormat)}
+                </Typography>
+              </Box>
+            </Stack>
+          </Grid>
+        </Grid>
 
-        <Typography variant="h5" mb={2}>
-          {user.profile.nickName}
-        </Typography>
-        <InstagramIcon />
         <Stack
           direction="column"
           alignItems="stretch"
+          mt={4}
           px={4}
           sx={{ textAlign: "left", width: "100%" }}>
           <Typography variant="caption" mb={2}>
@@ -173,12 +203,7 @@ const Profile = (props) => {
             <Typography variant="h6">Likes</Typography>
           </Box>
         </Stack>
-        <Box sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
-          <Typography variant="h5">가입일</Typography>
-          <Typography variant="body2" mt={2}>
-            {date.format(new Date(user.profile.createdAt), timeFormat)}
-          </Typography>
-        </Box>
+
         {user.profile?.isAdmin && (
           <>
             <Box
