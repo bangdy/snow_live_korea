@@ -8,11 +8,13 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import LogoutIcon from "@mui/icons-material/Logout";
 import EditIcon from "@mui/icons-material/Edit";
+import InstagramIcon from "@mui/icons-material/Instagram";
 import { useTheme } from "@mui/material/styles";
 import Divider from "@mui/material/Divider";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import date from "date-and-time";
+import Linkify from "react-linkify";
 
 import ProfileAvatar from "components/ProfileAvatar";
 import ProfileEditor from "components/ProfileEditor";
@@ -118,13 +120,21 @@ const Profile = (props) => {
         <Typography variant="h5" mb={2}>
           {user.profile.nickName}
         </Typography>
+        <InstagramIcon />
         <Stack
           direction="column"
           alignItems="stretch"
           px={4}
           sx={{ textAlign: "left", width: "100%" }}>
           <Typography variant="caption" mb={2}>
-            {user.profile?.introduce ?? "소개 없음"}
+            <Linkify
+              componentDecorator={(decoratedHref, decoratedText, key) => (
+                <a target="blank" href={decoratedHref} key={key}>
+                  {decoratedText}
+                </a>
+              )}>
+              {user.profile?.introduce ?? "소개 없음"}
+            </Linkify>
           </Typography>
         </Stack>
         <Stack
