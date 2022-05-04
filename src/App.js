@@ -19,6 +19,7 @@ import Login from "./page/Login";
 import Main from "./page/Main";
 import MyPage from "./page/MyPage";
 import About from "./page/About";
+import Admin from "./page/Admin";
 import ResortReviews from "./page/ResortReviews";
 import ResortEditor from "./page/ResortEditor";
 import PageHOC from "components/PageHOC";
@@ -230,6 +231,12 @@ function App() {
                   path="/about"
                   element={<PageHOC name="ResortEditor" Component={<About />} />}
                 />
+                {user.profile?.isAdmin && (
+                  <Route
+                    path="/admin"
+                    element={<PageHOC name="ResortEditor" Component={<Admin />} />}
+                  />
+                )}
                 <Route path="/loading" element={LoadingItem} />
               </Routes>
             )}

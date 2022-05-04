@@ -1,7 +1,7 @@
 import React from "react";
 import FullWidthTabs from "components/FullWidthTabs";
 import MyReviews from "page/MyReviews";
-import Profile from "page/Profile";
+import Profile from "page/ProfilePage";
 import CalendarLog from "page/CalendarLog";
 
 const MyPage = (props) => {
