@@ -8,17 +8,18 @@ const Admin = (props) => {
   return (
     <Stack direction="column" sx={{ alignItems: "center", position: "relative", width: "100%" }}>
       <Box
+        p={2}
+        mt={2}
         sx={{
           display: "block",
           textAlign: "center",
           width: "100%",
-          padding: 2,
-          marginTop: 2,
         }}>
         <Typography variant="h5">관리자 영역</Typography>
       </Box>
       <Stack
         mt={6}
+        px={4}
         direction="row"
         justifyContent="space-between"
         sx={{
