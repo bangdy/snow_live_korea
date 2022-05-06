@@ -79,7 +79,7 @@ const ProfilePage = (props) => {
 
   useEffect(() => {
     setActions(currentActions);
-  }, [edit]);
+  }, []);
 
   return (
     <>

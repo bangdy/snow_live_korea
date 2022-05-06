@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, componentw } from "react";
 import PropTypes from "prop-types";
 import SwipeableViews from "react-swipeable-views";
 import { useTheme } from "@mui/material/styles";
@@ -57,7 +57,7 @@ export default function FullWidthTabs(props) {
   };
 
   useEffect(() => {
-    setActions([]);
+    value && setActions([]); // 처음 mount 되면, 개별 page 가 먼저 mount 되서, actions 가 reset 됨
   }, [value]);
 
   return (
