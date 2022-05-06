@@ -5,9 +5,9 @@ import Profile from "page/ProfilePage";
 import CalendarLog from "page/CalendarLog";
 
 const MyPage = (props) => {
-  const logs = {
+  const calendar = {
     page: CalendarLog,
-    name: "기록",
+    name: "캘린더",
   };
 
   const reviews = {
@@ -17,10 +17,10 @@ const MyPage = (props) => {
 
   const profile = {
     page: Profile,
-    name: "Profile",
+    name: "프로필",
   };
 
-  const pages = [logs, reviews, profile];
+  const pages = [profile, calendar, reviews];
 
   return <FullWidthTabs pages={pages} />;
 };

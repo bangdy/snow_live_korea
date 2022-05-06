@@ -37,15 +37,19 @@ const Profile = (props) => {
             justifyContent="space-evenly"
             alignItems="flex-start"
             sx={{ height: "100%" }}>
-            <Stack direction="row" justifyContent={"space-between"} sx={{ width: "100%" }}>
+            <Stack
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="center"
+              sx={{ width: "100%" }}>
               <Typography variant="h5" zIndex={100}>
                 {user.profile.nickName}
               </Typography>
               <MyRideButton
                 myRide={user.profile.myRide}
                 equipment={user.profile.myRide}
-                size={30}
-                sx={{ marginRight: 10 }}
+                size={20}
+                sx={{ marginLeft: 4 }}
               />
             </Stack>
             <Stack direction="row" zIndex={100}>
@@ -66,7 +70,10 @@ const Profile = (props) => {
         mt={4}
         px={4}
         sx={{ textAlign: "left", width: "100%" }}>
-        <Typography variant="caption" mb={2}>
+        <Typography
+          variant="caption"
+          mb={2}
+          sx={{ wordWrap: "break-word", whiteSpace: "pre-line" }}>
           <Linkify
             componentDecorator={(decoratedHref, decoratedText, key) => (
               <a target="blank" href={decoratedHref} key={key}>

@@ -16,7 +16,7 @@ const MyRideButton = (props) => {
   return (
     <ToggleButton
       {...leftOver}
-      sx={{ width: size, height: size, borderRadius: 0.1 * size, ...sx }}
+      sx={{ width: size, height: size, borderRadius: 0.5 * size, ...sx }}
       disabled={!editable}
       value="check"
       selected={equipment === myRide}
