@@ -152,7 +152,10 @@ const ReviewCard = (props) => {
             <MyRideButton myRide={equipment} equipment={equipment} size={30} />
           </Stack>
         </Stack>
-        <Typography variant="body2" color="text.secondary">
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ wordWrap: "break-word", whiteSpace: "pre-line" }}>
           {comment}
         </Typography>
         <Divider
