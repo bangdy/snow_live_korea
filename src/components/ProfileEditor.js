@@ -22,11 +22,11 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   maxWidth: 600,
-  width: 500,
+  width: "80%",
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
-  p: 4,
+  p: 1,
 };
 
 const ProfileEditor = (props) => {
@@ -113,6 +113,7 @@ const ProfileEditor = (props) => {
         <Stack
           sx={{
             ...style,
+            width: user.isMobile ? "70%" : 500,
             position: "relative",
             top: "40%",
             alignItems: "center",
@@ -121,15 +122,17 @@ const ProfileEditor = (props) => {
           }}>
           <Box
             sx={{
-              width: "250px",
-              height: "250px",
+              width: 250,
+              height: 250,
               margin: "auto",
               border: 1,
               backgroundImage: `url(${img && window.URL.createObjectURL(img)})`,
             }}>
             <AvatarImageCropper apply={onImageChange} noWaterMark={Boolean(img)} />
           </Box>
-          <Stack direction="row" sx={{ justifyContent: "space-around", width: 350, marginTop: 2 }}>
+          <Stack
+            direction="row"
+            sx={{ justifyContent: "space-around", width: "100%", marginTop: 2 }}>
             <Button variant="outlined" onClick={handleInnerClose}>
               취소
             </Button>
@@ -148,82 +151,86 @@ const ProfileEditor = (props) => {
           </Stack>
         </Stack>
       </Modal>
-      <Stack
+      <Box
         sx={{
           ...style,
-          alignItems: "center",
-          justifyContent: "center",
           backgroundColor: "white",
+          overflow: user.isMobile ? "scroll" : "auto",
+          height: user.isMobile ? "100%" : "auto",
         }}>
-        <ProfileAvatar
-          sx={{ marginTop: 4 }}
-          user={user}
-          isChangigProfile={isChangigProfile}
-          size={100}
-          alterImgUrl={alterImgUrl}
-        />
-        <IconButton
-          sx={{ position: "relative", top: -30, left: 0 }}
-          disabled={!editable}
-          color="primary"
-          aria-label="upload picture"
-          component="span"
-          onClick={() => setInnerOpen(true)}>
-          <PhotoCamera sx={{ width: 40, height: 40 }} />
-        </IconButton>
+        <Stack direction="column" justifyContent="center" alignItems="center">
+          <ProfileAvatar
+            sx={{ marginTop: 4 }}
+            user={user}
+            isChangigProfile={isChangigProfile}
+            size={100}
+            alterImgUrl={alterImgUrl}
+          />
+          <IconButton
+            sx={{ position: "relative", top: -30, left: 0 }}
+            disabled={!editable}
+            color="primary"
+            aria-label="upload picture"
+            component="span"
+            onClick={() => setInnerOpen(true)}>
+            <PhotoCamera sx={{ width: 40, height: 40 }} />
+          </IconButton>
 
-        <Box mt={2} sx={{ display: "block", textAlign: "left", width: "100%", padding: 2 }}>
-          <Typography variant="h6" mb={2}>
-            닉네임
-          </Typography>
-          <Input
-            inputProps="description"
-            readOnly={!editable}
-            value={nickName}
-            onChange={(event) => handleChange(event, setNickName)}
-            sx={{ width: "100%" }}
-          />
-        </Box>
-        <Box sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
-          <Typography variant="h6">소개</Typography>
-          <TextField
-            sx={{ width: "100%" }}
-            id="outlined-multiline-static"
-            multiline
-            value={introduce}
-            onChange={(event) => handleChange(event, setIntroduce)}
-            rows={4}
-            defaultValue={"나 자신에 대해 소개해주세요~!"}
-          />
-        </Box>
-        <Box sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
-          <Typography variant="h6">내 탈거</Typography>
-        </Box>
-        <Box sx={{ width: "100%", padding: 2, display: "flex", justifyContent: "space-around" }}>
-          <MyRideButton
-            myRide={myRide}
-            setMyRide={setMyRide}
-            editable={editable}
-            equipment={"board"}
-            size={100}
-          />
-          <MyRideButton
-            myRide={myRide}
-            setMyRide={setMyRide}
-            editable={editable}
-            equipment={"ski"}
-            size={100}
-          />
-        </Box>
-        <Stack direction="row" spacing={2} mt={4} sx={{ height: 40 }}>
-          <Button variant="outlined" onClick={handleClose}>
-            취소
-          </Button>
-          <Button variant="contained" onClick={updateProfileFunc}>
-            저장
-          </Button>
+          <Box mt={2} sx={{ display: "block", textAlign: "left", width: "100%", padding: 2 }}>
+            <Typography variant="h6" mb={2}>
+              닉네임
+            </Typography>
+            <Input
+              inputProps="description"
+              readOnly={!editable}
+              value={nickName}
+              onChange={(event) => handleChange(event, setNickName)}
+              sx={{ width: "100%" }}
+            />
+          </Box>
+          <Box
+            sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
+            <Typography variant="h6">소개</Typography>
+            <TextField
+              sx={{ width: "100%" }}
+              id="outlined-multiline-static"
+              multiline
+              value={introduce}
+              onChange={(event) => handleChange(event, setIntroduce)}
+              rows={4}
+              defaultValue={"나 자신에 대해 소개해주세요~!"}
+            />
+          </Box>
+          <Box
+            sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
+            <Typography variant="h6">내 탈거</Typography>
+          </Box>
+          <Box sx={{ width: "100%", padding: 2, display: "flex", justifyContent: "space-around" }}>
+            <MyRideButton
+              myRide={myRide}
+              setMyRide={setMyRide}
+              editable={editable}
+              equipment={"board"}
+              size={100}
+            />
+            <MyRideButton
+              myRide={myRide}
+              setMyRide={setMyRide}
+              editable={editable}
+              equipment={"ski"}
+              size={100}
+            />
+          </Box>
+          <Stack direction="row" spacing={2} mt={4} sx={{ height: 40 }}>
+            <Button variant="outlined" onClick={handleClose}>
+              취소
+            </Button>
+            <Button variant="contained" onClick={updateProfileFunc}>
+              저장
+            </Button>
+          </Stack>
         </Stack>
-      </Stack>
+      </Box>
     </>
   );
 };
