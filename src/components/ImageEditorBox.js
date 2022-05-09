@@ -25,8 +25,8 @@ const ImageEditorBox = (props) => {
       ) : (
         <Box
           sx={{
-            width: "250px",
-            height: "250px",
+            width: 250,
+            height: 250,
             margin: "auto",
             border: 1,
             backgroundImage: `url(${img ? window.URL.createObjectURL(img) : resortImg})`,

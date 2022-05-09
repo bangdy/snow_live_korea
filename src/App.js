@@ -173,7 +173,7 @@ function App() {
             height: 70,
             alignItems: "center",
             zIndex: 100,
-            marginBottom: currentPath === "/my_page" ? "-70px" : 0,
+            marginBottom: currentPath === "/my_page" ? -9 : 0,
           }}
           elevation={0}>
           <Header />
@@ -181,7 +181,7 @@ function App() {
             sx={{
               display: "flex",
               justifyContent: "space-between",
-              width: currentWidth > 768 ? "768px" : "100%",
+              width: currentWidth > 768 ? 768 : "100%",
             }}>
             <Link to="/" style={{ textDecoration: "none" }}>
               <Typography variant="h6" component="div" sx={{ color: "white" }}>
@@ -198,9 +198,9 @@ function App() {
             justifyContent: "center",
             alignContent: "center",
             marginX: "auto",
-            maxWidth: "500px",
+            maxWidth: 500,
             width: "100%",
-            paddingTop: "70px",
+            paddingTop: 9,
             height: loading || currentPath == "/loading" ? "50%" : null,
           }}>
           <>

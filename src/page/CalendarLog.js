@@ -18,11 +18,11 @@ const Dot = styled((props) => {
   const { color, ...other } = props;
   return <Box {...other} sx={{ backgroundColor: color }} />;
 })(({ theme }) => ({
-  height: "8px",
-  width: "8px",
+  height: 8,
+  width: 8,
   borderRadius: "50%",
   display: "flex",
-  marginLeft: "1px",
+  marginLeft: 1,
 }));
 
 const dayFormat = "DD";
