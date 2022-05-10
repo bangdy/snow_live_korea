@@ -19,7 +19,7 @@ const Profile = (props) => {
   const theme = useTheme();
 
   return (
-    <Stack direction="column" sx={{ alignItems: "center", position: "relative" }}>
+    <Stack direction="column" sx={{ alignItems: "center" }}>
       <Box
         sx={{
           alignSelf: "stretch",
