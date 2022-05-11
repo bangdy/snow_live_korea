@@ -112,6 +112,8 @@ function App() {
     window.addEventListener("resize", () => setCurrentWidth(window.innerWidth));
   }, []);
 
+  const dialButtonMargin = currentWidth > 760 ? (currentWidth - 760) / 2 + 24 : 16;
+
   let rightButton;
 
   const currentPath = window.location.pathname;
@@ -170,7 +172,7 @@ function App() {
         <AppBar
           position={currentPath === "/my_page" ? "relative" : "fixed"}
           sx={{
-            height: 70,
+            height: 72,
             alignItems: "center",
             zIndex: 100,
             marginBottom: currentPath === "/my_page" ? -9 : 0,
@@ -243,16 +245,15 @@ function App() {
           </>
         </Box>
 
-        <Box
-          pr={2}
-          sx={{
-            position: user.isMobile ? "sticky" : "fixed",
-            right: !user.isMobile && 100,
-            bottom: 30,
-            alignSelf: "flex-end",
-          }}>
-          <SpeedDial actions={actions} />
-        </Box>
+        <Stack
+          direction="row"
+          justifyContent="flex-end"
+          sx={{ position: "fixed", width: "100%", bottom: 0 }}>
+          <SpeedDial
+            sx={{ marginBottom: 3, marginRight: dialButtonMargin.toString() + "px" }}
+            actions={actions}
+          />
+        </Stack>
       </Stack>
     </NavActionsContext.Provider>
   );

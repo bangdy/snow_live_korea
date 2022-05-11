@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 const BasicSpeedDial = (props) => {
   const navigate = useNavigate();
 
+  const { ...leftOver } = props;
+
   const BasicActions = [
     { icon: <QuestionMarkIcon />, name: "Logout", onClick: () => navigate("/about") },
   ];
@@ -17,7 +19,11 @@ const BasicSpeedDial = (props) => {
   }
 
   return (
-    <SpeedDial ariaLabel="SpeedDial basic example" direction="up" icon={<SpeedDialIcon />}>
+    <SpeedDial
+      {...leftOver}
+      ariaLabel="SpeedDial basic example"
+      direction="up"
+      icon={<SpeedDialIcon />}>
       {BasicActions.map((action, i) => (
         <SpeedDialAction
           icon={action.icon}
