@@ -84,6 +84,7 @@ function App() {
             // not login
             console.log("fail");
             dispatch(setLoading(false));
+            dispatch(setUid({ uid: false, name: null }));
           }
         },
         (error) => {

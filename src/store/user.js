@@ -28,7 +28,7 @@ export const user = createSlice({
       state.name = payload.displayName;
     },
     logout: (state) => {
-      state.uid = null;
+      state.uid = false;
       state.name = null;
       state.profile = null;
       state.pictureUrl = null;
