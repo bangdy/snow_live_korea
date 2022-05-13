@@ -11,7 +11,7 @@ const BasicSpeedDial = (props) => {
   const { ...leftOver } = props;
 
   const BasicActions = [
-    { icon: <QuestionMarkIcon />, name: "Logout", onClick: () => navigate("/about") },
+    { icon: <QuestionMarkIcon />, name: "About", onClick: () => navigate("/about") },
   ];
 
   if (props.actions) {
