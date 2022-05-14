@@ -24,7 +24,7 @@ import ResortReviews from "./page/ResortReviews";
 import ResortEditor from "./page/ResortEditor";
 import PageHOC from "components/PageHOC";
 import ProfileAvatar from "components/ProfileAvatar";
-import { isMobile } from "help/util";
+import { isMobile, nameToPath } from "help/util";
 import SpeedDial from "components/SpeedDial";
 import { NavActionsContext } from "help/customHooks";
 
@@ -44,7 +44,7 @@ function App() {
   const user = useSelector((state) => state.user);
   const [currentWidth, setCurrentWidth] = useState(window.innerWidth);
   const [actions, setActions] = useState([]);
-  const value2 = { actions, setActions };
+  const actionsProvider = { actions, setActions };
   const loading = user.loading;
   const resorts = useSelector((state) => state.resorts);
   const navigate = useNavigate();
@@ -60,7 +60,7 @@ function App() {
     };
     const kakaoAuthCode = window.location.search.split("=")[1];
     if (kakaoAuthCode) {
-      navigate("/loading");
+      navigate("/");
       getUser(kakaoAuthCode);
     }
   }, [dispatch]);
@@ -79,7 +79,7 @@ function App() {
             dispatch(setLoading(true));
             dispatch(setUid({ uid: user.uid, name: user.name }));
             dispatch(getPictureThunk(user.uid));
-            dispatch(getProfileThunk(user.uid)).then((r) => navigate("/"));
+            dispatch(getProfileThunk(user.uid)).then((r) => dispatch(setLoading(false)));
           } else {
             // not login
             console.log("fail");
@@ -158,8 +158,10 @@ function App() {
     );
   }
 
+  const pageArr = [Main, Login, MyPage, ResortEditor, About];
+
   return (
-    <NavActionsContext.Provider value={value2}>
+    <NavActionsContext.Provider value={actionsProvider}>
       <Stack
         direction="column"
         sx={{
@@ -211,9 +213,6 @@ function App() {
               LoadingItem
             ) : (
               <Routes>
-                <Route path="/" element={<PageHOC name="Main" Component={<Main />} />} />
-                <Route path="/login" element={<PageHOC name="Login" Component={<Login />} />} />
-                <Route path="/my_page" element={<PageHOC name="MyPage" Component={<MyPage />} />} />
                 {Object.keys(resorts.collection).map((key, i) => (
                   <Route
                     key={i}
@@ -226,21 +225,19 @@ function App() {
                     }
                   />
                 ))}
-                <Route
-                  path="/resort_editor"
-                  element={<PageHOC name="ResortEditor" Component={<ResortEditor />} />}
-                />
-                <Route
-                  path="/about"
-                  element={<PageHOC name="ResortEditor" Component={<About />} />}
-                />
+                {pageArr.map((Page, i) => (
+                  <Route
+                    key={i}
+                    path={nameToPath(Page.name)}
+                    element={<PageHOC name={Page.name} Component={<Page />} />}
+                  />
+                ))}
                 {user.profile?.isAdmin && (
                   <Route
                     path="/admin"
                     element={<PageHOC name="ResortEditor" Component={<Admin />} />}
                   />
                 )}
-                <Route path="/loading" element={LoadingItem} />
               </Routes>
             )}
           </>

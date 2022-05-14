@@ -38,8 +38,9 @@ const CalendarLog = (props) => {
   const colors = resortStore.colors;
   const user = useSelector((state) => state.user);
 
-  const createdAt = new Date(user.profile.createdAt);
+  const createdAt = new Date(user.profile?.createdAt);
   let temp;
+
   if (createdAt.getMonth() > 2) {
     temp = createdAt.getFullYear();
   } else {
@@ -70,80 +71,84 @@ const CalendarLog = (props) => {
     ? memoFounds[dateTime.format(selectedDay, timeFormat)]
     : [];
 
-  const cal = (d) => (
-    <Stack direction="row" justifyContent="center">
-      <Calendar
-        calendarType="US"
-        defaultValue={d}
-        formatDay={(locale, date) => dateTime.format(date, dayFormat)}
-        showNeighboringMonth={false}
-        onChange={(date) => {
-          if (Object.keys(memoFounds).includes(dateTime.format(date, timeFormat))) {
-            setSelectedDay(date);
-          } else {
-            setSelectedDay(null);
-          }
-        }}
-        tileContent={({ date, view }) => {
-          const founds = reviews.filter(
-            (x) =>
-              dateTime.format(new Date(x.createdAt), timeFormat) ===
-              dateTime.format(date, timeFormat)
-          );
-          if (founds.length > 0) {
-            memoFounds[dateTime.format(date, timeFormat)] = founds;
-            return (
-              <Stack direction="row" justifyContent="center">
-                {founds.map((found, i) => {
-                  return <Dot key={i} color={colors[found.resort]} />;
-                })}
-              </Stack>
+  if (user.profile) {
+    const cal = (d) => (
+      <Stack direction="row" justifyContent="center">
+        <Calendar
+          calendarType="US"
+          defaultValue={d}
+          formatDay={(locale, date) => dateTime.format(date, dayFormat)}
+          showNeighboringMonth={false}
+          onChange={(date) => {
+            if (Object.keys(memoFounds).includes(dateTime.format(date, timeFormat))) {
+              setSelectedDay(date);
+            } else {
+              setSelectedDay(null);
+            }
+          }}
+          tileContent={({ date, view }) => {
+            const founds = reviews.filter(
+              (x) =>
+                dateTime.format(new Date(x.createdAt), timeFormat) ===
+                dateTime.format(date, timeFormat)
             );
-          }
-        }}
-      />
-    </Stack>
-  );
-
-  return (
-    <Box>
-      <Stack direction="row" spacing={1} mb={2}>
-        {seasons.map((y, i) => {
-          const s = String(y).slice(2);
-          const e = String(Number(s) + 1);
-          return (
-            <Chip
-              label={`${s}-${e} 시즌`}
-              color="primary"
-              variant={y === season.getFullYear() ? "filled" : "outlined"}
-              onClick={() => setSeason(new Date(y, 11, 15))}
-              key={i}
-            />
-          );
-        })}
+            if (founds.length > 0) {
+              memoFounds[dateTime.format(date, timeFormat)] = founds;
+              return (
+                <Stack direction="row" justifyContent="center">
+                  {founds.map((found, i) => {
+                    return <Dot key={i} color={colors[found.resort]} />;
+                  })}
+                </Stack>
+              );
+            }
+          }}
+        />
       </Stack>
-      <Swiper
-        slidesPerView={1.3}
-        spaceBetween={8}
-        centeredSlides={true}
-        pagination={{
-          clickable: true,
-          type: "progressbar",
-        }}
-        modules={[Pagination]}
-        touchStartForcePreventDefault={true}
-        touchMoveStopPropagation={true}
-        className="mySwiper">
-        {[0, 1, 2, 3].map((i) => (
-          <SwiperSlide key={i}>{cal(dateTime.addMonths(season, i))}</SwiperSlide>
+    );
+
+    return (
+      <Box>
+        <Stack direction="row" spacing={1} mb={2}>
+          {seasons.map((y, i) => {
+            const s = String(y).slice(2);
+            const e = String(Number(s) + 1);
+            return (
+              <Chip
+                label={`${s}-${e} 시즌`}
+                color="primary"
+                variant={y === season.getFullYear() ? "filled" : "outlined"}
+                onClick={() => setSeason(new Date(y, 11, 15))}
+                key={i}
+              />
+            );
+          })}
+        </Stack>
+        <Swiper
+          slidesPerView={1.3}
+          spaceBetween={8}
+          centeredSlides={true}
+          pagination={{
+            clickable: true,
+            type: "progressbar",
+          }}
+          modules={[Pagination]}
+          touchStartForcePreventDefault={true}
+          touchMoveStopPropagation={true}
+          className="mySwiper">
+          {[0, 1, 2, 3].map((i) => (
+            <SwiperSlide key={i}>{cal(dateTime.addMonths(season, i))}</SwiperSlide>
+          ))}
+        </Swiper>
+        <Divider sx={{ marginY: 3, width: "100%" }} />
+        {selectedDaysReviews.map((rev, i) => (
+          <ReviewCard {...rev} key={i} user={user} uid={user.uid} resortInfo={rev.resortInfo} />
         ))}
-      </Swiper>
-      <Divider sx={{ marginY: 3, width: "100%" }} />
-      {selectedDaysReviews.map((rev, i) => (
-        <ReviewCard {...rev} key={i} user={user} uid={user.uid} resortInfo={rev.resortInfo} />
-      ))}
-    </Box>
-  );
+      </Box>
+    );
+  } else {
+    return <></>;
+  }
 };
 
 export default CalendarLog;

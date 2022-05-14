@@ -2,7 +2,6 @@
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
@@ -24,7 +23,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function SignIn(props) {
+export default function Login(props) {
   const dispatch = useDispatch();
 
   const redirectUri = window.location.protocol + "//" + window.location.host;

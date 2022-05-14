@@ -15,6 +15,7 @@ import Profile from "components/Profile";
 
 const ProfilePage = (props) => {
   const { setActions } = useContext(NavActionsContext);
+  const { currentTab } = props;
 
   const user = useSelector((state) => state.user);
   const [open, setOpen] = useState(false);
@@ -79,7 +80,7 @@ const ProfilePage = (props) => {
 
   useEffect(() => {
     setActions(currentActions);
-  }, []);
+  }, [currentTab]);
 
   return (
     <>

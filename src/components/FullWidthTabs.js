@@ -8,6 +8,7 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { useSelector } from "react-redux";
 import { NavActionsContext } from "help/customHooks";
+import PageHOC from "components/PageHOC";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -84,7 +85,7 @@ export default function FullWidthTabs(props) {
           const Page = obj.page;
           return (
             <TabPanel key={i} value={value} index={i} dir={theme.direction}>
-              <Page />
+              <PageHOC name={obj.name} Component={<Page currentTab={value} />} />
             </TabPanel>
           );
         })}

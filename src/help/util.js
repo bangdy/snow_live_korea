@@ -107,3 +107,38 @@ export const getJSON = function (url, callback) {
   };
   xhr.send();
 };
+
+export const nameToPath = (name, url = null) => {
+  let result;
+
+  switch (name) {
+    case "Main":
+      result = "/";
+      break;
+    case "Login":
+      result = "/login";
+      break;
+    case "MyPage":
+      result = "/my_page";
+      break;
+    case "Review":
+      result = `/${url}`;
+      break;
+    case "ResortEditor":
+      result = "/resort_editor";
+      break;
+    case "About":
+      result = "/about";
+      break;
+    case "Admin":
+      result = "/admin";
+      break;
+    case "LoadingItem":
+      result = "/loading";
+      break;
+    default:
+      result = "/";
+  }
+
+  return result;
+};
