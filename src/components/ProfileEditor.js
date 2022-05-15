@@ -15,6 +15,7 @@ import { uploadImage, removeImage } from "help/util";
 import { updateProfile, updatePictureUrl } from "store/user";
 import MyRideButton from "components/MyRideButton";
 import ProfileAvatar from "components/ProfileAvatar";
+import { ModalWrapper } from "help/util";
 
 const style = {
   position: "absolute",
@@ -104,52 +105,54 @@ const ProfileEditor = (props) => {
   };
 
   return (
-    <>
+    <Box>
       <Modal
         open={innerOpen}
         onClose={handleInnerClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
-        <Stack
-          sx={{
-            ...style,
-            width: user.isMobile ? "70%" : 500,
-            position: "relative",
-            top: "40%",
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: "white",
-          }}>
-          <Box
-            sx={{
-              width: 250,
-              height: 250,
-              margin: "auto",
-              border: 1,
-              backgroundImage: `url(${img && window.URL.createObjectURL(img)})`,
-            }}>
-            <AvatarImageCropper apply={onImageChange} noWaterMark={Boolean(img)} />
-          </Box>
+        <ModalWrapper>
           <Stack
-            direction="row"
-            sx={{ justifyContent: "space-around", width: "100%", marginTop: 2 }}>
-            <Button variant="outlined" onClick={handleInnerClose}>
-              취소
-            </Button>
-            <Button
-              variant="outlined"
-              onClick={() => {
-                handleInnerClose();
-                setAlterImgUrl(" ");
-                setDeleteImg(true);
+            sx={{
+              ...style,
+              width: user.isMobile ? "70%" : 500,
+              position: "relative",
+              top: "40%",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "white",
+            }}>
+            <Box
+              sx={{
+                width: 250,
+                height: 250,
+                margin: "auto",
+                border: 1,
+                backgroundImage: `url(${img && window.URL.createObjectURL(img)})`,
               }}>
-              지우기
-            </Button>
-            <Button variant="contained" onClick={handleInnerOk}>
-              확인
-            </Button>
+              <AvatarImageCropper apply={onImageChange} noWaterMark={Boolean(img)} />
+            </Box>
+            <Stack
+              direction="row"
+              sx={{ justifyContent: "space-around", width: "100%", marginTop: 2 }}>
+              <Button variant="outlined" onClick={handleInnerClose}>
+                취소
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  handleInnerClose();
+                  setAlterImgUrl(" ");
+                  setDeleteImg(true);
+                }}>
+                지우기
+              </Button>
+              <Button variant="contained" onClick={handleInnerOk}>
+                확인
+              </Button>
+            </Stack>
           </Stack>
-        </Stack>
+        </ModalWrapper>
       </Modal>
       <Box
         sx={{
@@ -181,7 +184,6 @@ const ProfileEditor = (props) => {
               닉네임
             </Typography>
             <Input
-              inputProps="description"
               readOnly={!editable}
               value={nickName}
               onChange={(event) => handleChange(event, setNickName)}
@@ -198,7 +200,6 @@ const ProfileEditor = (props) => {
               value={introduce}
               onChange={(event) => handleChange(event, setIntroduce)}
               rows={4}
-              defaultValue={"나 자신에 대해 소개해주세요~!"}
             />
           </Box>
           <Box
@@ -231,7 +232,7 @@ const ProfileEditor = (props) => {
           </Stack>
         </Stack>
       </Box>
-    </>
+    </Box>
   );
 };
 

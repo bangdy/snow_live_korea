@@ -1,5 +1,6 @@
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import imageCompression from "browser-image-compression";
+import React from "react";
 
 export const getDate = (d) => {
   var date = d;
@@ -142,3 +143,9 @@ export const nameToPath = (name, url = null) => {
 
   return result;
 };
+
+export const ModalWrapper = React.forwardRef((props, ref) => (
+  <span {...props} ref={ref}>
+    {props.children}
+  </span>
+));

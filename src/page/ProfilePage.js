@@ -12,6 +12,7 @@ import ProfileEditor from "components/ProfileEditor";
 import { NavActionsContext } from "help/customHooks";
 import { logout } from "store/user";
 import Profile from "components/Profile";
+import { ModalWrapper } from "help/util";
 
 const ProfilePage = (props) => {
   const { setActions } = useContext(NavActionsContext);
@@ -89,20 +90,22 @@ const ProfilePage = (props) => {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
-        <ProfileEditor
-          onImageChange={onImageChange}
-          img={img}
-          edit={edit}
-          setEdit={setEdit}
-          setOpen={setOpen}
-          setAlterImgUrl={setAlterImgUrl}
-          handleOk={handleOk}
-          user={user}
-          alterImgUrl={alterImgUrl}
-          handleClose={handleClose}
-          fullfilledUser={fullfilledUser}
-          dispatch={dispatch}
-        />
+        <ModalWrapper>
+          <ProfileEditor
+            onImageChange={onImageChange}
+            img={img}
+            edit={edit}
+            setEdit={setEdit}
+            setOpen={setOpen}
+            setAlterImgUrl={setAlterImgUrl}
+            handleOk={handleOk}
+            user={user}
+            alterImgUrl={alterImgUrl}
+            handleClose={handleClose}
+            fullfilledUser={fullfilledUser}
+            dispatch={dispatch}
+          />
+        </ModalWrapper>
       </Modal>
       <Profile user={user} />
     </>
