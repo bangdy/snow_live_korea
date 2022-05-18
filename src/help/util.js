@@ -149,3 +149,5 @@ export const ModalWrapper = React.forwardRef((props, ref) => (
     {props.children}
   </span>
 ));
+
+export const dayFormatChange = (d) => d.slice(0, 4) + "-" + d.slice(4, 6) + "-" + d.slice(6);

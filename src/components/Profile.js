@@ -84,7 +84,7 @@ const Profile = (props) => {
           </Linkify>
         </Typography>
       </Stack>
-      <Stack direction="row" mt={2} justifyContent="space-around" sx={{ height: 40, width: "80%" }}>
+      <Stack direction="row" mt={2} justifyContent="space-around" sx={{ width: "80%" }}>
         <Box sx={{ textAlign: "center" }}>
           <Typography variant="caption" fontWeight={800}>
             24

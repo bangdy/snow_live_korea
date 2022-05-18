@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import ProfileEditor from "components/ProfileEditor";
+import HeatmapChart from "components/HeatmapChart";
 import { NavActionsContext } from "help/customHooks";
 import { logout } from "store/user";
 import Profile from "components/Profile";
@@ -108,6 +109,7 @@ const ProfilePage = (props) => {
         </ModalWrapper>
       </Modal>
       <Profile user={user} />
+      <HeatmapChart user={user} />
     </>
   );
 };
