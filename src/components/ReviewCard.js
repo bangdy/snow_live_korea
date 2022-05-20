@@ -64,7 +64,27 @@ const ReviewCard = (props) => {
     <Card sx={{ width: "100%", marginBottom: 1 }}>
       <CardHeader
         avatar={<ProfileAvatar user={user} size={40} uid={uid} preImgUrl={preImgUrl} />}
-        title={user ? user.profile.nickName : ""}
+        title={
+          user ? (
+            <Stack
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="center"
+              sx={{ width: "100%" }}>
+              <Typography variant="subtitle2" zIndex={100}>
+                {user.profile.nickName}
+              </Typography>
+              <MyRideButton
+                myRide={user.profile.myRide}
+                equipment={user.profile.myRide}
+                size={20}
+                sx={{ marginLeft: 4 }}
+              />
+            </Stack>
+          ) : (
+            ""
+          )
+        }
         subheader={date.format(new Date(createdAt), timeFormat)}
         action={
           curUser.uid === uid && (
@@ -139,17 +159,8 @@ const ReviewCard = (props) => {
           <Rating name="simple-controlled" value={score} size="large" readOnly />
           <Stack direction="row">
             {!reviewPage && (
-              <>
-                <Chip label={resortInfo.name} size="small" color="primary" variant="outlined" />
-                <Divider
-                  orientation="vertical"
-                  variant="middle"
-                  flexItem
-                  sx={{ marginX: 1, marginY: 0 }}
-                />
-              </>
+              <Chip label={resortInfo.name} size="small" color="primary" variant="outlined" />
             )}
-            <MyRideButton myRide={equipment} equipment={equipment} size={30} />
           </Stack>
         </Stack>
         <Typography
