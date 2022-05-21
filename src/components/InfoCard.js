@@ -42,7 +42,7 @@ const InfoCard = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { isInMain, style } = props;
+  const { isInMain } = props;
   const { name, address, url, cityName } = props.info;
   const reviews = props.reviews;
   const resorts = useSelector((state) => state.resorts);
@@ -91,8 +91,17 @@ const InfoCard = (props) => {
   const showEditButton = !isInMain && user.profile?.isAdmin;
 
   return (
-    <Card sx={style}>
-      <Stack direction={isMobile ? "column" : "row"} sx={isMobile ? { alignItems: "center" } : {}}>
+    <Card>
+      <Stack
+        direction={isMobile ? "column" : "row"}
+        sx={
+          isMobile
+            ? {
+                alignItems: "center",
+                width: window.innerWidth > 480 ? 480 : window.innerWidth - 32,
+              }
+            : {}
+        }>
         <CardMedia
           component="img"
           sx={{ width: "35%", height: "auto", objectFit: "contain", marginLeft: 2 }}
@@ -101,7 +110,6 @@ const InfoCard = (props) => {
         />
         <CardContent
           sx={{
-            width: isMobile ? window.screen.width - 32 : "65%",
             textAlign: "left",
             paddingLeft: 4,
           }}>
