@@ -26,6 +26,8 @@ import Divider from "@mui/material/Divider";
 import { getJSON } from "help/util";
 import FilterHdrIcon from "@mui/icons-material/FilterHdr";
 import DeviceThermostatIcon from "@mui/icons-material/DeviceThermostat";
+import { Bounce } from "react-micron";
+import DelayLink from "components/DelayLink";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -165,11 +167,15 @@ const InfoCard = (props) => {
       {isInMain && (
         <CardActions disableSpacing sx={{ justifyContent: "space-between" }}>
           <Box sx={{ width: 40 }}></Box>
-          <Link to={`/${url}`} style={{ textDecoration: "none" }}>
+          <DelayLink to={`/${url}`} delay={500} style={{ textDecoration: "none" }}>
             <CardActions sx={{ display: "felx", flex: 1, justifyContent: "center" }}>
-              <Button size="small">리뷰하기</Button>
+              <Bounce>
+                <Button size="small" variant="contained">
+                  리뷰하기
+                </Button>
+              </Bounce>
             </CardActions>
-          </Link>
+          </DelayLink>
           <ExpandMore
             sx={{ marginLeft: 0, alignSelf: "center", justifySelf: "flex-end" }}
             expand={expanded}
