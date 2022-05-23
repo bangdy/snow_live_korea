@@ -19,7 +19,6 @@ export const DelayLink = (props) => {
 
   const handleClick = (e) => {
     // if trying to navigate to current page stop everything
-    console.log(location?.pathname, to);
     if (location?.pathname === to) return;
 
     onDelayStart(e, to);

@@ -33,9 +33,21 @@ Page :  home / login / my_page  / 각각의 resort
 - 가입날짜로 해서 그 해의 4월 이전에 가입했으면 그 시즌을 포함해서 보여준다
 - 끝나는 시즌은 별도의 setting document 에서 갖고 온다. 
 
+
+
+### Micro Interactions
+
+- Resort 페이지 이동 button 누를 때 
+
+
+
+
+
+
+
 -------
 
-
+### 
 
 
 
