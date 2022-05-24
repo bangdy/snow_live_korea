@@ -38,6 +38,8 @@ Page :  home / login / my_page  / 각각의 resort
 ### Micro Interactions
 
 - Resort 페이지 이동 button 누를 때 
+- Resort 리뷰 페이지 보일 때
+  - 구현할 때, 참조한 곳 : https://samuelkraft.com/blog/page-transition-with-framer-motion
 
 
 

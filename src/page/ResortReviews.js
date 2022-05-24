@@ -19,6 +19,7 @@ import { NavActionsContext } from "help/customHooks";
 import EditIcon from "@mui/icons-material/Edit";
 import EditOffIcon from "@mui/icons-material/EditOff";
 import BarChart from "components/BarChart";
+import { PageChange } from "components/Motions";
 
 const ResortReviews = (props) => {
   const dispatch = useDispatch();
@@ -86,86 +87,88 @@ const ResortReviews = (props) => {
         dateString === getDate(new Date())));
   // 1.로그인을 했고 && ( 2.수정 중이 아니고, 3.내 리뷰가 당일에 없고 4.오늘 일때)
   return (
-    <Box
-      sx={{
-        marginTop: 1,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        flex: 1,
-        paddingX: 2,
-      }}>
-      <InfoCard {...resorts[props.info.url]} style={{ marginBottom: 3 }} />
-      <DateNavigator date={date} setDate={setDate} setBeforeObj={setBeforeObj} />
-      <Stack sx={{ height: 300, width: "100%" }}>
-        <BarChart />
-      </Stack>
-      {onReview && showReviewMaker && (
-        <ReviewMaker
-          url={props.info.url}
-          beforeObj={beforeObj}
-          setOnReview={setOnReview}
-          setBeforeObj={setBeforeObj}
-          dateString={dateString}
+    <PageChange>
+      <Box
+        sx={{
+          marginTop: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          flex: 1,
+          paddingX: 2,
+        }}>
+        <InfoCard {...resorts[props.info.url]} style={{ marginBottom: 3 }} />
+        <DateNavigator date={date} setDate={setDate} setBeforeObj={setBeforeObj} />
+        <Stack sx={{ height: 300, width: "100%" }}>
+          <BarChart />
+        </Stack>
+        {onReview && showReviewMaker && (
+          <ReviewMaker
+            url={props.info.url}
+            beforeObj={beforeObj}
+            setOnReview={setOnReview}
+            setBeforeObj={setBeforeObj}
+            dateString={dateString}
+          />
+        )}
+        <Divider sx={{ marginY: 2, width: "100%" }} />
+        <SortToggle
+          sx={{ alignSelf: "flex-start" }}
+          tabs={[
+            [
+              "최신순",
+              () => {
+                setKeys(
+                  [...keys].sort(
+                    (a, b) =>
+                      reviews[dateString][a]["createdAt"] - reviews[dateString][b]["createdAt"]
+                  )
+                );
+              },
+            ],
+            ["공감순", () => {}],
+          ]}
         />
-      )}
-      <Divider sx={{ marginY: 2, width: "100%" }} />
-      <SortToggle
-        sx={{ alignSelf: "flex-start" }}
-        tabs={[
-          [
-            "최신순",
-            () => {
-              setKeys(
-                [...keys].sort(
-                  (a, b) =>
-                    reviews[dateString][a]["createdAt"] - reviews[dateString][b]["createdAt"]
-                )
-              );
-            },
-          ],
-          ["공감순", () => {}],
-        ]}
-      />
 
-      <Divider sx={{ marginY: 2, width: "100%" }} />
+        <Divider sx={{ marginY: 2, width: "100%" }} />
 
-      {isExist > 0 ? (
-        <>
-          <Stack direction="row" justifyContent="space-between" sx={{ width: "100%" }}>
-            <Typography
-              variant="h6"
-              color="text.secondary"
-              sx={{ alignSelf: "flex-start", marginBottom: 2 }}>
-              리뷰
-            </Typography>
-            <IconButton
-              aria-label="refresh"
-              sx={{ alignSelf: "flex-start", padding: 1 }}
-              onClick={() => dispatch(getResortDocThunk(props.info.url))}>
-              <RefreshIcon fontSize="small" />
-            </IconButton>
-            <Box></Box>
-          </Stack>
-          {keys.map((uid, i) => (
-            <ReviewCard
-              uid={uid}
-              {...reviews[dateString][uid]}
-              user={users?.[uid]}
-              key={i}
-              setBeforeObj={setBeforeObj}
-              reviewPage
-              resortInfo={props.info}
-              dateString={dateString}
-            />
-          ))}
-        </>
-      ) : (
-        <Typography sx={{ marginY: 2 }} variant="body2" color="text.secondary">
-          오늘의 리뷰가 없습니다
-        </Typography>
-      )}
-    </Box>
+        {isExist > 0 ? (
+          <>
+            <Stack direction="row" justifyContent="space-between" sx={{ width: "100%" }}>
+              <Typography
+                variant="h6"
+                color="text.secondary"
+                sx={{ alignSelf: "flex-start", marginBottom: 2 }}>
+                리뷰
+              </Typography>
+              <IconButton
+                aria-label="refresh"
+                sx={{ alignSelf: "flex-start", padding: 1 }}
+                onClick={() => dispatch(getResortDocThunk(props.info.url))}>
+                <RefreshIcon fontSize="small" />
+              </IconButton>
+              <Box></Box>
+            </Stack>
+            {keys.map((uid, i) => (
+              <ReviewCard
+                uid={uid}
+                {...reviews[dateString][uid]}
+                user={users?.[uid]}
+                key={i}
+                setBeforeObj={setBeforeObj}
+                reviewPage
+                resortInfo={props.info}
+                dateString={dateString}
+              />
+            ))}
+          </>
+        ) : (
+          <Typography sx={{ marginY: 2 }} variant="body2" color="text.secondary">
+            오늘의 리뷰가 없습니다
+          </Typography>
+        )}
+      </Box>
+    </PageChange>
   );
 };
 

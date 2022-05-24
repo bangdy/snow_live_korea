@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
-import { Link } from "react-router-dom";
 import CardMedia from "@mui/material/CardMedia";
 import { downloadImage } from "help/util";
 import { useSelector, useDispatch } from "react-redux";
@@ -26,8 +25,8 @@ import Divider from "@mui/material/Divider";
 import { getJSON } from "help/util";
 import FilterHdrIcon from "@mui/icons-material/FilterHdr";
 import DeviceThermostatIcon from "@mui/icons-material/DeviceThermostat";
-import { Bounce } from "react-micron";
 import DelayLink from "components/DelayLink";
+import { EnterButton } from "components/Motions";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -54,6 +53,7 @@ const InfoCard = (props) => {
   const [imageUrl, setImageUrl] = useState(resorts?.images[url]);
   const [expanded, setExpanded] = useState(false);
   const [curTemper, setCurTemper] = useState(null);
+  const [entered, setEntered] = useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -106,7 +106,12 @@ const InfoCard = (props) => {
         }>
         <CardMedia
           component="img"
-          sx={{ width: "35%", height: "auto", objectFit: "contain", marginLeft: 2 }}
+          sx={{
+            width: "35%",
+            height: "auto",
+            objectFit: "contain",
+            marginLeft: 2,
+          }}
           image={imageUrl}
           alt="Resort's Logo Image"
         />
@@ -167,13 +172,13 @@ const InfoCard = (props) => {
       {isInMain && (
         <CardActions disableSpacing sx={{ justifyContent: "space-between" }}>
           <Box sx={{ width: 40 }}></Box>
-          <DelayLink to={`/${url}`} delay={500} style={{ textDecoration: "none" }}>
+          <DelayLink to={`/${url}`} delay={200} style={{ textDecoration: "none" }}>
             <CardActions sx={{ display: "felx", flex: 1, justifyContent: "center" }}>
-              <Bounce>
-                <Button size="small" variant="contained">
+              <EnterButton trigger={entered}>
+                <Button size="small" variant="contained" onClick={() => setEntered(true)}>
                   리뷰하기
                 </Button>
-              </Bounce>
+              </EnterButton>
             </CardActions>
           </DelayLink>
           <ExpandMore
