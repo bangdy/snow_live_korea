@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import Modal from "@mui/material/Modal";
 import IconButton from "@mui/material/IconButton";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import Checkbox from "@mui/material/Checkbox";
 import AvatarImageCropper from "react-avatar-image-cropper";
 
 import { createDoc, updateDoc } from "help/firestore";
@@ -161,7 +162,7 @@ const ProfileEditor = (props) => {
           overflow: user.isMobile ? "scroll" : "auto",
           height: user.isMobile ? "100%" : "auto",
         }}>
-        <Stack direction="column" justifyContent="center" alignItems="center">
+        <Stack direction="column" justifyContent="center" alignItems="center" p={4}>
           <ProfileAvatar
             sx={{ marginTop: 4 }}
             user={user}
@@ -180,21 +181,23 @@ const ProfileEditor = (props) => {
           </IconButton>
 
           <Box mt={2} sx={{ display: "block", textAlign: "left", width: "100%", padding: 2 }}>
-            <Typography variant="h6" mb={2}>
+            <Typography variant="caption" mb={4}>
               닉네임
             </Typography>
-            <Input
+            <TextField
+              mt={2}
               readOnly={!editable}
               value={nickName}
+              variant="outlined"
               onChange={(event) => handleChange(event, setNickName)}
-              sx={{ width: "100%" }}
+              sx={{ width: "100%", marginY: 1 }}
             />
           </Box>
           <Box
             sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
-            <Typography variant="h6">소개</Typography>
+            <Typography variant="caption">소개</Typography>
             <TextField
-              sx={{ width: "100%" }}
+              sx={{ width: "100%", marginY: 1 }}
               id="outlined-multiline-static"
               multiline
               value={introduce}
@@ -203,10 +206,17 @@ const ProfileEditor = (props) => {
             />
           </Box>
           <Box
-            sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
-            <Typography variant="h6">내 탈거</Typography>
+            sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 1 }}>
+            <Typography variant="caption">내 탈거</Typography>
           </Box>
-          <Box sx={{ width: "100%", padding: 2, display: "flex", justifyContent: "space-around" }}>
+          <Box
+            sx={{
+              width: "100%",
+              padding: 2,
+              paddingX: 8,
+              display: "flex",
+              justifyContent: "space-around",
+            }}>
             <MyRideButton
               myRide={myRide}
               setMyRide={setMyRide}
