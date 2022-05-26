@@ -18,6 +18,8 @@ const Profile = (props) => {
 
   const theme = useTheme();
 
+  const insta = user.profile?.instagram;
+
   return (
     <Stack direction="column" sx={{ alignItems: "center" }}>
       <Box
@@ -53,7 +55,11 @@ const Profile = (props) => {
               />
             </Stack>
             <Stack direction="row" zIndex={100}>
-              <InstagramIcon />
+              {insta && (
+                <a href={`https://instagram.com/${insta}`} target="_blank">
+                  <InstagramIcon />
+                </a>
+              )}
             </Stack>
             <Box>
               <Typography variant="caption" mt={2}>

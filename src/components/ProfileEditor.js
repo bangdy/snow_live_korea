@@ -3,13 +3,12 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Input from "@mui/material/Input";
 import TextField from "@mui/material/TextField";
 import Modal from "@mui/material/Modal";
 import IconButton from "@mui/material/IconButton";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import Checkbox from "@mui/material/Checkbox";
 import AvatarImageCropper from "react-avatar-image-cropper";
+import InstagramIcon from "@mui/icons-material/Instagram";
 
 import { createDoc, updateDoc } from "help/firestore";
 import { uploadImage, removeImage } from "help/util";
@@ -23,8 +22,8 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  maxWidth: 600,
-  width: "80%",
+  maxWidth: 480,
+  width: "90%",
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -50,6 +49,7 @@ const ProfileEditor = (props) => {
   const [nickName, setNickName] = useState(fullfilledUser ? user.profile.nickName : "");
   const [myRide, setMyRide] = useState(fullfilledUser ? user.profile.myRide : "board");
   const [introduce, setIntroduce] = useState(fullfilledUser ? user.profile?.introduce : "");
+  const [instagram, setInstagram] = useState(fullfilledUser ? user.profile?.instagram : "");
 
   const [deleteImg, setDeleteImg] = useState(false);
 
@@ -73,6 +73,7 @@ const ProfileEditor = (props) => {
       nickName: nickName,
       myRide: myRide,
       introduce: introduce,
+      instagram: instagram,
       isAdmin: user.profile?.isAdmin ?? false,
       createdAt: user.profile?.createdAt ?? new Date().getTime(),
     };
@@ -162,16 +163,16 @@ const ProfileEditor = (props) => {
           overflow: user.isMobile ? "scroll" : "auto",
           height: user.isMobile ? "100%" : "auto",
         }}>
-        <Stack direction="column" justifyContent="center" alignItems="center" p={4}>
+        <Stack direction="column" justifyContent="center" alignItems="center" p={1}>
           <ProfileAvatar
-            sx={{ marginTop: 4 }}
+            sx={{ marginTop: 2 }}
             user={user}
             isChangigProfile={isChangigProfile}
             size={100}
             alterImgUrl={alterImgUrl}
           />
           <IconButton
-            sx={{ position: "relative", top: -30, left: 0 }}
+            sx={{ position: "relative", top: -10, left: 0, height: 10 }}
             disabled={!editable}
             color="primary"
             aria-label="upload picture"
@@ -179,13 +180,12 @@ const ProfileEditor = (props) => {
             onClick={() => setInnerOpen(true)}>
             <PhotoCamera sx={{ width: 40, height: 40 }} />
           </IconButton>
-
-          <Box mt={2} sx={{ display: "block", textAlign: "left", width: "100%", padding: 2 }}>
-            <Typography variant="caption" mb={4}>
+          <Box mt={2} sx={{ display: "block", textAlign: "left", width: "100%", paddingX: 2 }}>
+            <Typography variant="caption" sx={{ marginLeft: 1 }}>
               닉네임
             </Typography>
             <TextField
-              mt={2}
+              size="medium"
               readOnly={!editable}
               value={nickName}
               variant="outlined"
@@ -194,8 +194,10 @@ const ProfileEditor = (props) => {
             />
           </Box>
           <Box
-            sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 2 }}>
-            <Typography variant="caption">소개</Typography>
+            sx={{ display: "block", textAlign: "left", width: "100%", paddingX: 2, marginTop: 2 }}>
+            <Typography variant="caption" sx={{ marginLeft: 1 }}>
+              소개
+            </Typography>
             <TextField
               sx={{ width: "100%", marginY: 1 }}
               id="outlined-multiline-static"
@@ -205,15 +207,29 @@ const ProfileEditor = (props) => {
               rows={4}
             />
           </Box>
-          <Box
-            sx={{ display: "block", textAlign: "left", width: "100%", padding: 2, marginTop: 1 }}>
-            <Typography variant="caption">내 탈거</Typography>
+          <Stack
+            alignItems="center"
+            direction="row"
+            sx={{ width: "100%", paddingX: 2, marginTop: 2 }}>
+            <InstagramIcon size="small" />
+            <TextField
+              size="small"
+              readOnly={!editable}
+              value={instagram}
+              variant="outlined"
+              onChange={(event) => handleChange(event, setInstagram)}
+              sx={{ width: "100%", marginY: 1, marginLeft: 1 }}
+            />
+          </Stack>
+          <Box sx={{ display: "block", textAlign: "left", width: "100%", paddingX: 2, marginY: 2 }}>
+            <Typography variant="caption" sx={{ marginLeft: 1 }}>
+              내 탈거
+            </Typography>
           </Box>
           <Box
             sx={{
+              maxWidth: 320,
               width: "100%",
-              padding: 2,
-              paddingX: 8,
               display: "flex",
               justifyContent: "space-around",
             }}>
