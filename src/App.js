@@ -27,6 +27,7 @@ import ProfileAvatar from "components/ProfileAvatar";
 import { isMobile, nameToPath } from "help/util";
 import SpeedDial from "components/SpeedDial";
 import { NavActionsContext } from "help/customHooks";
+import * as Sentry from "@sentry/react";
 
 initFirebase();
 
@@ -44,6 +45,7 @@ function App() {
   const user = useSelector((state) => state.user);
   const [currentWidth, setCurrentWidth] = useState(window.innerWidth);
   const [actions, setActions] = useState([]);
+  const [hasError, setHasError] = useState(false);
   const actionsProvider = { actions, setActions };
   const loading = user.loading;
   const resorts = useSelector((state) => state.resorts);
@@ -158,102 +160,103 @@ function App() {
     );
   }
 
-  const pageArr = [Main, Login, MyPage, ResortEditor, About];
-
   return (
-    <NavActionsContext.Provider value={actionsProvider}>
-      <Stack
-        direction="column"
-        sx={{
-          height: "100vh",
-          flexGrow: 1,
-          overflow: "visible",
-          paddingX: 0,
-          marginX: "auto",
-        }}>
-        <AppBar
-          position={currentPath === "/my_page" ? "relative" : "fixed"}
+    <Sentry.ErrorBoundary fallback={<p>An error has occurred</p>} showDialog>
+      <NavActionsContext.Provider value={actionsProvider}>
+        <Stack
+          direction="column"
           sx={{
-            height: 72,
-            alignItems: "center",
-            zIndex: 100,
-            marginBottom: currentPath === "/my_page" ? -9 : 0,
-          }}
-          elevation={0}>
-          <Header />
-          <Toolbar
+            height: "100vh",
+            flexGrow: 1,
+            overflow: "visible",
+            paddingX: 0,
+            marginX: "auto",
+          }}>
+          <AppBar
+            position={currentPath === "/my_page" ? "relative" : "fixed"}
+            sx={{
+              height: 72,
+              alignItems: "center",
+              zIndex: 100,
+              marginBottom: currentPath === "/my_page" ? -9 : 0,
+            }}
+            elevation={0}>
+            <Header />
+            <Toolbar
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: currentWidth > 768 ? 768 : "100%",
+              }}>
+              <Link to="/" style={{ textDecoration: "none" }}>
+                <Typography variant="h6" component="div" sx={{ color: "white" }}>
+                  Snow Live
+                </Typography>
+              </Link>
+              {rightButton}
+            </Toolbar>
+          </AppBar>
+
+          <Box
             sx={{
               display: "flex",
-              justifyContent: "space-between",
-              width: currentWidth > 768 ? 768 : "100%",
+              justifyContent: "center",
+              alignContent: "center",
+              marginX: "auto",
+              maxWidth: 500,
+              width: "100%",
+              paddingTop: 9,
+              height: loading || currentPath == "/loading" ? "50%" : null,
             }}>
-            <Link to="/" style={{ textDecoration: "none" }}>
-              <Typography variant="h6" component="div" sx={{ color: "white" }}>
-                Snow Live
-              </Typography>
-            </Link>
-            {rightButton}
-          </Toolbar>
-        </AppBar>
+            <>
+              {loading ? (
+                LoadingItem
+              ) : (
+                <Routes>
+                  {Object.keys(resorts.collection).map((key, i) => (
+                    <Route
+                      key={i}
+                      path={`/${resorts.collection[key].info.url}`}
+                      element={
+                        <PageHOC
+                          name="Review"
+                          Component={<ResortReviews {...resorts.collection[key]} />}
+                        />
+                      }
+                    />
+                  ))}
 
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignContent: "center",
-            marginX: "auto",
-            maxWidth: 500,
-            width: "100%",
-            paddingTop: 9,
-            height: loading || currentPath == "/loading" ? "50%" : null,
-          }}>
-          <>
-            {loading ? (
-              LoadingItem
-            ) : (
-              <Routes>
-                {Object.keys(resorts.collection).map((key, i) => (
+                  <Route path="/" element={<PageHOC name="Main" Component={<Main />} />} />
+                  <Route path="/login" element={<PageHOC name="Login" Component={<Login />} />} />
                   <Route
-                    key={i}
-                    path={`/${resorts.collection[key].info.url}`}
-                    element={
-                      <PageHOC
-                        name="Review"
-                        Component={<ResortReviews {...resorts.collection[key]} />}
-                      />
-                    }
+                    path="/my_page"
+                    element={<PageHOC name="MyPage" Component={<MyPage />} />}
                   />
-                ))}
-                {pageArr.map((Page, i) => (
-                  <Route
-                    key={i}
-                    path={nameToPath(Page.name)}
-                    element={<PageHOC name={Page.name} Component={<Page />} />}
-                  />
-                ))}
-                {user.profile?.isAdmin && (
-                  <Route
-                    path="/admin"
-                    element={<PageHOC name="ResortEditor" Component={<Admin />} />}
-                  />
-                )}
-              </Routes>
-            )}
-          </>
-        </Box>
+                  <Route path="/about" element={<PageHOC name="About" Component={<About />} />} />
+                  {user.profile?.isAdmin && (
+                    <Route
+                      path="/admin"
+                      element={<PageHOC name="ResortEditor" Component={<Admin />} />}
+                    />
+                  )}
+                </Routes>
+              )}
+            </>
+          </Box>
 
-        <Stack
-          alignSelf="flex-end"
-          direction="row"
-          justifyContent="flex-end"
-          sx={{ position: "fixed", bottom: 0, overFlow: "hidden" }}>
-          <SpeedDial
-            sx={{ marginBottom: 3, marginRight: dialButtonMargin.toString() + "px" }}
-            actions={actions}
-          />
+          <Stack
+            alignSelf="flex-end"
+            direction="row"
+            justifyContent="flex-end"
+            sx={{ position: "fixed", bottom: 0, overFlow: "hidden" }}>
+            <SpeedDial
+              sx={{ marginBottom: 3, marginRight: dialButtonMargin.toString() + "px" }}
+              actions={actions}
+            />
+          </Stack>
         </Stack>
-      </Stack>
-    </NavActionsContext.Provider>
+      </NavActionsContext.Provider>
+    </Sentry.ErrorBoundary>
   );
 }
 
