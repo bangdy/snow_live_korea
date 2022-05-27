@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 
 const Main = (props) => {
   const resorts = useSelector((state) => state.resorts);
-
   return (
     <Stack
       spacing={2}
@@ -14,6 +13,7 @@ const Main = (props) => {
       {Object.keys(resorts.collection).map((key, i) => {
         return <InfoCard key={i} {...resorts.collection[key]} isInMain />;
       })}
+      <Stack sx={{ height: 120 }} />
     </Stack>
   );
 };

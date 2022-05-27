@@ -168,7 +168,6 @@ function App() {
           height: "100vh",
           flexGrow: 1,
           overflow: "visible",
-          zIndex: 10,
           paddingX: 0,
           marginX: "auto",
         }}>
@@ -244,9 +243,10 @@ function App() {
         </Box>
 
         <Stack
+          alignSelf="flex-end"
           direction="row"
           justifyContent="flex-end"
-          sx={{ position: "fixed", width: "100%", bottom: 0 }}>
+          sx={{ position: "fixed", bottom: 0, overFlow: "hidden" }}>
           <SpeedDial
             sx={{ marginBottom: 3, marginRight: dialButtonMargin.toString() + "px" }}
             actions={actions}
