@@ -12,6 +12,7 @@ const MyRideButton = (props) => {
   }
 
   const fSize = 0.7 * size;
+  const selected = equipment === myRide;
 
   return (
     <ToggleButton
@@ -19,9 +20,9 @@ const MyRideButton = (props) => {
       sx={{ width: size, height: size, borderRadius: 0.5 * size, ...sx }}
       disabled={!editable}
       value="check"
-      selected={equipment === myRide}
+      selected={selected}
       onChange={() => editable && setMyRide(equipment)}>
-      <MyRide sx={{ fontSize: fSize > 20 ? fSize : 20 }} />
+      <MyRide sx={{ fontSize: fSize > 20 ? fSize : 20 }} color={selected ? "primary" : ""} />
     </ToggleButton>
   );
 };
